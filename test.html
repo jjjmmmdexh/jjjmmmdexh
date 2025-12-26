@@ -16,7 +16,7 @@
                         secondary: '#6c757d',
                         dark: '#343a40',
                         light: '#f8f9fa',
-                        bilibili: '#00A1D6' // 添加Bilibili品牌蓝色
+                        bilibili: '#00A1D6' // Bilibili品牌蓝色
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -35,7 +35,8 @@
                 @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-white/20 dark:border-gray-700/20;
             }
             .btn-primary {
-                @apply bg-primary/90 hover:bg-primary text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 backdrop-blur-sm;
+                /* 亚克力下载按钮 - 调整透明度+圆形 */
+                @apply bg-primary/70 hover:bg-primary/80 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 backdrop-blur-md border border-white/20 dark:border-primary/30;
             }
             .section-padding {
                 @apply py-8 md:py-12;
@@ -45,9 +46,26 @@
                 @apply bg-gradient-to-r from-blue-50/80 to-indigo-50/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-xl shadow-md p-6 border border-blue-100/30 dark:border-gray-600/30;
             }
             
-            /* 黑夜模式切换按钮样式 */
-            .dark-mode-toggle {
-                @apply fixed top-4 right-4 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-800 dark:text-gray-200 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/30 dark:border-gray-600/30;
+            /* 圆形按钮样式（黑夜模式+通知按钮） */
+            .circle-btn {
+                @apply fixed top-4 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-800 dark:text-gray-200 w-12 h-12 flex items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/30 dark:border-gray-600/30;
+            }
+            
+            /* 通知栏样式 - 青柠起始页倾斜动画效果 */
+            .notification-panel {
+                @apply fixed top-16 right-4 z-40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl shadow-xl p-5 border border-gray-200/30 dark:border-gray-700/30 max-w-xs opacity-0 invisible;
+                transform: translateX(20px) rotate(2deg) scale(0.95);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+            
+            .notification-panel.open {
+                @apply opacity-100 visible;
+                transform: translateX(0) rotate(0deg) scale(1);
+            }
+            
+            .notification-panel.closing {
+                transform: translateX(20px) rotate(-2deg) scale(0.95);
+                @apply opacity-0 invisible;
             }
             
             /* 黑夜模式下的背景和文字颜色 */
@@ -70,15 +88,17 @@
             
             .dark-contact-item {
                 /* 亚克力/毛玻璃效果 */
-                @apply bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm shadow-sm dark:shadow-gray-800 border border-white/20 dark:border-gray-800/20;
+                @apply bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm shadow-sm dark:shadow-gray-800 border border-white/20 dark:border-gray-800/20 rounded-lg;
             }
             
-            .dark-icon-bg {
-                @apply bg-blue-100/80 dark:bg-blue-800/80 backdrop-blur-sm;
+            /* 统一的图标背景样式 */
+            .icon-bg {
+                @apply bg-blue-100/80 dark:bg-blue-800/80 backdrop-blur-sm w-12 h-12 flex items-center justify-center rounded-full mr-3;
             }
             
-            .dark-icon {
-                @apply text-blue-600 dark:text-blue-300;
+            /* 统一的图标颜色样式 */
+            .icon-color {
+                @apply text-blue-600 dark:text-blue-300 text-xl;
             }
             
             /* 背景壁纸样式 */
@@ -104,9 +124,35 @@
             .wallpaper-info {
                 @apply bg-black/60 backdrop-blur-md text-white p-4 rounded-lg text-sm md:text-base max-w-3xl mx-auto mt-6 mb-8;
             }
+            
+            /* 雪花效果样式 */
+            .snowflake {
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.8);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .dark .snowflake {
+                background: rgba(255, 255, 255, 0.9);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+            }
         }
     </style>
     <script>
+        // 全局变量 - 防止通知反复弹出
+        let notificationOpen = false;
+        let notificationTimer = null;
+        let isProcessingNotification = false;
+
+        // 雪花效果相关变量
+        let snowflakes = [];
+        let snowflakeIdCounter = 0;
+
         // 黑夜模式相关函数
         function initDarkMode() {
             // 从localStorage获取保存的主题设置
@@ -198,6 +244,162 @@
             }
         }
         
+        // 通知栏相关函数 - 修复反复弹出问题
+        function toggleNotification() {
+            // 防止快速重复点击
+            if (isProcessingNotification) return;
+            isProcessingNotification = true;
+
+            const panel = document.getElementById('notificationPanel');
+            const icon = document.getElementById('notificationIcon');
+            
+            // 清除自动关闭定时器
+            clearTimeout(notificationTimer);
+            
+            if (notificationOpen) {
+                // 关闭通知栏 - 反向倾斜动画
+                panel.classList.add('closing');
+                icon.classList.remove('fa-bell-slash');
+                icon.classList.add('fa-bell');
+                
+                setTimeout(() => {
+                    panel.classList.remove('open', 'closing');
+                    notificationOpen = false;
+                    isProcessingNotification = false;
+                }, 400);
+            } else {
+                // 打开通知栏 - 倾斜动画
+                panel.classList.add('open');
+                icon.classList.remove('fa-bell');
+                icon.classList.add('fa-bell-slash');
+                
+                // 自动关闭（8秒）
+                notificationTimer = setTimeout(() => {
+                    toggleNotification();
+                }, 8000);
+                
+                notificationOpen = true;
+                isProcessingNotification = false;
+            }
+        }
+        
+        // 点击页面其他区域关闭通知栏
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('notificationPanel');
+            const toggleBtn = document.getElementById('notificationToggle');
+            
+            if (notificationOpen && !isProcessingNotification &&
+                !panel.contains(event.target) && 
+                event.target !== toggleBtn && 
+                !toggleBtn.contains(event.target)) {
+                toggleNotification();
+            }
+        });
+
+        // ==================== 雪花效果相关函数 ====================
+        function createSnowflake(x, y) {
+            // 生成随机大小的雪花 (3-8px)
+            const size = Math.random() * 5 + 3;
+            const id = `snowflake-${snowflakeIdCounter++}`;
+            
+            // 创建雪花元素
+            const snowflake = document.createElement('div');
+            snowflake.id = id;
+            snowflake.className = 'snowflake';
+            snowflake.style.width = `${size}px`;
+            snowflake.style.height = `${size}px`;
+            snowflake.style.left = `${x}px`;
+            snowflake.style.top = `${y}px`;
+            snowflake.style.opacity = '1';
+            
+            // 添加到页面
+            document.body.appendChild(snowflake);
+            
+            // 存储雪花信息
+            const snowflakeInfo = {
+                id,
+                element: snowflake,
+                x,
+                y,
+                size,
+                velocityX: (Math.random() - 0.5) * 2, // 水平速度 (-1 到 1)
+                velocityY: Math.random() * 1 + 1,      // 垂直速度 (1 到 2)
+                rotation: Math.random() * 360,         // 初始旋转角度
+                rotationSpeed: (Math.random() - 0.5) * 2 // 旋转速度 (-1 到 1)
+            };
+            
+            snowflakes.push(snowflakeInfo);
+            
+            // 5秒后移除雪花
+            setTimeout(() => {
+                removeSnowflake(id);
+            }, 5000);
+            
+            return snowflakeInfo;
+        }
+
+        function updateSnowflakes() {
+            // 更新所有雪花的位置和状态
+            for (let i = snowflakes.length - 1; i >= 0; i--) {
+                const snowflake = snowflakes[i];
+                
+                // 更新位置
+                snowflake.x += snowflake.velocityX;
+                snowflake.y += snowflake.velocityY;
+                
+                // 更新旋转
+                snowflake.rotation += snowflake.rotationSpeed;
+                
+                // 应用样式
+                snowflake.element.style.left = `${snowflake.x}px`;
+                snowflake.element.style.top = `${snowflake.y}px`;
+                snowflake.element.style.transform = `rotate(${snowflake.rotation}deg)`;
+                
+                // 淡出效果
+                const lifeProgress = 1 - (snowflake.y / window.innerHeight);
+                snowflake.element.style.opacity = lifeProgress > 0 ? lifeProgress : 0;
+                
+                // 如果雪花超出屏幕底部，移除它
+                if (snowflake.y > window.innerHeight) {
+                    removeSnowflake(snowflake.id);
+                }
+            }
+            
+            // 继续更新
+            requestAnimationFrame(updateSnowflakes);
+        }
+
+        function removeSnowflake(id) {
+            // 从数组中移除
+            snowflakes = snowflakes.filter(s => s.id !== id);
+            
+            // 从DOM中移除
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.opacity = '0';
+                setTimeout(() => {
+                    element.remove();
+                }, 300);
+            }
+        }
+
+        function handleClick(event) {
+            // 防止在通知按钮/暗色模式按钮上点击时触发
+            const target = event.target;
+            if (target.closest('#darkModeToggle') || target.closest('#notificationToggle')) {
+                return;
+            }
+            
+            // 在点击位置创建多个雪花 (5-10个)
+            const count = Math.floor(Math.random() * 6) + 5;
+            for (let i = 0; i < count; i++) {
+                // 稍微偏移位置，让雪花散开
+                const offsetX = (Math.random() - 0.5) * 20;
+                const offsetY = (Math.random() - 0.5) * 20;
+                createSnowflake(event.clientX + offsetX, event.clientY + offsetY);
+            }
+        }
+        
         window.onload = async function() {
             // 初始化黑夜模式
             initDarkMode();
@@ -205,8 +407,13 @@
             // 加载Bing壁纸
             await getBingWallpaper();
             
-            // 添加黑夜模式切换事件
+            // 添加事件监听
             document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+            document.getElementById('notificationToggle').addEventListener('click', toggleNotification);
+            
+            // 初始化雪花效果
+            document.addEventListener('click', handleClick);
+            updateSnowflakes();
         };
     </script>
 </head>
@@ -214,23 +421,45 @@
     <!-- Bing壁纸背景 -->
     <div id="bgWallpaper" class="bg-wallpaper"></div>
     
-    <!-- 黑夜模式切换按钮 -->
-    <button id="darkModeToggle" class="dark-mode-toggle" title="切换黑夜模式">
-        <i id="darkModeIcon" class="fa fa-moon-o"></i>
+    <!-- 黑夜模式切换按钮（圆形） -->
+    <button id="darkModeToggle" class="circle-btn right-4" title="切换黑夜模式">
+        <i id="darkModeIcon" class="fa fa-moon-o text-xl"></i>
     </button>
+    
+    <!-- 通知按钮（圆形） -->
+    <button id="notificationToggle" class="circle-btn right-20" title="查看通知">
+        <i id="notificationIcon" class="fa fa-bell text-xl"></i>
+    </button>
+    
+    <!-- 通知栏 - 带青柠起始页风格的倾斜动画 -->
+    <div id="notificationPanel" class="notification-panel">
+        <div class="flex items-start">
+            <div class="bg-red-100 dark:bg-red-900/50 p-2 rounded-full mr-3">
+                <i class="fa fa-info-circle text-red-600 dark:text-red-400"></i>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-1">重要通知</h3>
+                <p class="text-gray-700 dark:text-gray-300 text-sm">由于种种原因，我宣布更新日志不再公开。</p>
+                <button onclick="toggleNotification()" class="mt-3 text-xs text-primary hover:text-primary/80 flex items-center">
+                    <i class="fa fa-times mr-1"></i> 关闭
+                </button>
+            </div>
+        </div>
+    </div>
     
     <div class="container mx-auto px-4 max-w-3xl">
         <!-- 头部区域 -->
         <header class="text-center section-padding">
-            <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg shadow-lg"/>
+            <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg shadow-lg max-w-full h-auto"/>
             <p class="dark-text-secondary text-lg mb-2">开放*创新</p>
             <p class="dark-text-secondary">Client</p>
         </header>
         
         <!-- 下载区域 -->
         <section class="section-padding text-center">
-            <a href="https://github.com/jjjmmmdexh227/jjjmmmdexh/raw/main/Client3.4.apk" 
-               class="btn-primary inline-flex items-center">
+            <!-- 圆形亚克力效果的下载按钮 -->
+            <a href="https://www.123865.com/s/EvgbVv-uvStd" 
+               class="btn-primary inline-flex items-center justify-center">
                 <i class="fa fa-download mr-2"></i> 下载White Client <span class="text-sm text-gray-200">(版本: 3.4)</span>
             </a>
             
@@ -247,9 +476,10 @@
                 </h2>
                 
                 <div class="space-y-4 dark-text">
-                    <div class="flex items-center p-3 dark-contact-item rounded-lg">
-                        <div class="dark-icon-bg p-2 rounded-full mr-3">
-                            <i class="fa fa-qq dark-icon"></i>
+                    <!-- QQ联系方式（统一样式） -->
+                    <div class="flex items-center p-3 dark-contact-item">
+                        <div class="icon-bg">
+                            <i class="fa fa-qq icon-color"></i>
                         </div>
                         <div>
                             <p class="font-medium">QQ</p>
@@ -257,9 +487,10 @@
                         </div>
                     </div>
                     
-                    <div class="flex items-center p-3 dark-contact-item rounded-lg">
-                        <div class="dark-icon-bg p-2 rounded-full mr-3">
-                            <i class="fa fa-envelope dark-icon"></i>
+                    <!-- 邮箱联系方式（统一样式） -->
+                    <div class="flex items-center p-3 dark-contact-item">
+                        <div class="icon-bg">
+                            <i class="fa fa-envelope icon-color"></i>
                         </div>
                         <div>
                             <p class="font-medium">E-MAIL</p>
@@ -267,11 +498,12 @@
                         </div>
                     </div>
                     
-                    <div class="flex items-center p-3 dark-contact-item rounded-lg">
-                        <div class="dark-icon-bg p-2 rounded-full mr-3 flex items-center justify-center">
-                            <!-- Bilibili 小电视 -->
-                            <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .356-.124.657-.373.906l-1.174 1.12zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.789 1.894v7.52c.02.765.283 1.395.789 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.128.789-1.893v-7.52c-.02-.765-.283-1.396-.789-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z" fill="#00A1D6"/>
+                    <!-- Bilibili联系方式（统一颜色样式） -->
+                    <div class="flex items-center p-3 dark-contact-item">
+                        <div class="icon-bg">
+                            <!-- B站图标使用统一的颜色风格 -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-color">
+                                <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .356-.124.657-.373.906l-1.174 1.12zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.789 1.894v7.52c.02.765.283 1.395.789 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.128.789-1.893v-7.52c-.02-.765-.283-1.396-.789-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z" fill="currentColor"/>
                             </svg>
                         </div>
                         <div>
