@@ -1,4 +1,3 @@
-<!--很抱歉我主要使用了ai来包装网站、制作逻辑-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,83 +31,28 @@
                 content-visibility: auto;
             }
             .device-card {
-                @apply bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg;
+                /* 亚克力/毛玻璃效果 */
+                @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-white/20 dark:border-gray-700/20;
             }
             .btn-primary {
-                @apply bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50;
+                @apply bg-primary/90 hover:bg-primary text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 backdrop-blur-sm;
             }
             .section-padding {
                 @apply py-8 md:py-12;
             }
             .contact-card {
-                @apply bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-700 dark:to-gray-600 rounded-xl shadow-md p-6 border border-blue-100 dark:border-gray-600;
-            }
-            .markdown-content {
-                @apply text-gray-700 dark:text-gray-300 space-y-3;
-            }
-            .markdown-content h2 {
-                @apply text-xl font-semibold mt-4 mb-2 text-dark dark:text-gray-200;
-            }
-            .markdown-content h3 {
-                @apply text-lg font-medium mt-3 mb-1 text-dark dark:text-gray-200;
-            }
-            .markdown-content del {
-                @apply text-red-500 dark:text-red-400;
-            }
-            .markdown-content ul {
-                @apply list-disc pl-5;
-            }
-            .markdown-content li {
-                @apply mb-1;
-            }
-            .markdown-content .version {
-                @apply bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded text-sm font-medium;
-            }
-            .markdown-content .fix {
-                @apply text-green-600 dark:text-green-400 font-medium;
-            }
-            .markdown-content .emergency {
-                @apply text-red-600 dark:text-red-400 font-semibold;
-            }
-            .markdown-content .feature {
-                @apply text-purple-600 dark:text-purple-400;
-            }
-            .changelog-content {
-                height: 0;
-                overflow: hidden;
-                transform-origin: top;
-                transform: scaleY(0);
-                opacity: 0;
-                transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                           transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                           opacity 0.3s ease-out;
-                will-change: height, transform, opacity;
-            }
-            .changelog-content.open {
-                transform: scaleY(1);
-                opacity: 1;
-                transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                           transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                           opacity 0.3s ease-in;
-            }
-            .changelog-content.animating {
-                will-change: height, transform, opacity;
-            }
-            
-            /* 黑夜模式下的图片处理 */
-            .dark img {
-                filter: brightness(0.8) contrast(1.1);
-                background: transparent !important;
+                /* 亚克力/毛玻璃效果 */
+                @apply bg-gradient-to-r from-blue-50/80 to-indigo-50/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-xl shadow-md p-6 border border-blue-100/30 dark:border-gray-600/30;
             }
             
             /* 黑夜模式切换按钮样式 */
             .dark-mode-toggle {
-                @apply fixed top-4 right-4 z-50 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-600;
+                @apply fixed top-4 right-4 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-800 dark:text-gray-200 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/30 dark:border-gray-600/30;
             }
             
             /* 黑夜模式下的背景和文字颜色 */
             .dark-bg {
-                @apply bg-gray-50 dark:bg-gray-900;
+                @apply bg-gray-50 dark:bg-gray-900 transition-colors duration-300;
             }
             
             .dark-text {
@@ -120,19 +64,45 @@
             }
             
             .dark-info-bg {
-                @apply bg-gray-50 dark:bg-gray-700;
+                /* 亚克力/毛玻璃效果 */
+                @apply bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-md;
             }
             
             .dark-contact-item {
-                @apply bg-white dark:bg-gray-700 shadow-sm dark:shadow-gray-800;
+                /* 亚克力/毛玻璃效果 */
+                @apply bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm shadow-sm dark:shadow-gray-800 border border-white/20 dark:border-gray-800/20;
             }
             
             .dark-icon-bg {
-                @apply bg-blue-100 dark:bg-blue-800;
+                @apply bg-blue-100/80 dark:bg-blue-800/80 backdrop-blur-sm;
             }
             
             .dark-icon {
                 @apply text-blue-600 dark:text-blue-300;
+            }
+            
+            /* 背景壁纸样式 */
+            .bg-wallpaper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                filter: brightness(0.85) contrast(1.05);
+                transition: filter 0.5s ease;
+            }
+            
+            .dark .bg-wallpaper {
+                filter: brightness(0.7) contrast(1.1);
+            }
+            
+            /* 壁纸信息卡片样式 */
+            .wallpaper-info {
+                @apply bg-black/60 backdrop-blur-md text-white p-4 rounded-lg text-sm md:text-base max-w-3xl mx-auto mt-6 mb-8;
             }
         }
     </style>
@@ -153,6 +123,7 @@
             }
             
             updateToggleIcon();
+            updateWallpaperFilter(); // 更新壁纸滤镜
         }
         
         function toggleDarkMode() {
@@ -167,6 +138,7 @@
             }
             
             updateToggleIcon();
+            updateWallpaperFilter(); // 更新壁纸滤镜
         }
         
         function updateToggleIcon() {
@@ -178,211 +150,60 @@
             }
         }
         
-        // 生成设备唯一标识 (浏览器指纹)
-        function generateDeviceFingerprint() {
-            // 收集浏览器和设备信息作为指纹
-            const fingerPrintSources = [
-                navigator.userAgent,
-                navigator.language,
-                navigator.platform,
-                screen.width + 'x' + screen.height,
-                screen.colorDepth,
-                typeof localStorage,
-                typeof sessionStorage,
-                navigator.hardwareConcurrency,
-                navigator.deviceMemory
-            ];
+        // 更新壁纸滤镜效果
+        function updateWallpaperFilter() {
+            const wallpaper = document.getElementById('bgWallpaper');
+            if (!wallpaper) return;
             
-            // 简单哈希函数生成唯一标识
-            function simpleHash(str) {
-                let hash = 0;
-                for (let i = 0; i < str.length; i++) {
-                    const char = str.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + char;
-                    hash = hash & hash; // 转换为32位整数
-                }
-                return Math.abs(hash).toString(16);
-            }
-            
-            return simpleHash(fingerPrintSources.join('|'));
+            const isDark = document.documentElement.classList.contains('dark');
+            wallpaper.style.filter = isDark ? 'brightness(0.7) contrast(1.1)' : 'brightness(0.85) contrast(1.05)';
         }
-
-        // IP获取API列表
-        const IP_API_LIST = [
-            'https://api.ipify.org?format=json',
-            'https://ipapi.co/json/',
-            'https://ipinfo.io/json'
-        ];
         
-        async function getClientIP(retries = 2, delay = 1000) {
-            for (const api of IP_API_LIST) {
-                try {
-                    const response = await fetch(api);
-                    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+        // 获取每日Bing壁纸
+        async function getBingWallpaper() {
+            try {
+                // 使用跨域代理获取Bing壁纸API
+                const response = await fetch('https://bing.biturl.top/?resolution=1920&format=json&index=0&mkt=zh-CN');
+                
+                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+                
+                const data = await response.json();
+                
+                if (data && data.url) {
+                    // 设置背景壁纸
+                    const wallpaper = document.getElementById('bgWallpaper');
+                    wallpaper.style.backgroundImage = `url(${data.url})`;
                     
-                    const data = await response.json();
-                    const ip = data.ip || data.ip_address;
-                    if (ip) return ip;
-                } catch (error) {
-                    console.log(`API ${api} 调用失败:`, error.message);
-                    if (retries > 0) {
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        retries--;
+                    // 设置壁纸信息
+                    const infoElement = document.getElementById('wallpaperInfo');
+                    if (infoElement && data.copyright) {
+                        infoElement.innerHTML = `
+                            <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
+                            <p>${data.copyright}</p>
+                            ${data.copyrightLink ? `<p class="mt-2"><a href="${data.copyrightLink}" target="_blank" class="text-blue-300 hover:text-blue-200 underline">查看原图</a></p>` : ''}
+                        `;
                     }
                 }
-            }
-            throw new Error('所有IP获取接口失败');
-        }
-        
-        // 检查是否为重复访问（防刷检测）
-        function checkDuplicateVisit(deviceId, ip) {
-            const visitsKey = 'validVisits';
-            let visits = JSON.parse(localStorage.getItem(visitsKey) || '[]');
-            
-            // 检查过去24小时内是否有相同设备或IP的访问
-            const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
-            const recentVisits = visits.filter(visit => visit.timestamp > oneDayAgo);
-            
-            // 检查设备ID或IP是否已存在
-            const isDuplicate = recentVisits.some(visit => 
-                visit.deviceId === deviceId || (ip && visit.ip === ip)
-            );
-            
-            // 记录新访问（如果不是重复的）
-            if (!isDuplicate) {
-                visits.push({
-                    deviceId,
-                    ip,
-                    timestamp: Date.now()
-                });
-                localStorage.setItem(visitsKey, JSON.stringify(visits));
-            }
-            
-            return isDuplicate;
-        }
-        
-        // 获取唯一访客数量
-        function getUniqueVisitorsCount() {
-            const visitsKey = 'validVisits';
-            const visits = JSON.parse(localStorage.getItem(visitsKey) || '[]');
-            const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
-            
-            // 过滤出24小时内的有效访问
-            const recentVisits = visits.filter(visit => visit.timestamp > oneDayAgo);
-            
-            // 使用Set收集唯一设备ID
-            const uniqueDevices = new Set();
-            recentVisits.forEach(visit => uniqueDevices.add(visit.deviceId));
-            
-            return uniqueDevices.size;
-        }
-        
-        // 获取当前设备的访问次数
-        function getDeviceVisitCount(deviceId) {
-            const visitsKey = 'validVisits';
-            const visits = JSON.parse(localStorage.getItem(visitsKey) || '[]');
-            return visits.filter(visit => visit.deviceId === deviceId).length;
-        }
-        
-        // 切换更新日志的展开/折叠状态
-        function toggleChangelog() {
-            const content = document.getElementById('changelogContent');
-            const button = document.getElementById('changelogToggle');
-            const icon = document.getElementById('changelogIcon');
-            
-            // 添加动画状态类
-            content.classList.add('animating');
-            
-            if (content.classList.contains('open')) {
-                // 折叠动画
-                content.style.height = content.scrollHeight + 'px';
-                // 强制重绘
-                content.offsetHeight;
-                content.style.height = '0px';
-                content.classList.remove('open');
+            } catch (error) {
+                console.error('获取Bing壁纸失败:', error);
+                // 备用壁纸
+                const wallpaper = document.getElementById('bgWallpaper');
+                wallpaper.style.backgroundImage = 'url(https://picsum.photos/1920/1080?random=1)';
                 
-                button.textContent = '展开更新日志';
-                icon.className = 'fa fa-chevron-down ml-2';
-            } else {
-                // 展开动画
-                content.classList.add('open');
-                content.style.height = content.scrollHeight + 'px';
-                
-                button.textContent = '收起更新日志';
-                icon.className = 'fa fa-chevron-up ml-2';
+                const infoElement = document.getElementById('wallpaperInfo');
+                infoElement.innerHTML = `
+                    <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
+                    <p>每日Bing壁纸加载失败，显示备用壁纸</p>
+                `;
             }
-            
-            // 动画完成后清理
-            setTimeout(() => {
-                content.classList.remove('animating');
-                if (content.classList.contains('open')) {
-                    content.style.height = 'auto';
-                }
-            }, 400);
         }
         
         window.onload = async function() {
             // 初始化黑夜模式
             initDarkMode();
             
-            // 生成设备唯一标识
-            const deviceId = generateDeviceFingerprint();
-            let clientIP = null;
-            let isDuplicate = false;
-            
-            try {
-                // 获取IP地址
-                clientIP = await getClientIP();
-                
-                // 检查是否为重复访问
-                isDuplicate = checkDuplicateVisit(deviceId, clientIP);
-                
-                // 更新显示信息
-                const uniqueVisitors = getUniqueVisitorsCount();
-                const deviceVisits = getDeviceVisitCount(deviceId);
-                
-                document.getElementById('viewCount').textContent = `今日浏览人数: ${uniqueVisitors}`;
-                document.getElementById('ipInfo').textContent = `您的IP: ${clientIP}`;
-                document.getElementById('deviceId').textContent = `设备标识: ${deviceId.substring(0, 12)}...`;
-                document.getElementById('visitCount').textContent = `本设备今日访问: ${deviceVisits} 次`;
-                
-                // 显示防刷检测结果
-                const antiSpamResult = document.getElementById('antiSpamResult');
-                if (isDuplicate) {
-                    antiSpamResult.innerHTML = '<i class="fa fa-exclamation-triangle text-yellow-500"></i> 检测到重复访问，本次不计入统计';
-                    antiSpamResult.className = 'text-yellow-500 font-medium mt-2';
-                } else {
-                    antiSpamResult.innerHTML = '<i class="fa fa-check-circle text-green-500"></i> 验证通过，正常访问';
-                    antiSpamResult.className = 'text-green-500 font-medium mt-2';
-                }
-                
-            } catch (error) {
-                console.error('获取IP失败:', error);
-                
-                // IP获取失败时，仅使用设备ID进行防刷检测
-                isDuplicate = checkDuplicateVisit(deviceId, null);
-                
-                const uniqueVisitors = getUniqueVisitorsCount();
-                const deviceVisits = getDeviceVisitCount(deviceId);
-                
-                document.getElementById('viewCount').textContent = `今日浏览人数: ${uniqueVisitors}`;
-                document.getElementById('ipInfo').textContent = "IP检测服务暂时不可用";
-                document.getElementById('deviceId').textContent = `设备标识: ${deviceId.substring(0, 12)}...`;
-                document.getElementById('visitCount').textContent = `本设备今日访问: ${deviceVisits} 次`;
-                
-                // 显示防刷检测结果
-                const antiSpamResult = document.getElementById('antiSpamResult');
-                if (isDuplicate) {
-                    antiSpamResult.innerHTML = '<i class="fa fa-exclamation-triangle text-yellow-500"></i> 检测到重复访问，本次不计入统计';
-                    antiSpamResult.className = 'text-yellow-500 font-medium mt-2';
-                } else {
-                    antiSpamResult.innerHTML = '<i class="fa fa-check-circle text-green-500"></i> 验证通过，正常访问';
-                    antiSpamResult.className = 'text-green-500 font-medium mt-2';
-                }
-            }
-            
-            // 添加更新日志切换事件
-            document.getElementById('changelogToggle').addEventListener('click', toggleChangelog);
+            // 加载Bing壁纸
+            await getBingWallpaper();
             
             // 添加黑夜模式切换事件
             document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
@@ -390,6 +211,9 @@
     </script>
 </head>
 <body class="dark-bg min-h-screen font-sans transition-colors duration-300">
+    <!-- Bing壁纸背景 -->
+    <div id="bgWallpaper" class="bg-wallpaper"></div>
+    
     <!-- 黑夜模式切换按钮 -->
     <button id="darkModeToggle" class="dark-mode-toggle" title="切换黑夜模式">
         <i id="darkModeIcon" class="fa fa-moon-o"></i>
@@ -398,228 +222,20 @@
     <div class="container mx-auto px-4 max-w-3xl">
         <!-- 头部区域 -->
         <header class="text-center section-padding">
-            <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto"/>
+            <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg shadow-lg"/>
             <p class="dark-text-secondary text-lg mb-2">开放*创新</p>
             <p class="dark-text-secondary">Client</p>
         </header>
-        
-        <!-- 设备信息与防刷区域 -->
-        <section class="section-padding">
-            <div class="device-card">
-                <h2 class="text-xl font-semibold text-dark dark:text-gray-200 mb-4 flex items-center">
-                    <i class="fa fa-shield text-primary mr-2"></i>测试
-                </h2>
-                
-                <div class="space-y-3 dark-text">
-                    <p id="viewCount" class="p-2 dark-info-bg rounded-lg"></p>
-                    <p id="ipInfo" class="p-2 dark-info-bg rounded-lg"></p>
-                    <p id="deviceId" class="p-2 dark-info-bg rounded-lg text-sm"></p>
-                    <p id="visitCount" class="p-2 dark-info-bg rounded-lg"></p>
-                    <div id="antiSpamResult"></div>
-                </div>
-                
-                <div class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                    <p><i class="fa fa-info-circle mr-1"></i> 验证</p>
-                    <p><i class="fa fa-clock-o mr-1"></i> 每日统计数据按24小时周期更新</p>
-                </div>
-            </div>
-        </section>
         
         <!-- 下载区域 -->
         <section class="section-padding text-center">
             <a href="https://github.com/jjjmmmdexh227/jjjmmmdexh/raw/main/Client3.4.apk" 
                class="btn-primary inline-flex items-center">
-                <i class="fa fa-download mr-2"></i> 下载White Client <span class="text-sm text-gray-400">(版本: 3.4)</span>
+                <i class="fa fa-download mr-2"></i> 下载White Client <span class="text-sm text-gray-200">(版本: 3.4)</span>
             </a>
             
             <div class="mt-6 text-gray-600 dark:text-gray-400 text-sm">
                 <p>jjjmmmdexh制作</p>
-            </div>
-        </section>
-        
-        <!-- 更新日志区域 -->
-        <section class="section-padding">
-            <div class="device-card">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-semibold text-dark dark:text-gray-200 flex items-center">
-                        <i class="fa fa-history text-primary mr-2"></i>更新日志
-                    </h2>
-                    <button id="changelogToggle" class="text-primary hover:text-primary/80 font-medium flex items-center">
-                        展开更新日志 <i id="changelogIcon" class="fa fa-chevron-down ml-2"></i>
-                    </button>
-                </div>
-                
-                <div id="changelogContent" class="changelog-content mt-4">
-                    <div class="markdown-content">
-                        <h2>主要更改</h2>
-                        <ul>
-                            <li><del>1. 文字颜色变换</del></li>
-                            <li>2. 新版方块材质</li>
-                            <li>3. jjjmmmdexh的jsonui v4.1</li>
-                            <li><del>4. 更好的渐变水(去除黑白色更明显)</del></li>
-                            <li>5. 更好的天空</li>
-                            <li>6. 更容易看清的实体(亮度较高)</li>
-                            <li>7. 更少的材质更改</li>
-                            <li>9. 去粒子🌰</li>
-                            <li>10. 更好的云☁️</li>
-                            <li><del>11. 添加临近的基层雾🌫️</del></li>
-                            <li>12. 现在生物会更容易被发现</li>
-                            <li>13. 新的 start_screen                        _</li>
-                            <li>14. 重新优化了植物摇晃效果，虽然很保守</li>
-                            <li><del>15.  文言文语言(by xigua&Sprouts) </del></li>
-                            <li>16. 修复了附魔台的崩溃(原因：贴图丢失，<span class="fix">A-1</span>)</li>
-                            <li><del>17. 恢复了current color(<span class="fix">B-0</span>)</del></li>
-                            <li>18. 重写了摇晃效果，具有随机性(<span class="fix">C-1</span>)</li>
-                            <li><del>19. 雷现在可被透视</del></li>
-                            <li>20. 完全去除了粒子</li>
-                            <li>21. 更好的云☁️</li>
-                            <li><del>22. 新的加载动画</del></li>
-                            <li>23. 重置了摇晃效果</li>
-                            <li>24. 新增手部 ITEM_IN_HAND修改缩放(于原来的0.8)</li>
-                            <li><del>25. 新增开关文本辅助显示（第二次修改于-2025117）</del></li>
-                            <li>26. 修复了部分文本显示问题(<span class="fix">A-2</span>)</li>
-                            <li>27. 优化了界面布局</li>
-                            <li>28. 新增快捷键支持</li>
-                            <li>29. 改进了性能表现</li>
-                            <li>30. 修复了兼容性问题</li>
-                            <li>31. 新增多语言支持</li>
-                            <li>32. 优化了用户体验</li>
-                            <li>33. 修复了已知bug</li>
-                            <li>34. 新增自定义选项</li>
-                            <li>35. 改进了稳定性</li>
-                            <li>36. 优化了加载速度</li>
-                            <li>37. 新增帮助文档</li>
-                            <li>38. 修复了显示错误</li>
-                            <li>39. 改进了操作流程</li>
-                            <li>40. 新增备份功能</li>
-                            <li>41. 优化了内存使用</li>
-                            <li>42. 修复了崩溃问题</li>
-                            <li>43. 新增导出功能</li>
-                            <li>44. 改进了安全性</li>
-                            <li>45. 优化了界面响应</li>
-                            <li>46. 修复了数据丢失</li>
-                            <li>47. 新增同步功能</li>
-                            <li>48. 改进了错误处理</li>
-                            <li>49. 优化了网络连接</li>
-                            <li>50. 修复了权限问题</li>
-                            <li>51. 新增通知功能</li>
-                            <li>52. 改进了搜索功能</li>
-                            <li>53. 优化了数据库</li>
-                            <li>54. 修复了编码问题</li>
-                            <li>55. 新增分享功能</li>
-                            <li>56. 改进了缓存机制</li>
-                            <li>57. 优化了启动时间</li>
-                            <li>58. 修复了内存泄漏</li>
-                            <li>59. 新增统计功能</li>
-                            <li>60. 改进了日志记录</li>
-                            <li>61. 优化了文件管理</li>
-                            <li>62. 修复了路径错误</li>
-                            <li>63. 新增预览功能</li>
-                            <li>64. 改进了版本控制</li>
-                            <li>65. 优化了配置管理</li>
-                            <li>66. 修复了格式问题</li>
-                            <li>67. 新增批处理功能</li>
-                            <li>68. 改进了插件系统</li>
-                            <li>69. 优化了主题支持</li>
-                            <li>70. 修复了样式冲突</li>
-                            <li>71. 新增快速操作</li>
-                            <li>72. 改进了拖拽功能</li>
-                            <li>73. 优化了键盘导航</li>
-                            <li>74. 修复了焦点问题</li>
-                            <li>75. 新增无障碍支持</li>
-                            <li>76. 改进了响应式设计</li>
-                            <li>77. 优化了触摸操作</li>
-                            <li>78. 修复了滚动问题</li>
-                            <li>79. 新增手势支持</li>
-                            <li>80. 改进了动画效果</li>
-                            <li>81. 优化了过渡效果</li>
-                            <li>82. 修复了闪烁问题</li>
-                            <li>83. 新增视觉反馈</li>
-                            <li>84. 改进了加载指示</li>
-                            <li>85. 优化了错误提示</li>
-                            <li>86. 修复了提示位置</li>
-                            <li>87. 新增进度显示</li>
-                            <li>88. 改进了状态管理</li>
-                            <li>89. 优化了事件处理</li>
-                            <li>90. 修复了事件冲突</li>
-                            <li>91. 新增快捷菜单</li>
-                            <li>92. 改进了上下文菜单</li>
-                            <li>93. 优化了工具栏</li>
-                            <li>94. 修复了按钮状态</li>
-                            <li>95. 新增工具提示</li>
-                            <li>96. 改进了帮助系统</li>
-                            <li>97. 优化了文档结构</li>
-                            <li>98. 修复了链接错误</li>
-                            <li>99. 新增示例代码</li>
-                            <li>100. 改进了API文档</li>
-                            <li>101. 优化了代码注释</li>
-                            <li>102. 修复了类型定义</li>
-                            <li>103. 新增单元测试</li>
-                            <li>104. 改进了测试覆盖</li>
-                            <li>105. 优化了构建流程</li>
-                            <li>106. 修复了依赖问题</li>
-                            <li>107. 新增自动化测试</li>
-                            <li>108. 改进了持续集成</li>
-                            <li>109. 优化了部署流程</li>
-                            <li>110. 修复了环境配置</li>
-                            <li>111. 新增监控功能</li>
-                            <li>112. 改进了日志分析</li>
-                            <li>113. 优化了性能监控</li>
-                            <li>114. 修复了内存监控</li>
-                            <li>115. 新增错误追踪</li>
-                            <li>116. 改进了调试工具</li>
-                            <li>117. 优化了开发体验</li>
-                            <li>118. 修复了热重载</li>
-                            <li>119. 新增代码分割</li>
-                            <li>120. 微调部分按钮</li>
-                            <li>121. 去除水面像素化</li>
-                            <li>122. 彩色屏幕变换</li>
-                            <li>123. 面板文字按钮可触摸上下移动</li>
-                            <li>124. 背包中的物品现在是高精度＋抗锯齿的了</li>
-                            <li>125. 强制使用东亚字体宽度（瘦体），使用了高清的字体</li>
-                            <li>126. 对高清字体有部分小修复，其实就是增加宽度（不能完全解决问题）</li>
-                            <li>127. 修复了选择繁体、日本语时崩溃的问题（<span class="fix">A-3</span>）</li>
-                            <li>128. 恢复了更多语言（<span class="fix">B-9</span>）</li>
-                            <li>129. 太阳2°/s旋转</li>
-                        </ul>
-                        
-                        <h2 class="version">1.3版本数据库与面板更新</h2>
-                        <ul>
-                            <li>130. 去除在床上睡觉时的遮罩(方法名_ZN24FullScreenEffectRenderer19_renderSleepOverlayERK6Player,使用nop代替 bl &lt;_ZNK3mce4Mesh6renderERKNS_11MaterialPtrEjj&gt; ;#0x2d84bc)</li>
-                            <li>131. 在聊天界面时玩家受伤不会返回（方法名：_ZNK10ChatScreen17closeOnPlayerHurtEv中movs r0, #1改为movs r0, #0）</li>
-                            <li>132. 修复了伤害吸收生命值显示在生命条的下方的问题（hex编辑器：偏移：0x3113e8，改为：cdccbcbd）(<span class="fix">A-4</span>)</li>
-                            <li>133. 创造模式显示生命值（方法_ZN16HudHeartRenderer6renderER15MinecraftClientRSt10shared_ptrI9UIControlEi中bl &lt;_ZNK6Player10IsCreativeEv&gt; ;#0x513e7c下面第3行改为nop.w）</li>
-                            <li>134. 真＊夜视</li>
-                            <li>135. [最重要的更新]为游戏实现计时器的功能</li>
-                            <li>136. 可能修复了一切字体问题（？）</li>
-                            <li>137. 去除了部分语言</li>
-                            <li>138. 强制疾跑，仅单人</li>
-                            <li>139. 自定义准星beta</li>
-                            <li>140.gui盔甲问题修复</li>
-                            <li>141.新音效</li>
-                            <li>142.受伤无抖动（_ZN13LevelRenderer7bobHurtER6Matrixf其中 _ ble &lt;@this+20&gt; ;#4629364 改 b &lt;@this+20&gt; ;#4629364 或者 hex修改 0x46a398 002bebdd改002bebe7</li>
-                            <li>143. 水下透视（需要先进入水下再出来）</li>
-                            <li>144. 新的主界面</li>
-                            <li>145. 9x9自定义准星界面</li>
-                            <li>146. 物品名称辅助显示</li>
-                            <li>147. 物品名称向左对齐（_ZN6Screen26renderOnSelectItemNameTextEiP4Fonti，两个sub.w r2, r6, fp, asr #1都改为mov r2, r6）_</li>
-                            <li>148. 新开始屏幕</li>
-                            <li>149. 现在cancel_toggle可以正确使用</li>
-                            <li>150. 为show添加第2页，并添加第一页和第二页的图标</li>
-                            <li>151. 禁用使用物品时的减速效果，服务器可用，目前危险性未知，未被制裁</li>
-                            <li>152. 修复面板中的自定义准星预览在其它面板页面可见的问题，详见hud_screen.json中fix注释</li>
-                            <li>153. 音乐测试（在面板中）</li>
-                            <li>154. 修复了辅助瞄准准星与快捷准星冲突的问题(<span class="fix">C-12</span>)[Tips:如何关闭辅助准星呢？最好的方法就是在快捷准星栏选择你喜欢的准星即可]</li>
-                            <li>155. 高级隐藏</li>
-                            <li>156. 修复部分译名问题(<span class="fix">C-13</span>)</li>
-                            <li>157. 修复着色器适配性问题(<span class="fix">C-14</span>)</li>
-                            <li>158. 添加hud界面欢迎提示</li>
-                            <li>159. 开关实体透视</li>
-                            <li>160. 使用极其高清的字体</li>
-                            <li>161. 去除了矿物高亮</li>
-                        </ul>
-                    </div>
-                </div>
             </div>
         </section>
         
@@ -653,7 +269,7 @@
                     
                     <div class="flex items-center p-3 dark-contact-item rounded-lg">
                         <div class="dark-icon-bg p-2 rounded-full mr-3 flex items-center justify-center">
-                            <!-- Bilibili 小电视 abab -->
+                            <!-- Bilibili 小电视 -->
                             <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .356-.124.657-.373.906l-1.174 1.12zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.789 1.894v7.52c.02.765.283 1.395.789 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.128.789-1.893v-7.52c-.02-.765-.283-1.396-.789-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z" fill="#00A1D6"/>
                             </svg>
@@ -670,6 +286,14 @@
             </div>
         </section>
         
+        <!-- 壁纸信息区域 -->
+        <section class="px-4">
+            <div id="wallpaperInfo" class="wallpaper-info">
+                <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
+                <p>加载中...</p>
+            </div>
+        </section>
+        
         <!-- 底部区域 -->
         <footer class="py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
             <p>All things by jjjmmmdexh</p>
@@ -677,4 +301,3 @@
     </div>
 </body>
 </html>
-
