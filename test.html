@@ -619,7 +619,7 @@
         function handleClick(event) {
             // 防止在按钮上点击时触发雪花效果
             const target = event.target;
-            if (target.closest('#darkModeToggle') || target.closest('#notificationToggle') || target.closest('#timeDisplay')) {
+            if (target.closest('#darkModeToggle') || target.closest('#notificationToggle') || target.closest('#timeDisplay') || target.closest('#githubToggle')) {
                 return;
             }
             
@@ -710,7 +710,6 @@
                 altText.className = 'text-center py-8';
                 altText.innerHTML = `
                     <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">White Client</h1>
-                    <p class="text-gray-600 dark:text-gray-300">开放*创新</p>
                 `;
                 parent.appendChild(altText);
             }
@@ -756,13 +755,18 @@
         00:00:00
     </button>
     
+    <!-- GitHub仓库按钮（右上角）- 亚克力效果 -->
+    <a href="https://github.com/jjjmmmdexh227/jjjmmmdexh/tree/main" target="_blank" id="githubToggle" class="circle-btn right-40" title="前往GitHub仓库">
+        <i class="fa fa-github text-xl"></i>
+    </a>
+    
     <!-- 黑夜模式切换按钮（右上角）- 亚克力效果 -->
-    <button id="darkModeToggle" class="circle-btn right-4" title="切换黑夜模式">
+    <button id="darkModeToggle" class="circle-btn right-28" title="切换黑夜模式">
         <i id="darkModeIcon" class="fa fa-moon-o text-xl"></i>
     </button>
     
     <!-- 通知按钮（右上角）- 亚克力效果 -->
-    <button id="notificationToggle" class="circle-btn right-20" title="查看通知">
+    <button id="notificationToggle" class="circle-btn right-16" title="查看通知">
         <i id="notificationIcon" class="fa fa-bell text-xl"></i>
     </button>
     
@@ -792,8 +796,6 @@
                 <!-- 鼠标跟随的照亮效果层 -->
                 <div class="title-light"></div>
             </div>
-            <p class="dark-text-secondary text-lg mb-2">开放*创新</p>
-            <p class="dark-text-secondary">Client</p>
         </header>
         
         <!-- 下载区域 -->
