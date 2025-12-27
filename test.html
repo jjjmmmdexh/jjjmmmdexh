@@ -36,18 +36,7 @@
             }
             .btn-primary {
                 /* 亚克力下载按钮 - 调整透明度+圆形 */
-                @apply bg-gradient-to-br from-primary/60 to-primary/40 hover:from-primary/70 hover:to-primary/50 text-white font-medium py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 backdrop-blur-lg border border-white/20 dark:border-primary/30;
-            }
-            
-            /* 响应式下载按钮 */
-            @media (max-width: 640px) {
-                .btn-primary {
-                    @apply py-2 px-4 text-sm;
-                }
-                
-                .btn-primary span {
-                    display: none;
-                }
+                @apply bg-primary/70 hover:bg-primary/80 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 backdrop-blur-md border border-white/20 dark:border-primary/30;
             }
             .section-padding {
                 @apply py-8 md:py-12;
@@ -59,31 +48,15 @@
             
             /* 圆形按钮样式（时间+黑夜模式+通知按钮）- 亚克力效果 */
             .circle-btn {
-                @apply fixed top-4 z-50 bg-gradient-to-br from-white/70 to-white/40 dark:from-gray-800/70 dark:to-gray-700/40 backdrop-blur-lg text-gray-800 dark:text-gray-200 w-12 h-12 flex items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-white/30 dark:border-gray-600/30;
-            }
-            
-            /* 响应式圆形按钮大小 */
-            @media (max-width: 640px) {
-                .circle-btn {
-                    @apply w-10 h-10;
-                }
+                @apply fixed top-4 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-800 dark:text-gray-200 w-12 h-12 flex items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/30 dark:border-gray-600/30;
             }
             
             /* 时间显示按钮特殊样式 */
             .time-btn {
                 @apply font-mono text-sm md:text-base tracking-wider;
-                min-width: 100px;
+                min-width: 120px;
                 width: auto;
-                padding: 0 0.75rem;
-            }
-            
-            /* 响应式时间按钮 */
-            @media (max-width: 640px) {
-                .time-btn {
-                    min-width: 80px;
-                    padding: 0 0.5rem;
-                    font-size: 0.75rem;
-                }
+                padding: 0 1rem;
             }
             
             /* 通知栏样式 - 青柠起始页倾斜动画效果 */
@@ -220,68 +193,15 @@
                 width: 100%;
                 height: 100%;
                 pointer-events: none;
-                background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), 
-                    rgba(255, 255, 255, 0.4) 0%, 
-                    rgba(255, 255, 255, 0.2) 20%, 
-                    rgba(255, 255, 255, 0) 70%);
+                background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 60%);
                 border-radius: inherit;
                 opacity: 0;
-                transition: opacity 0.2s ease;
-                /* 添加发光效果 */
-                box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+                transition: opacity 0.3s ease;
             }
             
             /* 修复：使用JS控制显示，而不是CSS hover */
             .title-light.active {
                 opacity: 1;
-            }
-            
-            /* 按钮范围光源效果容器 */
-            .light-container {
-                position: relative;
-                display: inline-block;
-                overflow: hidden;
-            }
-            
-            /* 按钮鼠标跟随的照亮效果 */
-            .btn-light {
-                position: absolute;
-                width: 200px;
-                height: 200px;
-                pointer-events: none;
-                background: radial-gradient(circle at center, 
-                    rgba(255, 255, 255, 0.4) 0%, 
-                    rgba(255, 255, 255, 0.2) 30%, 
-                    rgba(255, 255, 255, 0) 70%);
-                border-radius: 50%;
-                opacity: 0;
-                transition: opacity 0.2s ease;
-                transform: translate(-50%, -50%);
-                z-index: 1;
-            }
-            
-            /* 按钮光源激活状态 */
-            .btn-light.active {
-                opacity: 1;
-            }
-            
-            /* 全局防止文本选择和拖动 */
-            * {
-                user-select: none !important;
-                -webkit-user-select: none !important;
-                -moz-user-select: none !important;
-                -ms-user-select: none !important;
-                pointer-events: auto !important;
-            }
-            
-            /* 链接仍然可以点击，但不能拖动 */
-            a[draggable="false"] {
-                pointer-events: auto !important;
-            }
-            
-            /* 按钮元素仍然可以点击 */
-            button, [role="button"] {
-                pointer-events: auto !important;
             }
         }
     </style>
@@ -378,7 +298,7 @@
                         infoElement.innerHTML = `
                             <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
                             <p>${copyright}</p>
-                            ${copyrightLink ? `<p class="mt-2"><a href="${copyrightLink}" target="_blank" class="text-blue-300 hover:text-blue-200 underline" draggable="false" oncontextmenu="return false;" onselectstart="return false;">查看原图</a></p>` : ''}
+                            ${copyrightLink ? `<p class="mt-2"><a href="${copyrightLink}" target="_blank" class="text-blue-300 hover:text-blue-200 underline">查看原图</a></p>` : ''}
                         `;
                     }
                     
@@ -550,61 +470,6 @@
                     isMouseOverTitle = false;
                     titleLight.classList.remove('active');
                 }
-            });
-        }
-        
-        // 初始化按钮范围光源效果
-        function initButtonLightEffects() {
-            const lightContainers = document.querySelectorAll('.light-container');
-            
-            lightContainers.forEach(container => {
-                const btnLight = container.querySelector('.btn-light');
-                if (!btnLight) return;
-                
-                // 确保按钮内容在光源之上
-                const buttonContent = container.querySelector('button, a');
-                if (buttonContent) {
-                    buttonContent.style.position = 'relative';
-                    buttonContent.style.zIndex = '2';
-                }
-                
-                // 鼠标进入按钮区域
-                container.addEventListener('mouseenter', function() {
-                    btnLight.classList.add('active');
-                });
-                
-                // 鼠标在按钮区域移动
-                container.addEventListener('mousemove', function(e) {
-                    if (!btnLight.classList.contains('active')) {
-                        btnLight.classList.add('active');
-                    }
-                    
-                    const rect = container.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    
-                    // 设置光源位置
-                    btnLight.style.left = `${x}px`;
-                    btnLight.style.top = `${y}px`;
-                });
-                
-                // 鼠标离开按钮区域
-                container.addEventListener('mouseleave', function() {
-                    btnLight.classList.remove('active');
-                });
-                
-                // 防止快速移动时可能丢失事件
-                container.addEventListener('mouseout', function(e) {
-                    // 检查鼠标是否真的离开了容器
-                    const rect = container.getBoundingClientRect();
-                    const x = e.clientX;
-                    const y = e.clientY;
-                    
-                    // 如果鼠标位置在容器外部
-                    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
-                        btnLight.classList.remove('active');
-                    }
-                });
             });
         }
         
@@ -816,9 +681,6 @@
             // 初始化标题鼠标跟随效果
             initTitleLightEffect();
             
-            // 初始化按钮范围光源效果
-            initButtonLightEffects();
-            
             // 加载Bing壁纸（不阻塞页面加载）
             getBingWallpaper().catch(error => {
                 console.error('壁纸加载失败:', error);
@@ -841,18 +703,15 @@
             console.warn('图片加载失败:', img.src);
             img.style.display = 'none';
             
-            // 显示替代文本 - 确保只添加一次
+            // 显示替代文本
             const parent = img.parentElement;
             if (parent && parent.classList.contains('title-container')) {
-                // 检查是否已经添加过替代文本
-                if (!parent.querySelector('.error-alternative')) {
-                    const altText = document.createElement('div');
-                    altText.className = 'error-alternative text-center py-8';
-                    altText.innerHTML = `
-                        <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">White Client</h1>
-                    `;
-                    parent.appendChild(altText);
-                }
+                const altText = document.createElement('div');
+                altText.className = 'text-center py-8';
+                altText.innerHTML = `
+                    <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">White Client</h1>
+                `;
+                parent.appendChild(altText);
             }
         }
         
@@ -892,31 +751,27 @@
     <div id="bgWallpaper" class="bg-wallpaper"></div>
     
     <!-- 时间显示按钮（左上角）- 亚克力效果 -->
-    <div class="light-container circle-btn left-4 time-btn md:left-6" style="border-radius: 50%;">
-        <button id="timeDisplay" class="w-full h-full flex items-center justify-center" title="当前时间（24小时制）">
-            00:00:00
-        </button>
-        <div class="btn-light"></div>
-    </div>
+    <button id="timeDisplay" class="circle-btn left-4 time-btn" title="当前时间（24小时制）">
+        00:00:00
+    </button>
+    
+    <!-- GitHub仓库按钮（右上角）- 亚克力效果 -->
+    <a href="https://github.com/jjjmmmdexh227/jjjmmmdexh/tree/main" target="_blank" id="githubToggle" class="circle-btn right-40" title="前往GitHub仓库">
+        <i class="fa fa-github text-xl"></i>
+    </a>
     
     <!-- 黑夜模式切换按钮（右上角）- 亚克力效果 -->
-    <div class="light-container circle-btn right-6 md:right-28" style="border-radius: 50%;">
-        <button id="darkModeToggle" class="w-full h-full flex items-center justify-center" title="切换黑夜模式">
-            <i id="darkModeIcon" class="fa fa-moon-o text-xl"></i>
-        </button>
-        <div class="btn-light"></div>
-    </div>
+    <button id="darkModeToggle" class="circle-btn right-28" title="切换黑夜模式">
+        <i id="darkModeIcon" class="fa fa-moon-o text-xl"></i>
+    </button>
     
     <!-- 通知按钮（右上角）- 亚克力效果 -->
-    <div class="light-container circle-btn right-24 md:right-16" style="border-radius: 50%;">
-        <button id="notificationToggle" class="w-full h-full flex items-center justify-center" title="查看通知">
-            <i id="notificationIcon" class="fa fa-bell text-xl"></i>
-        </button>
-        <div class="btn-light"></div>
-    </div>
+    <button id="notificationToggle" class="circle-btn right-16" title="查看通知">
+        <i id="notificationIcon" class="fa fa-bell text-xl"></i>
+    </button>
     
     <!-- 通知栏 - 带青柠起始页风格的倾斜动画 -->
-    <div id="notificationPanel" class="notification-panel md:max-w-xs max-w-sm">
+    <div id="notificationPanel" class="notification-panel">
         <div class="flex items-start">
             <div class="bg-red-100 dark:bg-red-900/50 p-2 rounded-full mr-3">
                 <i class="fa fa-info-circle text-red-600 dark:text-red-400"></i>
@@ -952,16 +807,10 @@
         <!-- 下载区域 -->
         <section class="section-padding text-center">
             <!-- 圆形亚克力效果的下载按钮 -->
-            <div class="light-container" style="border-radius: 9999px;">
-                <a href="https://www.123865.com/s/EvgbVv-uvStd" 
-                   class="btn-primary inline-flex items-center justify-center"
-                   draggable="false" 
-                   oncontextmenu="return false;" 
-                   onselectstart="return false;">
-                    <i class="fa fa-download mr-2"></i> 下载White Client <span class="text-sm text-gray-200">(版本: 3.4)</span>
-                </a>
-                <div class="btn-light"></div>
-            </div>
+            <a href="https://www.123865.com/s/EvgbVv-uvStd" 
+               class="btn-primary inline-flex items-center justify-center">
+                <i class="fa fa-download mr-2"></i> 下载White Client <span class="text-sm text-gray-200">(版本: 3.4)</span>
+            </a>
             
             <div class="mt-6 text-gray-600 dark:text-gray-400 text-sm">
                 <p>jjjmmmdexh制作</p>
@@ -994,10 +843,7 @@
                         </div>
                         <div>
                             <p class="font-medium">E-MAIL</p>
-                            <a href="mailto:name1591123827@163.com" class="text-sm text-primary hover:underline"
-                               draggable="false" 
-                               oncontextmenu="return false;" 
-                               onselectstart="return false;">name1591123827@163.com</a>
+                            <a href="mailto:name1591123827@163.com" class="text-sm text-primary hover:underline">name1591123827@163.com</a>
                         </div>
                     </div>
                     
@@ -1011,10 +857,7 @@
                         </div>
                         <div>
                             <p class="font-medium">bilibili</p>
-                            <a href="https://space.bilibili.com/3546584027499085" target="_blank" class="text-sm text-primary hover:underline"
-                               draggable="false" 
-                               oncontextmenu="return false;" 
-                               onselectstart="return false;">jjjmmmdexh</a>
+                            <a href="https://space.bilibili.com/3546584027499085" target="_blank" class="text-sm text-primary hover:underline">jjjmmmdexh</a>
                         </div>
                     </div>
                 </div>
