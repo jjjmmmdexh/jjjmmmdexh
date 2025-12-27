@@ -792,7 +792,13 @@
             <!-- 标题容器 - 用于鼠标跟随效果 -->
             <div class="title-container">
                 <!-- 标题图片 - 带入场动画 -->
-                <img id="titleImage" src="title.png" alt="White Client" width="1538" height="472" class="title-image" onerror="handleImageError(this)"/>
+                <img id="titleImage" src="title.png" alt="White Client" width="1538" height="472" class="title-image" 
+                     draggable="false" 
+                     oncontextmenu="return false;" 
+                     onselectstart="return false;" 
+                     onmousedown="return false;" 
+                     style="pointer-events: none; user-select: none;"
+                     onerror="handleImageError(this)"/>
                 <!-- 鼠标跟随的照亮效果层 -->
                 <div class="title-light"></div>
             </div>
