@@ -16,7 +16,7 @@
                         secondary: '#6c757d',
                         dark: '#343a40',
                         light: '#f8f9fa',
-                        bilibili: '#00A1D6' // Bilibili品牌蓝色
+                        bilibili: '#00A1D6'
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -31,85 +31,60 @@
                 content-visibility: auto;
             }
             .device-card {
-                /* 亚克力/毛玻璃效果 */
                 @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-white/20 dark:border-gray-700/20;
             }
             .btn-primary {
-                /* 亚克力下载按钮 - 调整透明度+圆形 */
                 @apply bg-primary/70 hover:bg-primary/80 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 backdrop-blur-md border border-white/20 dark:border-primary/30;
             }
             .section-padding {
                 @apply py-8 md:py-12;
             }
             .contact-card {
-                /* 亚克力/毛玻璃效果 */
                 @apply bg-gradient-to-r from-blue-50/80 to-indigo-50/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-xl shadow-md p-6 border border-blue-100/30 dark:border-gray-600/30;
             }
-            
-            /* 圆形按钮样式（时间+黑夜模式+通知按钮）- 亚克力效果 */
             .circle-btn {
                 @apply fixed top-4 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-800 dark:text-gray-200 w-12 h-12 flex items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/30 dark:border-gray-600/30;
             }
-            
-            /* 时间显示按钮特殊样式 */
             .time-btn {
                 @apply font-mono text-sm md:text-base tracking-wider;
                 min-width: 120px;
                 width: auto;
                 padding: 0 1rem;
             }
-            
-            /* 通知栏样式 - 青柠起始页倾斜动画效果 */
             .notification-panel {
                 @apply fixed top-16 right-4 z-40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl shadow-xl p-5 border border-gray-200/30 dark:border-gray-700/30 max-w-xs opacity-0 invisible;
                 transform: translateX(20px) rotate(2deg) scale(0.95);
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
-            
             .notification-panel.open {
                 @apply opacity-100 visible;
                 transform: translateX(0) rotate(0deg) scale(1);
             }
-            
             .notification-panel.closing {
                 transform: translateX(20px) rotate(-2deg) scale(0.95);
                 @apply opacity-0 invisible;
             }
-            
-            /* 黑夜模式下的背景和文字颜色 */
             .dark-bg {
                 @apply bg-gray-50 dark:bg-gray-900 transition-colors duration-300;
             }
-            
             .dark-text {
                 @apply text-gray-700 dark:text-gray-300;
             }
-            
             .dark-text-secondary {
                 @apply text-secondary dark:text-gray-400;
             }
-            
             .dark-info-bg {
-                /* 亚克力/毛玻璃效果 */
                 @apply bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-md;
             }
-            
             .dark-contact-item {
-                /* 亚克力/毛玻璃效果 */
                 @apply bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm shadow-sm dark:shadow-gray-800 border border-white/20 dark:border-gray-800/20 rounded-lg;
             }
-            
-            /* 统一的图标背景样式 */
             .icon-bg {
                 @apply bg-blue-100/80 dark:bg-blue-800/80 backdrop-blur-sm w-12 h-12 flex items-center justify-center rounded-full mr-3;
             }
-            
-            /* 统一的图标颜色样式 */
             .icon-color {
                 @apply text-blue-600 dark:text-blue-300 text-xl;
             }
-            
-            /* 背景壁纸样式 */
             .bg-wallpaper {
                 position: fixed;
                 top: 0;
@@ -126,28 +101,21 @@
                 transform: scale(1.05);
                 transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
-            
             .bg-wallpaper.loaded {
                 opacity: 1;
                 transform: scale(1);
             }
-            
             .dark .bg-wallpaper {
                 filter: brightness(0.7) contrast(1.1);
             }
-            
-            /* 壁纸信息卡片样式 */
             .wallpaper-info {
                 @apply bg-black/60 backdrop-blur-md text-white p-4 rounded-lg text-sm md:text-base max-w-3xl mx-auto mt-6 mb-8;
                 opacity: 0;
                 transition: opacity 0.8s ease;
             }
-            
             .wallpaper-info.loaded {
                 opacity: 1;
             }
-            
-            /* 雪花效果样式 */
             .snowflake {
                 position: fixed;
                 pointer-events: none;
@@ -158,25 +126,19 @@
                 opacity: 0;
                 transition: opacity 0.3s ease;
             }
-            
             .dark .snowflake {
                 background: rgba(255, 255, 255, 0.9);
                 box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
             }
-            
-            /* 标题图片动画样式 */
             .title-image {
                 @apply mx-auto rounded-lg shadow-lg max-w-full h-auto opacity-0 invisible;
                 transform: translateY(20px) rotate(-2deg) scale(0.95);
                 transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
-            
             .title-image.animate-in {
                 @apply opacity-100 visible;
                 transform: translateY(0) rotate(0deg) scale(1);
             }
-            
-            /* 标题鼠标跟随照亮效果容器 */
             .title-container {
                 position: relative;
                 display: inline-block;
@@ -184,8 +146,6 @@
                 --mouse-x: 50%;
                 --mouse-y: 50%;
             }
-            
-            /* 鼠标跟随的照亮效果 */
             .title-light {
                 position: absolute;
                 top: 0;
@@ -198,41 +158,179 @@
                 opacity: 0;
                 transition: opacity 0.3s ease;
             }
-            
-            /* 修复：使用JS控制显示，而不是CSS hover */
             .title-light.active {
                 opacity: 1;
+            }
+            .language-btn {
+                @apply fixed top-4 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-800 dark:text-gray-200 w-12 h-12 flex items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/30 dark:border-gray-600/30;
+                font-size: 0.875rem;
+                font-weight: 500;
             }
         }
     </style>
     <script>
-        // 全局变量 - 防止通知反复弹出
         let notificationOpen = false;
         let notificationTimer = null;
         let isProcessingNotification = false;
-
-        // 雪花效果相关变量
         let snowflakes = [];
         let snowflakeIdCounter = 0;
-
-        // 时间显示相关变量
         let timeUpdateInterval = null;
-        
-        // 事件监听器标志，避免重复绑定
         let eventListenersBound = false;
-        
-        // 标题光照效果相关变量
         let titleContainer = null;
         let titleLight = null;
         let isMouseOverTitle = false;
-
-        // 黑夜模式相关函数
+        let currentLanguage = 'zh-CN';
+        
+        const translations = {
+            'zh-CN': {
+                'timeBtn': '当前时间（24小时制）',
+                'githubBtn': '前往GitHub仓库',
+                'darkModeBtn': '切换黑夜模式',
+                'notificationBtn': '查看通知',
+                'notificationTitle': '重要通知',
+                'notificationContent': '由于种种原因，我宣布更新日志不再公开。',
+                'notificationClose': '关闭',
+                'downloadBtn': '下载White Client',
+                'versionText': '(版本: 3.4)',
+                'creatorText': 'jjjmmmdexh制作',
+                'contactTitle': '关于',
+                'qqLabel': 'QQ',
+                'emailLabel': 'E-MAIL',
+                'bilibiliLabel': 'bilibili',
+                'wallpaperTitle': '今日壁纸',
+                'wallpaperLoading': '加载中...',
+                'wallpaperError': '壁纸加载失败，显示纯色背景',
+                'wallpaperFallback': '备用壁纸 | 随机网络图片',
+                'footerText': 'All things by jjjmmmdexh'
+            },
+            'zh-TW': {
+                'timeBtn': '當前時間（24小時制）',
+                'githubBtn': '前往GitHub倉庫',
+                'darkModeBtn': '切換黑夜模式',
+                'notificationBtn': '查看通知',
+                'notificationTitle': '重要通知',
+                'notificationContent': '由於種種原因，我宣布更新日誌不再公開。',
+                'notificationClose': '關閉',
+                'downloadBtn': '下載White Client',
+                'versionText': '(版本: 3.4)',
+                'creatorText': 'jjjmmmdexh製作',
+                'contactTitle': '關於',
+                'qqLabel': 'QQ',
+                'emailLabel': 'E-MAIL',
+                'bilibiliLabel': 'bilibili',
+                'wallpaperTitle': '今日壁紙',
+                'wallpaperLoading': '加載中...',
+                'wallpaperError': '壁紙加載失敗，顯示純色背景',
+                'wallpaperFallback': '備用壁紙 | 隨機網路圖片',
+                'footerText': 'All things by jjjmmmdexh'
+            },
+            'en': {
+                'timeBtn': 'Current Time (24h format)',
+                'githubBtn': 'Go to GitHub Repository',
+                'darkModeBtn': 'Toggle Dark Mode',
+                'notificationBtn': 'View Notifications',
+                'notificationTitle': 'Important Notice',
+                'notificationContent': 'Due to various reasons, I announce that update logs will no longer be made public.',
+                'notificationClose': 'Close',
+                'downloadBtn': 'Download White Client',
+                'versionText': '(Version: 3.4)',
+                'creatorText': 'Created by jjjmmmdexh',
+                'contactTitle': 'About',
+                'qqLabel': 'QQ',
+                'emailLabel': 'E-MAIL',
+                'bilibiliLabel': 'bilibili',
+                'wallpaperTitle': 'Today\'s Wallpaper',
+                'wallpaperLoading': 'Loading...',
+                'wallpaperError': 'Wallpaper failed to load, showing solid color background',
+                'wallpaperFallback': 'Fallback Wallpaper | Random Web Image',
+                'footerText': 'All things by jjjmmmdexh'
+            }
+        };
+        
+        const languageDisplay = {
+            'zh-CN': '简',
+            'zh-TW': '繁',
+            'en': 'En'
+        };
+        
+        const languageTitles = {
+            'zh-CN': '切换语言',
+            'zh-TW': '切換語言',
+            'en': 'Switch Language'
+        };
+        
+        function updateLanguageButton() {
+            const languageBtn = document.getElementById('languageToggle');
+            if (languageBtn) {
+                languageBtn.textContent = languageDisplay[currentLanguage];
+                languageBtn.title = languageTitles[currentLanguage];
+            }
+        }
+        
+        function translatePage() {
+            document.getElementById('timeDisplay').title = translations[currentLanguage].timeBtn;
+            document.getElementById('githubToggle').title = translations[currentLanguage].githubBtn;
+            document.getElementById('darkModeToggle').title = translations[currentLanguage].darkModeBtn;
+            document.getElementById('notificationToggle').title = translations[currentLanguage].notificationBtn;
+            
+            const notificationPanel = document.getElementById('notificationPanel');
+            if (notificationPanel) {
+                notificationPanel.querySelector('h3').textContent = translations[currentLanguage].notificationTitle;
+                notificationPanel.querySelector('p').textContent = translations[currentLanguage].notificationContent;
+                notificationPanel.querySelector('button').innerHTML = `<i class="fa fa-times mr-1"></i> ${translations[currentLanguage].notificationClose}`;
+            }
+            
+            const downloadBtn = document.querySelector('.btn-primary');
+            if (downloadBtn) {
+                downloadBtn.innerHTML = `<i class="fa fa-download mr-2"></i> ${translations[currentLanguage].downloadBtn} <span class="text-sm text-gray-200">${translations[currentLanguage].versionText}</span>`;
+            }
+            
+            const creatorText = document.querySelector('.mt-6.text-gray-600');
+            if (creatorText) {
+                creatorText.querySelector('p').textContent = translations[currentLanguage].creatorText;
+            }
+            
+            const contactTitle = document.querySelector('.text-xl.font-semibold');
+            if (contactTitle) {
+                contactTitle.innerHTML = `<i class="fa fa-envelope text-primary mr-2"></i>${translations[currentLanguage].contactTitle}`;
+            }
+            
+            const contactItems = document.querySelectorAll('.dark-contact-item');
+            if (contactItems.length >= 3) {
+                contactItems[0].querySelector('.font-medium').textContent = translations[currentLanguage].qqLabel;
+                contactItems[1].querySelector('.font-medium').textContent = translations[currentLanguage].emailLabel;
+                contactItems[2].querySelector('.font-medium').textContent = translations[currentLanguage].bilibiliLabel;
+            }
+            
+            const wallpaperInfo = document.getElementById('wallpaperInfo');
+            if (wallpaperInfo) {
+                const infoElements = wallpaperInfo.querySelectorAll('p');
+                if (infoElements.length > 0) {
+                    infoElements[0].innerHTML = `<i class="fa fa-camera mr-2"></i>${translations[currentLanguage].wallpaperTitle}`;
+                }
+            }
+            
+            const footerText = document.querySelector('footer p');
+            if (footerText) {
+                footerText.textContent = translations[currentLanguage].footerText;
+            }
+            
+            updateLanguageButton();
+        }
+        
+        function toggleLanguage() {
+            const languages = ['zh-CN', 'zh-TW', 'en'];
+            const currentIndex = languages.indexOf(currentLanguage);
+            const nextIndex = (currentIndex + 1) % languages.length;
+            currentLanguage = languages[nextIndex];
+            
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            translatePage();
+        }
+        
         function initDarkMode() {
-            // 从localStorage获取保存的主题设置
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            // 如果有保存的设置就使用，否则使用系统偏好
             const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
             
             if (isDark) {
@@ -242,7 +340,7 @@
             }
             
             updateToggleIcon();
-            updateWallpaperFilter(); // 更新壁纸滤镜
+            updateWallpaperFilter();
         }
         
         function toggleDarkMode() {
@@ -257,8 +355,8 @@
             }
             
             updateToggleIcon();
-            updateWallpaperFilter(); // 更新壁纸滤镜
-            updateTimeDisplay(); // 切换主题后更新时间显示
+            updateWallpaperFilter();
+            updateTimeDisplay();
         }
         
         function updateToggleIcon() {
@@ -270,7 +368,6 @@
             }
         }
         
-        // 更新壁纸滤镜效果
         function updateWallpaperFilter() {
             const wallpaper = document.getElementById('bgWallpaper');
             if (!wallpaper) return;
@@ -279,7 +376,6 @@
             wallpaper.style.filter = isDark ? 'brightness(0.7) contrast(1.1)' : 'brightness(0.85) contrast(1.05)';
         }
         
-        // 设置壁纸的通用函数
         function setWallpaper(url, copyright, copyrightLink) {
             return new Promise((resolve) => {
                 const wallpaper = document.getElementById('bgWallpaper');
@@ -287,33 +383,27 @@
                 
                 img.onload = function() {
                     wallpaper.style.backgroundImage = `url(${url})`;
-                    
-                    // 添加强制重绘
                     void wallpaper.offsetWidth;
                     wallpaper.classList.add('loaded');
                     
-                    // 显示壁纸信息并添加淡入动画
                     const infoElement = document.getElementById('wallpaperInfo');
                     if (infoElement && copyright) {
                         infoElement.innerHTML = `
-                            <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
+                            <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>${translations[currentLanguage].wallpaperTitle}</p>
                             <p>${copyright}</p>
                             ${copyrightLink ? `<p class="mt-2"><a href="${copyrightLink}" target="_blank" class="text-blue-300 hover:text-blue-200 underline">查看原图</a></p>` : ''}
                         `;
                     }
                     
-                    // 添加强制重绘
                     void infoElement.offsetWidth;
                     infoElement.classList.add('loaded');
                     
-                    // 壁纸加载完成后触发标题动画
                     triggerTitleAnimation();
                     resolve();
                 };
                 
                 img.onerror = function() {
                     console.warn('壁纸加载失败:', url);
-                    // 如果备用图片也加载失败，使用纯色背景
                     wallpaper.style.backgroundColor = document.documentElement.classList.contains('dark') 
                         ? '#1a202c' 
                         : '#f7fafc';
@@ -322,8 +412,8 @@
                     const infoElement = document.getElementById('wallpaperInfo');
                     if (infoElement) {
                         infoElement.innerHTML = `
-                            <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
-                            <p>壁纸加载失败，显示纯色背景</p>
+                            <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>${translations[currentLanguage].wallpaperTitle}</p>
+                            <p>${translations[currentLanguage].wallpaperError}</p>
                         `;
                         infoElement.classList.add('loaded');
                     }
@@ -336,10 +426,8 @@
             });
         }
         
-        // 获取每日Bing壁纸
         async function getBingWallpaper() {
             try {
-                // 尝试多个Bing壁纸API端点
                 const apiEndpoints = [
                     'https://bing.biturl.top/?resolution=1920&format=json&index=0&mkt=zh-CN',
                     'https://bingw.jasonzeng.dev/?resolution=1920&format=json&index=0&mkt=zh-CN',
@@ -349,7 +437,6 @@
                 let data = null;
                 let lastError = null;
                 
-                // 尝试每个API端点，直到有一个成功
                 for (const endpoint of apiEndpoints) {
                     try {
                         const response = await fetch(endpoint, { timeout: 5000 });
@@ -360,7 +447,6 @@
                         
                         data = await response.json();
                         
-                        // 检查返回的数据格式
                         if (data && data.url) {
                             break;
                         } else {
@@ -374,7 +460,6 @@
                 }
                 
                 if (data && data.url) {
-                    // 确保URL是完整的
                     let imageUrl = data.url;
                     if (!imageUrl.startsWith('http')) {
                         imageUrl = 'https://www.bing.com' + imageUrl;
@@ -386,7 +471,6 @@
                 }
             } catch (error) {
                 console.error('获取Bing壁纸失败:', error);
-                // 备用壁纸方案
                 const fallbackUrls = [
                     'https://picsum.photos/1920/1080?random=' + Date.now(),
                     'https://source.unsplash.com/random/1920x1080?nature',
@@ -396,26 +480,22 @@
                 const randomIndex = Math.floor(Math.random() * fallbackUrls.length);
                 await setWallpaper(
                     fallbackUrls[randomIndex], 
-                    '备用壁纸 | 随机网络图片',
+                    translations[currentLanguage].wallpaperFallback,
                     null
                 );
             }
         }
         
-        // 触发标题入场动画
         function triggerTitleAnimation() {
             const titleImage = document.getElementById('titleImage');
             if (titleImage) {
-                // 添加强制重绘确保动画生效
                 void titleImage.offsetWidth;
-                // 延迟一点触发，让壁纸动画先开始
                 setTimeout(() => {
                     titleImage.classList.add('animate-in');
                 }, 300);
             }
         }
         
-        // 修复标题鼠标跟随照亮效果问题
         function initTitleLightEffect() {
             titleContainer = document.querySelector('.title-container');
             titleLight = document.querySelector('.title-light');
@@ -425,13 +505,11 @@
                 return;
             }
             
-            // 鼠标进入标题区域
             titleContainer.addEventListener('mouseenter', function() {
                 isMouseOverTitle = true;
                 titleLight.classList.add('active');
             });
             
-            // 鼠标在标题区域移动
             titleContainer.addEventListener('mousemove', function(e) {
                 if (!isMouseOverTitle) {
                     isMouseOverTitle = true;
@@ -442,30 +520,24 @@
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 
-                // 设置CSS变量，控制径向渐变的位置
                 titleContainer.style.setProperty('--mouse-x', `${x}px`);
                 titleContainer.style.setProperty('--mouse-y', `${y}px`);
                 
-                // 确保光照效果是可见的
                 if (!titleLight.classList.contains('active')) {
                     titleLight.classList.add('active');
                 }
             });
             
-            // 鼠标离开标题区域
             titleContainer.addEventListener('mouseleave', function() {
                 isMouseOverTitle = false;
                 titleLight.classList.remove('active');
             });
             
-            // 防止快速移动时可能丢失事件
             titleContainer.addEventListener('mouseout', function(e) {
-                // 检查鼠标是否真的离开了容器
                 const rect = titleContainer.getBoundingClientRect();
                 const x = e.clientX;
                 const y = e.clientY;
                 
-                // 如果鼠标位置在容器外部
                 if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
                     isMouseOverTitle = false;
                     titleLight.classList.remove('active');
@@ -473,20 +545,16 @@
             });
         }
         
-        // 通知栏相关函数 - 修复反复弹出问题
         function toggleNotification() {
-            // 防止快速重复点击
             if (isProcessingNotification) return;
             isProcessingNotification = true;
 
             const panel = document.getElementById('notificationPanel');
             const icon = document.getElementById('notificationIcon');
             
-            // 清除自动关闭定时器
             clearTimeout(notificationTimer);
             
             if (notificationOpen) {
-                // 关闭通知栏 - 反向倾斜动画
                 panel.classList.add('closing');
                 icon.classList.remove('fa-bell-slash');
                 icon.classList.add('fa-bell');
@@ -497,12 +565,10 @@
                     isProcessingNotification = false;
                 }, 400);
             } else {
-                // 打开通知栏 - 倾斜动画
                 panel.classList.add('open');
                 icon.classList.remove('fa-bell');
                 icon.classList.add('fa-bell-slash');
                 
-                // 自动关闭（8秒）
                 notificationTimer = setTimeout(() => {
                     if (notificationOpen) {
                         toggleNotification();
@@ -514,7 +580,6 @@
             }
         }
         
-        // 点击页面其他区域关闭通知栏
         function handleDocumentClick(event) {
             const panel = document.getElementById('notificationPanel');
             const toggleBtn = document.getElementById('notificationToggle');
@@ -526,14 +591,11 @@
                 toggleNotification();
             }
         }
-
-        // ==================== 雪花效果相关函数 ====================
+        
         function createSnowflake(x, y) {
-            // 生成随机大小的雪花 (3-8px)
             const size = Math.random() * 5 + 3;
             const id = `snowflake-${snowflakeIdCounter++}`;
             
-            // 创建雪花元素
             const snowflake = document.createElement('div');
             snowflake.id = id;
             snowflake.className = 'snowflake';
@@ -543,25 +605,22 @@
             snowflake.style.top = `${y}px`;
             snowflake.style.opacity = '1';
             
-            // 添加到页面
             document.body.appendChild(snowflake);
             
-            // 存储雪花信息
             const snowflakeInfo = {
                 id,
                 element: snowflake,
                 x,
                 y,
                 size,
-                velocityX: (Math.random() - 0.5) * 2, // 水平速度 (-1 到 1)
-                velocityY: Math.random() * 1 + 1,      // 垂直速度 (1 到 2)
-                rotation: Math.random() * 360,         // 初始旋转角度
-                rotationSpeed: (Math.random() - 0.5) * 2 // 旋转速度 (-1 到 1)
+                velocityX: (Math.random() - 0.5) * 2,
+                velocityY: Math.random() * 1 + 1,
+                rotation: Math.random() * 360,
+                rotationSpeed: (Math.random() - 0.5) * 2
             };
             
             snowflakes.push(snowflakeInfo);
             
-            // 5秒后移除雪花
             setTimeout(() => {
                 removeSnowflake(id);
             }, 5000);
@@ -570,41 +629,32 @@
         }
 
         function updateSnowflakes() {
-            // 更新所有雪花的位置和状态
             for (let i = snowflakes.length - 1; i >= 0; i--) {
                 const snowflake = snowflakes[i];
                 
-                // 更新位置
                 snowflake.x += snowflake.velocityX;
                 snowflake.y += snowflake.velocityY;
                 
-                // 更新旋转
                 snowflake.rotation += snowflake.rotationSpeed;
                 
-                // 应用样式
                 snowflake.element.style.left = `${snowflake.x}px`;
                 snowflake.element.style.top = `${snowflake.y}px`;
                 snowflake.element.style.transform = `rotate(${snowflake.rotation}deg)`;
                 
-                // 淡出效果
                 const lifeProgress = 1 - (snowflake.y / window.innerHeight);
                 snowflake.element.style.opacity = lifeProgress > 0 ? lifeProgress : 0;
                 
-                // 如果雪花超出屏幕底部，移除它
                 if (snowflake.y > window.innerHeight) {
                     removeSnowflake(snowflake.id);
                 }
             }
             
-            // 继续更新
             requestAnimationFrame(updateSnowflakes);
         }
 
         function removeSnowflake(id) {
-            // 从数组中移除
             snowflakes = snowflakes.filter(s => s.id !== id);
             
-            // 从DOM中移除
             const element = document.getElementById(id);
             if (element) {
                 element.style.opacity = '0';
@@ -617,23 +667,19 @@
         }
 
         function handleClick(event) {
-            // 防止在按钮上点击时触发雪花效果
             const target = event.target;
-            if (target.closest('#darkModeToggle') || target.closest('#notificationToggle') || target.closest('#timeDisplay') || target.closest('#githubToggle')) {
+            if (target.closest('#darkModeToggle') || target.closest('#notificationToggle') || target.closest('#timeDisplay') || target.closest('#githubToggle') || target.closest('#languageToggle')) {
                 return;
             }
             
-            // 在点击位置创建多个雪花 (5-10个)
             const count = Math.floor(Math.random() * 6) + 5;
             for (let i = 0; i < count; i++) {
-                // 稍微偏移位置，让雪花散开
                 const offsetX = (Math.random() - 0.5) * 20;
                 const offsetY = (Math.random() - 0.5) * 20;
                 createSnowflake(event.clientX + offsetX, event.clientY + offsetY);
             }
         }
-
-        // ==================== 时间显示相关函数 ====================
+        
         function updateTimeDisplay() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
@@ -649,10 +695,8 @@
         }
 
         function startTimeUpdates() {
-            // 立即更新一次
             updateTimeDisplay();
             
-            // 每秒更新一次
             if (timeUpdateInterval) {
                 clearInterval(timeUpdateInterval);
             }
@@ -660,50 +704,43 @@
             timeUpdateInterval = setInterval(updateTimeDisplay, 1000);
         }
         
-        // 初始化所有功能
         function initializeApp() {
-            // 如果已经绑定过事件监听器，则不再绑定
             if (eventListenersBound) return;
             
-            // 初始化黑夜模式
-            initDarkMode();
+            const savedLanguage = localStorage.getItem('preferredLanguage');
+            if (savedLanguage && translations[savedLanguage]) {
+                currentLanguage = savedLanguage;
+            }
             
-            // 启动时间更新
+            initDarkMode();
             startTimeUpdates();
             
-            // 添加事件监听
             document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
             document.getElementById('notificationToggle').addEventListener('click', toggleNotification);
+            document.getElementById('languageToggle').addEventListener('click', toggleLanguage);
             
-            // 初始化雪花效果
             document.addEventListener('click', handleClick);
             
-            // 初始化标题鼠标跟随效果
             initTitleLightEffect();
             
-            // 加载Bing壁纸（不阻塞页面加载）
             getBingWallpaper().catch(error => {
                 console.error('壁纸加载失败:', error);
-                // 即使壁纸加载失败，也要确保页面可用
                 triggerTitleAnimation();
             });
             
-            // 启动雪花动画循环
             updateSnowflakes();
             
-            // 添加全局点击事件监听器来关闭通知
             document.addEventListener('click', handleDocumentClick);
             
-            // 标记事件监听器已绑定
+            translatePage();
+            
             eventListenersBound = true;
         }
         
-        // 图片加载错误处理
         function handleImageError(img) {
             console.warn('图片加载失败:', img.src);
             img.style.display = 'none';
             
-            // 显示替代文本
             const parent = img.parentElement;
             if (parent && parent.classList.contains('title-container')) {
                 const altText = document.createElement('div');
@@ -715,28 +752,22 @@
             }
         }
         
-        // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
-            // 为标题图片添加错误处理
             const titleImage = document.getElementById('titleImage');
             if (titleImage) {
                 titleImage.addEventListener('error', function() {
                     handleImageError(this);
                 });
                 
-                // 如果图片已经加载完成但出错
                 if (titleImage.complete && titleImage.naturalHeight === 0) {
                     handleImageError(titleImage);
                 }
             }
             
-            // 初始化应用
             initializeApp();
         });
         
-        // 窗口大小变化时重新调整雪花位置（防止超出屏幕）
         window.addEventListener('resize', function() {
-            // 移除超出屏幕的雪花
             for (let i = snowflakes.length - 1; i >= 0; i--) {
                 const snowflake = snowflakes[i];
                 if (snowflake.x > window.innerWidth || snowflake.y > window.innerHeight) {
@@ -747,30 +778,28 @@
     </script>
 </head>
 <body class="dark-bg min-h-screen font-sans transition-colors duration-300">
-    <!-- Bing壁纸背景 -->
     <div id="bgWallpaper" class="bg-wallpaper"></div>
     
-    <!-- 时间显示按钮（左上角）- 亚克力效果 -->
     <button id="timeDisplay" class="circle-btn left-4 time-btn" title="当前时间（24小时制）">
         00:00:00
     </button>
     
-    <!-- GitHub仓库按钮（右上角）- 亚克力效果 -->
     <a href="https://github.com/jjjmmmdexh227/jjjmmmdexh/tree/main" target="_blank" id="githubToggle" class="circle-btn right-40" title="前往GitHub仓库">
         <i class="fa fa-github text-xl"></i>
     </a>
     
-    <!-- 黑夜模式切换按钮（右上角）- 亚克力效果 -->
     <button id="darkModeToggle" class="circle-btn right-28" title="切换黑夜模式">
         <i id="darkModeIcon" class="fa fa-moon-o text-xl"></i>
     </button>
     
-    <!-- 通知按钮（右上角）- 亚克力效果 -->
     <button id="notificationToggle" class="circle-btn right-16" title="查看通知">
         <i id="notificationIcon" class="fa fa-bell text-xl"></i>
     </button>
     
-    <!-- 通知栏 - 带青柠起始页风格的倾斜动画 -->
+    <button id="languageToggle" class="language-btn right-4" title="切换语言">
+        简
+    </button>
+    
     <div id="notificationPanel" class="notification-panel">
         <div class="flex items-start">
             <div class="bg-red-100 dark:bg-red-900/50 p-2 rounded-full mr-3">
@@ -787,11 +816,8 @@
     </div>
     
     <div class="container mx-auto px-4 max-w-3xl">
-        <!-- 头部区域 -->
         <header class="text-center section-padding">
-            <!-- 标题容器 - 用于鼠标跟随效果 -->
             <div class="title-container">
-                <!-- 标题图片 - 带入场动画 -->
                 <img id="titleImage" src="title.png" alt="White Client" width="1538" height="472" class="title-image" 
                      draggable="false" 
                      oncontextmenu="return false;" 
@@ -799,14 +825,11 @@
                      onmousedown="return false;" 
                      style="pointer-events: none; user-select: none;"
                      onerror="handleImageError(this)"/>
-                <!-- 鼠标跟随的照亮效果层 -->
                 <div class="title-light"></div>
             </div>
         </header>
         
-        <!-- 下载区域 -->
         <section class="section-padding text-center">
-            <!-- 圆形亚克力效果的下载按钮 -->
             <a href="https://www.123865.com/s/EvgbVv-uvStd" 
                class="btn-primary inline-flex items-center justify-center">
                 <i class="fa fa-download mr-2"></i> 下载White Client <span class="text-sm text-gray-200">(版本: 3.4)</span>
@@ -817,7 +840,6 @@
             </div>
         </section>
         
-        <!-- 联系区域 -->
         <section class="section-padding">
             <div class="contact-card">
                 <h2 class="text-xl font-semibold text-dark dark:text-gray-200 mb-4 flex items-center">
@@ -825,7 +847,6 @@
                 </h2>
                 
                 <div class="space-y-4 dark-text">
-                    <!-- QQ联系方式（统一样式） -->
                     <div class="flex items-center p-3 dark-contact-item">
                         <div class="icon-bg">
                             <i class="fa fa-qq icon-color"></i>
@@ -836,7 +857,6 @@
                         </div>
                     </div>
                     
-                    <!-- 邮箱联系方式（统一样式） -->
                     <div class="flex items-center p-3 dark-contact-item">
                         <div class="icon-bg">
                             <i class="fa fa-envelope icon-color"></i>
@@ -847,10 +867,8 @@
                         </div>
                     </div>
                     
-                    <!-- Bilibili联系方式（统一颜色样式） -->
                     <div class="flex items-center p-3 dark-contact-item">
                         <div class="icon-bg">
-                            <!-- B站图标使用统一的颜色风格 -->
                             <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-color">
                                 <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .356-.124.657-.373.906l-1.174 1.12zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.789 1.894v7.52c.02.765.283 1.395.789 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.128.789-1.893v-7.52c-.02-.765-.283-1.396-.789-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z" fill="currentColor"/>
                             </svg>
@@ -867,7 +885,6 @@
             </div>
         </section>
         
-        <!-- 壁纸信息区域 -->
         <section class="px-4">
             <div id="wallpaperInfo" class="wallpaper-info">
                 <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
@@ -875,7 +892,6 @@
             </div>
         </section>
         
-        <!-- 底部区域 -->
         <footer class="py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
             <p>All things by jjjmmmdexh</p>
         </footer>
