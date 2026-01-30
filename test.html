@@ -161,6 +161,135 @@
             .time-display {
                 @apply text-gray-600 dark:text-gray-400 text-sm font-medium;
             }
+            
+            /* Windows 10磁贴动态光效样式 */
+            .tile-glow-container {
+                position: relative;
+                display: inline-block;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 10px 30px rgba(0, 123, 255, 0.2);
+            }
+            
+            /* 磁贴基础样式 */
+            .tile-base {
+                position: relative;
+                border-radius: 12px;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                z-index: 1;
+            }
+            
+            /* 动态光效层 */
+            .tile-glow {
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: linear-gradient(
+                    45deg,
+                    transparent 30%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    transparent 70%
+                );
+                transform: rotate(0deg);
+                animation: glowRotate 8s linear infinite;
+                z-index: 0;
+                filter: blur(10px);
+                opacity: 0.6;
+            }
+            
+            .dark .tile-glow {
+                background: linear-gradient(
+                    45deg,
+                    transparent 30%,
+                    rgba(0, 123, 255, 0.3) 50%,
+                    transparent 70%
+                );
+                opacity: 0.4;
+            }
+            
+            /* 磁贴边框光效 */
+            .tile-border {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border-radius: 12px;
+                border: 2px solid transparent;
+                background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(0,123,255,0.5), rgba(255,255,255,0.2)) border-box;
+                -webkit-mask: 
+                    linear-gradient(#fff 0 0) padding-box, 
+                    linear-gradient(#fff 0 0);
+                -webkit-mask-composite: destination-out;
+                mask-composite: exclude;
+                animation: borderGlow 3s ease-in-out infinite alternate;
+                z-index: 2;
+                pointer-events: none;
+            }
+            
+            .dark .tile-border {
+                background: linear-gradient(90deg, rgba(0,123,255,0.3), rgba(100,200,255,0.7), rgba(0,123,255,0.3)) border-box;
+            }
+            
+            /* 光效动画 */
+            @keyframes glowRotate {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            
+            @keyframes borderGlow {
+                0% {
+                    opacity: 0.4;
+                    background-position: 0% 50%;
+                }
+                100% {
+                    opacity: 0.8;
+                    background-position: 100% 50%;
+                }
+            }
+            
+            /* 脉冲动画 */
+            @keyframes pulseGlow {
+                0%, 100% {
+                    box-shadow: 
+                        0 0 20px rgba(0, 123, 255, 0.2),
+                        0 0 40px rgba(0, 123, 255, 0.1),
+                        0 0 60px rgba(0, 123, 255, 0.05);
+                }
+                50% {
+                    box-shadow: 
+                        0 0 30px rgba(0, 123, 255, 0.4),
+                        0 0 60px rgba(0, 123, 255, 0.2),
+                        0 0 90px rgba(0, 123, 255, 0.1);
+                }
+            }
+            
+            .dark .tile-glow-container {
+                animation: pulseGlow 4s ease-in-out infinite;
+            }
+            
+            .tile-glow-container:hover {
+                transform: scale(1.02);
+                transition: transform 0.3s ease;
+            }
+            
+            /* 响应式调整 */
+            @media (max-width: 768px) {
+                .tile-glow {
+                    animation: glowRotate 12s linear infinite;
+                }
+                
+                .tile-glow-container {
+                    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.15);
+                }
+            }
         }
     </style>
     <script>
@@ -542,9 +671,17 @@
     </div>
     
     <div class="container mx-auto px-4 max-w-3xl">
-        <!-- 头部区域 - 已去除副标题 -->
+        <!-- 头部区域 - 已去除副标题并添加Windows 10磁贴光效 -->
         <header class="text-center section-padding">
-            <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg shadow-lg max-w-full h-auto"/>
+            <div class="tile-glow-container mx-auto max-w-full">
+                <div class="tile-base">
+                    <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg max-w-full h-auto relative z-10"/>
+                </div>
+                <!-- 动态光效层 -->
+                <div class="tile-glow"></div>
+                <!-- 边框光效 -->
+                <div class="tile-border"></div>
+            </div>
             <!-- 已删除原副标题部分 -->
         </header>
         
