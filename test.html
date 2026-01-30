@@ -156,6 +156,11 @@
             .contributor-name {
                 @apply text-center font-medium text-gray-800 dark:text-gray-200 truncate;
             }
+            
+            /* 时间显示样式 */
+            .time-display {
+                @apply text-gray-600 dark:text-gray-400 text-sm font-medium;
+            }
         }
     </style>
     <script>
@@ -299,6 +304,31 @@
                 
                 container.appendChild(contributorCard);
             });
+        }
+        
+        // 更新时间显示
+        function updateTime() {
+            const timeElement = document.getElementById('currentTime');
+            if (!timeElement) return;
+            
+            const now = new Date();
+            
+            // 格式化日期和时间
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // 星期几
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const weekday = weekdays[now.getDay()];
+            
+            // 更新时间显示
+            timeElement.innerHTML = `
+                <i class="fa fa-clock-o mr-1"></i> ${year}-${month}-${day} ${weekday} ${hours}:${minutes}:${seconds}
+            `;
         }
         
         // 通知栏相关函数 - 修复反复弹出问题
@@ -467,6 +497,10 @@
             // 渲染贡献者列表
             renderContributors();
             
+            // 初始化时间显示并每秒更新
+            updateTime();
+            setInterval(updateTime, 1000);
+            
             // 添加事件监听
             document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
             document.getElementById('notificationToggle').addEventListener('click', toggleNotification);
@@ -508,11 +542,10 @@
     </div>
     
     <div class="container mx-auto px-4 max-w-3xl">
-        <!-- 头部区域 -->
+        <!-- 头部区域 - 已去除副标题 -->
         <header class="text-center section-padding">
             <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg shadow-lg max-w-full h-auto"/>
-            <p class="dark-text-secondary text-lg mb-2">开放*创新</p>
-            <p class="dark-text-secondary">Client</p>
+            <!-- 已删除原副标题部分 -->
         </header>
         
         <!-- 下载区域 -->
@@ -572,9 +605,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                </div>
             </div>
         </section>
         
@@ -603,9 +633,11 @@
             </div>
         </section>
         
-        <!-- 底部区域 -->
-        <footer class="py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
-            <p>All things by jjjmmmdexh</p>
+        <!-- 底部区域 - 已添加时间显示 -->
+        <footer class="py-6 text-center">
+            <!-- 时间显示在最底部 -->
+            <div id="currentTime" class="time-display mb-2"></div>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">All things by jjjmmmdexh</p>
         </footer>
     </div>
 </body>
