@@ -141,6 +141,21 @@
                 background: rgba(255, 255, 255, 0.9);
                 box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
             }
+            
+            /* 贡献者卡片样式 */
+            .contributor-card {
+                @apply bg-white/80 dark:bg-gray-700/80 backdrop-blur-md rounded-xl shadow-md p-4 transition-all duration-300 hover:shadow-lg hover:scale-105 border border-white/20 dark:border-gray-600/20;
+            }
+            
+            /* 贡献者头像样式 */
+            .contributor-avatar {
+                @apply w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-white/40 dark:border-gray-600/40 mx-auto mb-3;
+            }
+            
+            /* 贡献者名字样式 */
+            .contributor-name {
+                @apply text-center font-medium text-gray-800 dark:text-gray-200 truncate;
+            }
         }
     </style>
     <script>
@@ -152,6 +167,18 @@
         // 雪花效果相关变量
         let snowflakes = [];
         let snowflakeIdCounter = 0;
+
+        // 贡献者列表数据
+        const contributors = [
+            { name: '凋灵斯拉是个up主', image: '凋灵斯拉是个up主.jpg' },
+            { name: 'TOM', image: 'TOM.jpg' },
+            { name: 'Ternus340', image: 'Ternus340.jpg' },
+            { name: 'Xigua', image: 'Xigua.jpg' },
+            { name: 'CB604BL', image: 'CB604BL.jpg' },
+            { name: 'Sunch233', image: 'Sunch233.jpg' },
+            { name: 'NEETSama', image: 'NEETSama.jpg' },
+            { name: 'asosa', image: 'asosa.jpg' }
+        ];
 
         // 黑夜模式相关函数
         function initDarkMode() {
@@ -242,6 +269,36 @@
                     <p>每日Bing壁纸加载失败，显示备用壁纸</p>
                 `;
             }
+        }
+        
+        // 渲染贡献者列表
+        function renderContributors() {
+            const container = document.getElementById('contributorsList');
+            if (!container) return;
+            
+            // 清空容器
+            container.innerHTML = '';
+            
+            // 为每个贡献者创建卡片
+            contributors.forEach(contributor => {
+                const contributorCard = document.createElement('div');
+                contributorCard.className = 'contributor-card';
+                
+                // 创建头像 - 添加错误处理，如果图片不存在则显示默认头像
+                contributorCard.innerHTML = `
+                    <div class="text-center">
+                        <img 
+                            src="${contributor.image}" 
+                            alt="${contributor.name}" 
+                            class="contributor-avatar"
+                            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iNDAiIGZpbGw9IiM0Njg1RkYiLz4KPHBhdGggZD0iTTQwIDI2LjY2NzdDNDQuNjA2IDI2LjY2NzcgNDguMzMzNiAzMC4zOTQ0IDQ4LjMzMzYgMzVWNDEuNjY3N0MzOC4zMzM2IDQzLjMzNDQgMjYuNjY2OSA0NC4xNjcxIDI2LjY2NjkgNDRWNDMuMzM0NEMyNi42NjY5IDQwLjI2NzcgMjUuMzMzNiAzNy4yMDA4IDI1LjMzMzYgMzVDMjUuMzMzNiAzMC4zOTQ0IDI5LjA2MDIgMjYuNjY3NyAzMy42NjY5IDI2LjY2NzdINDBaTTU1LjYwMDIgNTcuMzM0NEgyNC4zMzM2QzI3LjM2NjkgNTIuMzMzNyAzMy4wNjY5IDQ4LjMzMzcgNDAgNDguMzMzN0M0Ni45MzM2IDQ4LjMzMzcgNTIuNjY2OSA1Mi4zMzM3IDU1LjYwMDIgNTcuMzMzNFY1Ny4zMzQ0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+'; this.alt='${contributor.name} 头像加载失败'"
+                        />
+                        <p class="contributor-name">${contributor.name}</p>
+                    </div>
+                `;
+                
+                container.appendChild(contributorCard);
+            });
         }
         
         // 通知栏相关函数 - 修复反复弹出问题
@@ -407,6 +464,9 @@
             // 加载Bing壁纸
             await getBingWallpaper();
             
+            // 渲染贡献者列表
+            renderContributors();
+            
             // 添加事件监听
             document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
             document.getElementById('notificationToggle').addEventListener('click', toggleNotification);
@@ -517,48 +577,20 @@
                 </div>
             </div>
         </section>
-
-        <!-- 贡献者列表区域 -->
+        
+        <!-- 贡献者区域 -->
         <section class="section-padding">
             <div class="contact-card">
-                <h2 class="text-xl font-semibold text-dark dark:text-gray-200 mb-4 flex items-center">
-                    <i class="fa fa-users text-primary mr-2"></i>贡献者列表
+                <h2 class="text-xl font-semibold text-dark dark:text-gray-200 mb-6 flex items-center">
+                    <i class="fa fa-users text-primary mr-2"></i>贡献者
                 </h2>
-                <!-- 贡献者网格布局 - 响应式适配 -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    <!-- 每个贡献者项 - 亚克力风格 + 圆形头像 -->
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="凋灵斯拉是个up主.jpg" alt="凋灵斯拉是个up主" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">凋灵斯拉是个up主</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="TOM.jpg" alt="TOM" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">TOM</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="Ternus340.jpg" alt="Ternus340" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">Ternus340</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="Xigua.jpg" alt="Xigua" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">Xigua</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="CB604BL.jpg" alt="CB604BL" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">CB604BL</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="Sunch233.jpg" alt="Sunch233" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">Sunch233</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="NEETSama.jpg" alt="NEETSama" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">NEETSama</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="asosa.jpg" alt="asosa" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">asosa</p>
-                    </div>
+                
+                <div id="contributorsList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <!-- 贡献者列表将通过JavaScript动态生成 -->
+                </div>
+                
+                <div class="mt-6 text-sm text-gray-500 dark:text-gray-400 text-center">
+                    <p>感谢所有贡献者为White Client开发做出的贡献！</p>
                 </div>
             </div>
         </section>
