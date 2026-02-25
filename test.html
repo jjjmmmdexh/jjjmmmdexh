@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>White Client · 双源壁纸</title>
+    <title>White Client</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -172,7 +172,7 @@
         let snowflakes = [];
         let snowflakeIdCounter = 0;
 
-        // 壁纸当前源 ('bing' 或 'yuanmeng')
+        // 壁纸当前源 ('bing' 或 'loli')
         let currentSource = 'bing';
 
         // 贡献者列表
@@ -186,6 +186,9 @@
             { name: 'NEETSama', image: 'NEETSama.jpg' },
             { name: 'asosa', image: 'asosa.jpg' }
         ];
+
+        // 提示定时器
+        let hintTimer = null;
 
         // --- 黑夜模式 ---
         function initDarkMode() {
@@ -231,7 +234,7 @@
 
         // --- 壁纸加载函数 ---
 
-        // 加载Bing每日壁纸 (原逻辑)
+        // 加载Bing每日壁纸
         async function loadBingWallpaper() {
             const captionDiv = document.getElementById('wallpaperCaption');
             const sourceLabel = document.getElementById('wallpaperSourceLabel');
@@ -263,37 +266,30 @@
             }
         }
 
-        // 加载远梦API壁纸 (直接使用提供的端点)
-        function loadYuanmengWallpaper() {
+        // 加载LoliAPI壁纸 (直接图片)
+        function loadLoliWallpaper() {
             const captionDiv = document.getElementById('wallpaperCaption');
             const sourceLabel = document.getElementById('wallpaperSourceLabel');
             const wallpaperDiv = document.getElementById('bgWallpaper');
             // 添加时间戳防止缓存
-            const apiUrl = `https://api.mmp.cc/api/pcwallpaper?category=&type=&_=${Date.now()}`;
+            const apiUrl = `https://www.loliapi.com/acg/?_=${Date.now()}`;
+            
+            // 清空介绍区域（Loli源不显示介绍）
+            if (captionDiv) {
+                captionDiv.innerHTML = ''; // 清空内容
+            }
             
             // 使用图片预加载方式，确保图片有效再设置背景
             const img = new Image();
             img.onload = function() {
                 wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
-                if (captionDiv) {
-                    captionDiv.innerHTML = `
-                        <p class="font-medium mb-1"><i class="fa fa-picture-o mr-2"></i>🌈 远梦·随机壁纸</p>
-                        <p>来源：远梦API (mmp.cc)  | 随机风景/抽象</p>
-                        <p class="text-xs opacity-70 mt-1">每次切换随机刷新</p>
-                    `;
-                }
-                if (sourceLabel) sourceLabel.innerText = '当前源: 远梦';
+                if (sourceLabel) sourceLabel.innerText = '当前源: Loli';
                 updateWallpaperFilter();
             };
             img.onerror = function() {
-                console.error('远梦壁纸加载失败，回退Bing');
-                // 加载失败时切回Bing并提示
-                if (captionDiv) {
-                    captionDiv.innerHTML = `<p class="font-medium mb-1"><i class="fa fa-exclamation-circle mr-2"></i>远梦壁纸暂时不可用，自动切回Bing</p>`;
-                }
-                // 切回Bing源（但不改变currentSource? 为了避免递归，暂时先加载Bing）
+                console.error('Loli壁纸加载失败，回退Bing');
+                // 加载失败时切回Bing并提示（Bing会恢复介绍）
                 loadBingWallpaper();
-                // 同时更新按钮状态，因为源实际上被重置为Bing了
                 setActiveSourceButton('bing');
                 currentSource = 'bing';
                 if (sourceLabel) sourceLabel.innerText = '当前源: Bing (自动回退)';
@@ -304,13 +300,13 @@
         // --- 源切换控制 ---
         function setActiveSourceButton(source) {
             const btnBing = document.getElementById('btnBingSource');
-            const btnYuan = document.getElementById('btnYuanmengSource');
-            if (!btnBing || !btnYuan) return;
+            const btnLoli = document.getElementById('btnLoliSource');
+            if (!btnBing || !btnLoli) return;
             if (source === 'bing') {
                 btnBing.classList.add('active');
-                btnYuan.classList.remove('active');
+                btnLoli.classList.remove('active');
             } else {
-                btnYuan.classList.add('active');
+                btnLoli.classList.add('active');
                 btnBing.classList.remove('active');
             }
         }
@@ -322,11 +318,37 @@
             loadBingWallpaper();
         }
 
-        function switchToYuanmeng() {
-            if (currentSource === 'yuanmeng') return;
-            currentSource = 'yuanmeng';
-            setActiveSourceButton('yuanmeng');
-            loadYuanmengWallpaper();
+        function switchToLoli() {
+            if (currentSource === 'loli') return;
+            currentSource = 'loli';
+            setActiveSourceButton('loli');
+            loadLoliWallpaper();
+        }
+
+        // --- 刷新按钮处理 ---
+        function refreshWallpaper() {
+            if (currentSource === 'bing') {
+                // 显示提示
+                showBingHint();
+                loadBingWallpaper();
+            } else {
+                loadLoliWallpaper();
+            }
+        }
+
+        // 显示Bing刷新提示
+        function showBingHint() {
+            const hintDiv = document.getElementById('wallpaperHint');
+            if (!hintDiv) return;
+            // 清除之前的定时器
+            if (hintTimer) clearTimeout(hintTimer);
+            // 显示提示
+            hintDiv.classList.remove('hidden');
+            // 3秒后隐藏
+            hintTimer = setTimeout(() => {
+                hintDiv.classList.add('hidden');
+                hintTimer = null;
+            }, 3000);
         }
 
         // --- 通知栏 ---
@@ -487,7 +509,8 @@
             document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
             document.getElementById('notificationToggle').addEventListener('click', toggleNotification);
             document.getElementById('btnBingSource').addEventListener('click', switchToBing);
-            document.getElementById('btnYuanmengSource').addEventListener('click', switchToYuanmeng);
+            document.getElementById('btnLoliSource').addEventListener('click', switchToLoli);
+            document.getElementById('refreshWallpaperBtn').addEventListener('click', refreshWallpaper);
             
             // 设置初始激活按钮
             setActiveSourceButton('bing');
@@ -540,7 +563,7 @@
         <section class="section-padding text-center">
             <a href="https://www.123865.com/s/EvgbVv-uvStd" 
                class="btn-primary inline-flex items-center justify-center">
-                <i class="fa fa-download mr-2"></i> 下载White Client <span class="text-sm text-gray-200">(版本: 3.4)</span>
+                <i class="fa fa-download mr-2"></i> 下载White Client稳定版本 <span class="text-sm text-gray-200">(版本: 3.4)</span>
             </a>
             
             <div class="mt-6 text-gray-600 dark:text-gray-400 text-sm">
@@ -592,16 +615,24 @@
             <div id="wallpaperInfo" class="wallpaper-info">
                 <!-- 切换按钮行 -->
                 <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
-                    <div class="flex space-x-2">
-                        <button id="btnBingSource" class="source-btn active">Bing壁纸</button>
-                        <button id="btnYuanmengSource" class="source-btn">远梦壁纸</button>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-white/80 mr-1">选择壁纸API：</span>
+                        <button id="btnBingSource" class="source-btn active">Bing API</button>
+                        <button id="btnLoliSource" class="source-btn">Loli API</button>
+                        <a href="https://www.loliapi.com/" target="_blank" class="ml-2 text-xs text-blue-300 hover:underline" title="API文档">📄 文档</a>
                     </div>
-                    <span id="wallpaperSourceLabel" class="text-xs opacity-70">当前源: Bing</span>
+                    <div class="flex items-center">
+                        <span id="wallpaperSourceLabel" class="text-xs opacity-70">当前源: Bing</span>
+                        <button id="refreshWallpaperBtn" class="ml-2 text-white/70 hover:text-white transition-colors" title="刷新壁纸">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                    </div>
                 </div>
-                <!-- 壁纸描述动态区域 -->
+                <!-- 提示区域（用于Bing刷新提示） -->
+                <div id="wallpaperHint" class="text-xs text-yellow-300 mb-2 hidden">此bing壁纸一般在新的一天后更新</div>
+                <!-- 壁纸描述动态区域：Bing源显示介绍，Loli源清空 -->
                 <div id="wallpaperCaption" class="text-sm">
-                    <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
-                    <p>加载中...</p>
+                    <!-- 初始由JS填充 -->
                 </div>
             </div>
         </section>
