@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>White Client - MD3 Design Enhanced</title>
+    <title>White Client - 主题色适配版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -30,6 +30,7 @@
         :root {
             /* 从壁纸提取的原色 (Primary) */
             --md-primary: 66, 133, 244;
+            --md-primary-light: 150, 180, 255;
             --md-primary-container: 225, 235, 255;
             --md-on-primary: 255, 255, 255;
             --md-on-primary-container: 10, 30, 90;
@@ -155,18 +156,29 @@
                 background-color: color-mix(in srgb, var(--md-surface-primary-high) 35%, rgb(var(--md-surface-container-highest)));
             }
             
-            /* 4. 圆形功能按钮 - 主题色边框 */
+            /* 4. 圆形功能按钮 - 改进的深浅模式切换按钮（更饱和） */
             .circle-btn {
                 @apply fixed top-4 z-50 backdrop-blur-md w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300;
                 background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-highest)));
-                color: rgb(var(--md-primary));
-                border: 1.5px solid rgba(var(--md-primary), 0.3);
+                border: 1.5px solid rgba(var(--md-primary), 0.4);
                 box-shadow: 0px 1px 3px 1px rgba(var(--md-shadow-color), 0.1);
             }
+            
+            /* 黑夜模式切换按钮 - 更饱和的颜色 */
+            .dark-mode-toggle {
+                color: rgba(var(--md-primary), 1) !important;
+                filter: saturate(1.8) brightness(1.1);
+            }
+            
+            .notification-toggle {
+                color: rgba(var(--md-primary), 0.9) !important;
+                filter: saturate(1.5);
+            }
+            
             .circle-btn:hover {
                 background-color: color-mix(in srgb, var(--md-surface-primary-medium) 30%, rgb(var(--md-surface-container-highest)));
                 box-shadow: 0px 2px 6px 2px rgba(var(--md-shadow-color), 0.15);
-                border-color: rgba(var(--md-primary), 0.5);
+                border-color: rgba(var(--md-primary), 0.7);
             }
             
             /* 5. 通知面板 */
@@ -188,7 +200,7 @@
                 @apply opacity-0 invisible;
             }
             
-            /* 6. 贡献者卡片 - 微透明的纯主题色（根据需求修改） */
+            /* 6. 贡献者卡片 - 微透明的纯主题色 */
             .contributor-card {
                 @apply backdrop-blur-md rounded-2xl shadow-md p-4 transition-all duration-300 hover:shadow-lg border;
                 /* 改为微透明的纯主题色 */
@@ -288,21 +300,25 @@
                 @apply py-8 md:py-12;
             }
             
-            /* 14. 雪花效果 */
-            .snowflake {
+            /* 14. 气泡效果 - 替换雪花效果 */
+            .bubble {
                 position: fixed;
                 pointer-events: none;
                 z-index: 9999;
                 border-radius: 50%;
-                background: rgba(255, 255, 255, 0.8);
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
                 opacity: 0;
-                transition: opacity 0.3s ease;
+                transition: opacity 0.5s ease;
+                background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(var(--md-primary), 0.6));
+                box-shadow: 
+                    inset 0 0 20px rgba(255, 255, 255, 0.8),
+                    0 0 20px rgba(var(--md-primary), 0.5);
             }
             
-            .dark .snowflake {
-                background: rgba(255, 255, 255, 0.9);
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+            .dark .bubble {
+                background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(var(--md-primary), 0.7));
+                box-shadow: 
+                    inset 0 0 20px rgba(255, 255, 255, 0.9),
+                    0 0 20px rgba(var(--md-primary), 0.6);
             }
             
             /* 15. 链接样式 - 使用主题色 */
@@ -325,7 +341,7 @@
                 border-top: 1px solid rgba(var(--md-primary), 0.1);
             }
             
-            /* 18. 次要主标题（如QQ、bilibili等）使用更重的颜色 - 根据需求修改 */
+            /* 18. 次要主标题（如QQ、bilibili等）使用更重的颜色 */
             .contact-title {
                 @apply font-medium;
                 color: rgba(var(--md-primary), 0.9) !important;
@@ -335,6 +351,46 @@
             .dark .contact-title {
                 color: rgba(var(--md-primary), 0.95) !important;
             }
+            
+            /* 19. 标题图片颜色适配 - 修复透明背景被染色问题 */
+            .title-image-container {
+                @apply relative inline-block;
+            }
+            
+            /* 修复：使用mask-image来保持透明背景 */
+            .title-image {
+                -webkit-mask-image: url('title.png');
+                mask-image: url('title.png');
+                -webkit-mask-repeat: no-repeat;
+                mask-repeat: no-repeat;
+                -webkit-mask-position: center;
+                mask-position: center;
+                -webkit-mask-size: contain;
+                mask-size: contain;
+                background-color: rgb(var(--md-primary));
+                width: 100%;
+                height: 100%;
+                min-height: 200px;
+            }
+            
+            /* 20. 图片遮罩层，用于颜色适配 - 修复版本 */
+            .title-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                -webkit-mask-image: url('title.png');
+                mask-image: url('title.png');
+                -webkit-mask-repeat: no-repeat;
+                mask-repeat: no-repeat;
+                -webkit-mask-position: center;
+                mask-position: center;
+                -webkit-mask-size: contain;
+                mask-size: contain;
+                background: linear-gradient(135deg, rgba(var(--md-primary), 0.9) 0%, rgba(var(--md-primary), 0.6) 100%);
+            }
         }
     </style>
     <script>
@@ -343,9 +399,9 @@
         let notificationTimer = null;
         let isProcessingNotification = false;
         
-        // 雪花效果
-        let snowflakes = [];
-        let snowflakeIdCounter = 0;
+        // 气泡效果
+        let bubbles = [];
+        let bubbleIdCounter = 0;
         
         // 壁纸当前源
         let currentSource = 'bing';
@@ -606,8 +662,19 @@
             const [r, g, b] = primaryColor;
             const root = document.documentElement;
             
+            // 计算色相值
+            const hsl = rgbToHsl(r, g, b);
+            const hue = hsl[0] * 360;
+            
             // 设置主色
             root.style.setProperty('--md-primary', `${r}, ${g}, ${b}`);
+            
+            // 设置主色浅色版本
+            const lightColor = adjustColorBrightness(primaryColor, 1.3);
+            root.style.setProperty('--md-primary-light', `${lightColor[0]}, ${lightColor[1]}, ${lightColor[2]}`);
+            
+            // 设置CSS变量用于标题图片滤镜
+            root.style.setProperty('--primary-hue', hue);
             
             // 计算 on-primary 颜色（确保文字可读性）
             const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
@@ -623,7 +690,75 @@
             root.style.setProperty('--md-surface-primary-medium', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.08 : 0.12})`);
             root.style.setProperty('--md-surface-primary-high', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.12 : 0.18})`);
             
-            console.log('动态主题色已应用:', primaryColor, '亮度:', luminance.toFixed(0));
+            console.log('动态主题色已应用:', primaryColor, '亮度:', luminance.toFixed(0), '色相:', hue.toFixed(0));
+            
+            // 更新标题图片颜色
+            updateTitleImageColor(primaryColor, hue);
+            
+            // 更新按钮图标颜色
+            updateButtonIcons(primaryColor);
+        }
+        
+        /**
+         * 更新按钮图标颜色
+         */
+        function updateButtonIcons(primaryColor) {
+            const [r, g, b] = primaryColor;
+            const root = document.documentElement;
+            
+            // 计算更饱和的颜色
+            const hsl = rgbToHsl(r, g, b);
+            const saturatedColor = increaseSaturation([r, g, b], 1.5);
+            
+            // 更新CSS变量
+            root.style.setProperty('--md-primary-saturated', `${saturatedColor[0]}, ${saturatedColor[1]}, ${saturatedColor[2]}`);
+        }
+        
+        /**
+         * 增加颜色饱和度
+         */
+        function increaseSaturation(color, factor) {
+            const [r, g, b] = color;
+            const hsl = rgbToHsl(r, g, b);
+            
+            // 增加饱和度
+            let s = hsl[1] * factor;
+            s = Math.min(1, Math.max(0, s));
+            
+            // 转换回RGB
+            return hslToRgb(hsl[0], s, hsl[2]);
+        }
+        
+        /**
+         * HSL转RGB
+         */
+        function hslToRgb(h, s, l) {
+            let r, g, b;
+            
+            if (s === 0) {
+                r = g = b = l; // 灰色
+            } else {
+                const hue2rgb = (p, q, t) => {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1/6) return p + (q - p) * 6 * t;
+                    if (t < 1/2) return q;
+                    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                    return p;
+                };
+                
+                const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                const p = 2 * l - q;
+                r = hue2rgb(p, q, h + 1/3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1/3);
+            }
+            
+            return [
+                Math.round(r * 255),
+                Math.round(g * 255),
+                Math.round(b * 255)
+            ];
         }
         
         /**
@@ -635,6 +770,35 @@
                 Math.min(255, Math.max(0, Math.floor(color[1] * factor))),
                 Math.min(255, Math.max(0, Math.floor(color[2] * factor)))
             ];
+        }
+        
+        /**
+         * 更新标题图片颜色 - 修复透明背景被染色问题
+         */
+        function updateTitleImageColor(primaryColor, hue) {
+            const [r, g, b] = primaryColor;
+            const root = document.documentElement;
+            
+            // 计算浅色版本
+            const lightColor = adjustColorBrightness(primaryColor, 1.3);
+            
+            // 更新标题图片的CSS滤镜变量
+            root.style.setProperty('--primary-hue', hue);
+            
+            // 创建标题图片的遮罩层
+            const titleContainer = document.getElementById('titleContainer');
+            if (titleContainer) {
+                // 移除现有的遮罩层
+                const existingOverlay = titleContainer.querySelector('.title-overlay');
+                if (existingOverlay) {
+                    existingOverlay.remove();
+                }
+                
+                // 创建新的遮罩层
+                const overlay = document.createElement('div');
+                overlay.className = 'title-overlay';
+                titleContainer.appendChild(overlay);
+            }
         }
         
         // --- 黑夜模式 ---
@@ -897,66 +1061,90 @@
             }
         });
         
-        // --- 雪花效果 ---
-        function createSnowflake(x, y) {
-            const size = Math.random() * 5 + 3;
-            const id = `snowflake-${snowflakeIdCounter++}`;
+        // --- 气泡效果 ---
+        function createBubble(x, y) {
+            const size = Math.random() * 20 + 10; // 10-30px
+            const id = `bubble-${bubbleIdCounter++}`;
             
-            const snowflake = document.createElement('div');
-            snowflake.id = id;
-            snowflake.className = 'snowflake';
-            snowflake.style.width = `${size}px`;
-            snowflake.style.height = `${size}px`;
-            snowflake.style.left = `${x}px`;
-            snowflake.style.top = `${y}px`;
-            snowflake.style.opacity = '1';
+            const bubble = document.createElement('div');
+            bubble.id = id;
+            bubble.className = 'bubble';
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${x}px`;
+            bubble.style.top = `${y}px`;
+            bubble.style.opacity = '0.8';
             
-            document.body.appendChild(snowflake);
+            document.body.appendChild(bubble);
             
             const info = {
-                id, element: snowflake, x, y, size,
-                velocityX: (Math.random() - 0.5) * 2,
-                velocityY: Math.random() * 1 + 1,
+                id, element: bubble, x, y, size,
+                velocityX: (Math.random() - 0.5) * 1.5,
+                velocityY: -(Math.random() * 2 + 1), // 向上移动
                 rotation: Math.random() * 360,
-                rotationSpeed: (Math.random() - 0.5) * 2
+                rotationSpeed: (Math.random() - 0.5) * 1,
+                scale: 1,
+                scaleSpeed: (Math.random() - 0.5) * 0.01,
+                opacity: 0.8,
+                opacitySpeed: -0.002
             };
-            snowflakes.push(info);
+            bubbles.push(info);
             
-            setTimeout(() => removeSnowflake(id), 5000);
+            setTimeout(() => removeBubble(id), 5000);
         }
         
-        function updateSnowflakes() {
-            for (let i = snowflakes.length - 1; i >= 0; i--) {
-                const s = snowflakes[i];
-                s.x += s.velocityX;
-                s.y += s.velocityY;
-                s.rotation += s.rotationSpeed;
-                s.element.style.left = `${s.x}px`;
-                s.element.style.top = `${s.y}px`;
-                s.element.style.transform = `rotate(${s.rotation}deg)`;
-                const life = 1 - (s.y / window.innerHeight);
-                s.element.style.opacity = life > 0 ? life : 0;
-                if (s.y > window.innerHeight) removeSnowflake(s.id);
+        function updateBubbles() {
+            for (let i = bubbles.length - 1; i >= 0; i--) {
+                const b = bubbles[i];
+                
+                // 更新位置
+                b.x += b.velocityX;
+                b.y += b.velocityY;
+                
+                // 添加轻微的摆动
+                b.x += Math.sin(Date.now() * 0.001 + i) * 0.3;
+                
+                // 更新旋转
+                b.rotation += b.rotationSpeed;
+                
+                // 更新大小
+                b.scale += b.scaleSpeed;
+                b.scale = Math.max(0.5, Math.min(1.5, b.scale));
+                
+                // 更新透明度
+                b.opacity += b.opacitySpeed;
+                b.opacity = Math.max(0, Math.min(0.9, b.opacity));
+                
+                // 应用变换
+                b.element.style.left = `${b.x}px`;
+                b.element.style.top = `${b.y}px`;
+                b.element.style.transform = `translate(-50%, -50%) rotate(${b.rotation}deg) scale(${b.scale})`;
+                b.element.style.opacity = b.opacity;
+                
+                // 如果气泡移出屏幕顶部，移除它
+                if (b.y < -50 || b.x < -50 || b.x > window.innerWidth + 50) {
+                    removeBubble(b.id);
+                }
             }
-            requestAnimationFrame(updateSnowflakes);
+            requestAnimationFrame(updateBubbles);
         }
         
-        function removeSnowflake(id) {
-            snowflakes = snowflakes.filter(s => s.id !== id);
+        function removeBubble(id) {
+            bubbles = bubbles.filter(b => b.id !== id);
             const el = document.getElementById(id);
             if (el) {
                 el.style.opacity = '0';
-                setTimeout(() => el.remove(), 300);
+                setTimeout(() => el.remove(), 500);
             }
         }
         
         function handleClick(event) {
             if (event.target.closest('#darkModeToggle') || event.target.closest('#notificationToggle')) return;
-            const count = Math.floor(Math.random() * 6) + 5;
+            const count = Math.floor(Math.random() * 5) + 3; // 3-7个气泡
             for (let i = 0; i < count; i++) {
-                const offsetX = (Math.random() - 0.5) * 20;
-                const offsetY = (Math.random() - 0.5) * 20;
-                createSnowflake(event.clientX + offsetX, event.clientY + offsetY);
+                const offsetX = (Math.random() - 0.5) * 30;
+                const offsetY = (Math.random() - 0.5) * 30;
+                createBubble(event.clientX + offsetX, event.clientY + offsetY);
             }
         }
         
@@ -1014,7 +1202,7 @@
             
             setActiveSourceButton('bing');
             document.addEventListener('click', handleClick);
-            updateSnowflakes();
+            updateBubbles();
         };
     </script>
 </head>
@@ -1022,13 +1210,13 @@
     <!-- 背景壁纸 -->
     <div id="bgWallpaper" class="bg-wallpaper"></div>
     
-    <!-- 黑夜模式按钮 -->
-    <button id="darkModeToggle" class="circle-btn right-4" title="切换黑夜模式">
+    <!-- 黑夜模式按钮 - 更饱和的颜色 -->
+    <button id="darkModeToggle" class="circle-btn right-4 dark-mode-toggle" title="切换黑夜模式">
         <i id="darkModeIcon" class="fa fa-moon-o text-xl"></i>
     </button>
     
     <!-- 通知按钮 -->
-    <button id="notificationToggle" class="circle-btn right-20" title="查看通知">
+    <button id="notificationToggle" class="circle-btn right-20 notification-toggle" title="查看通知">
         <i id="notificationIcon" class="fa fa-bell text-xl"></i>
     </button>
     
@@ -1049,9 +1237,12 @@
     </div>
     
     <div class="container mx-auto px-4 max-w-3xl">
-        <!-- 头部区域 -->
+        <!-- 头部区域 - 标题图片颜色适配（修复透明背景） -->
         <header class="text-center section-padding">
-            <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg max-w-full h-auto"/>
+            <div id="titleContainer" class="title-image-container" style="max-width: 100%; min-height: 150px; position: relative;">
+                <!-- 使用div替代img，通过mask-image保持透明背景 -->
+                <div class="title-image"></div>
+            </div>
         </header>
         
         <!-- 下载区域 -->
