@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>White Client</title>
+    <title>White Client - MD3 Design Enhanced</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -26,34 +26,154 @@
         }
     </script>
     <style type="text/tailwindcss">
+        /* 增强的MD3动态色彩变量系统 */
+        :root {
+            /* 从壁纸提取的原色 (Primary) */
+            --md-primary: 66, 133, 244;
+            --md-primary-container: 225, 235, 255;
+            --md-on-primary: 255, 255, 255;
+            --md-on-primary-container: 10, 30, 90;
+            
+            /* 次要色/容器色 (Surface) - 基础中性色 */
+            --md-surface: 255, 255, 255;
+            --md-surface-dim: 227, 227, 227;
+            --md-on-surface: 28, 27, 31;
+            --md-on-surface-variant: 73, 69, 78;
+            
+            /* 增强的表面容器 - 与主题色关联 */
+            --md-surface-container-lowest: 255, 255, 255;
+            --md-surface-container-low: 247, 247, 247;
+            --md-surface-container: 242, 242, 242;
+            --md-surface-container-high: 235, 235, 235;
+            --md-surface-container-highest: 230, 230, 230;
+            
+            /* 轮廓 (Outline) */
+            --md-outline: 121, 116, 126;
+            --md-outline-variant: 196, 199, 197;
+            
+            /* 阴影 */
+            --md-shadow-color: 0, 0, 0;
+            
+            /* 圆角 */
+            --md-shape-extra-small: 4px;
+            --md-shape-small: 8px;
+            --md-shape-medium: 12px;
+            --md-shape-large: 16px;
+            --md-shape-extra-large: 28px;
+            --md-shape-full: 9999px;
+            
+            /* 新增：主题色相关的表面色（透明度较低） */
+            --md-surface-primary-low: rgba(var(--md-primary), 0.05);
+            --md-surface-primary-medium: rgba(var(--md-primary), 0.08);
+            --md-surface-primary-high: rgba(var(--md-primary), 0.12);
+        }
+        
+        /* 暗色主题变量覆写 */
+        .dark {
+            --md-surface: 28, 27, 31;
+            --md-surface-dim: 18, 18, 18;
+            --md-on-surface: 230, 225, 229;
+            --md-on-surface-variant: 202, 196, 208;
+            
+            --md-surface-container-lowest: 18, 18, 18;
+            --md-surface-container-low: 35, 33, 37;
+            --md-surface-container: 40, 38, 44;
+            --md-surface-container-high: 50, 48, 52;
+            --md-surface-container-highest: 61, 58, 66;
+            
+            --md-outline: 147, 143, 153;
+            --md-outline-variant: 70, 70, 70;
+            
+            /* 暗色模式下主题色相关表面色的透明度更高 */
+            --md-surface-primary-low: rgba(var(--md-primary), 0.08);
+            --md-surface-primary-medium: rgba(var(--md-primary), 0.12);
+            --md-surface-primary-high: rgba(var(--md-primary), 0.18);
+        }
+        
         @layer utilities {
-            .content-auto {
-                content-visibility: auto;
+            /* 基础样式 */
+            .dark-bg {
+                @apply transition-colors duration-300;
+                background-color: rgb(var(--md-surface));
+                color: rgb(var(--md-on-surface));
             }
+            
+            .dark-text {
+                color: rgb(var(--md-on-surface));
+            }
+            
+            .dark-text-secondary {
+                color: rgb(var(--md-on-surface-variant));
+            }
+            
+            /* 1. 设备/信息卡片 - 增强的主题色跟随 */
             .device-card {
-                /* 亚克力/毛玻璃效果 */
-                @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-white/20 dark:border-gray-700/20;
+                @apply backdrop-blur-md rounded-2xl p-6 transition-all duration-300 hover:shadow-lg border;
+                /* 使用主题色相关的表面色，但不透明 */
+                background-color: color-mix(in srgb, var(--md-surface-primary-medium) 30%, rgb(var(--md-surface-container)));
+                border-color: rgba(var(--md-outline-variant), 0.3);
+                box-shadow: 
+                    0px 1px 3px 0px rgba(var(--md-shadow-color), 0.1),
+                    0px 4px 8px 3px rgba(var(--md-shadow-color), 0.05);
             }
+            .device-card:hover {
+                box-shadow: 
+                    0px 2px 6px 0px rgba(var(--md-shadow-color), 0.15),
+                    0px 8px 12px 6px rgba(var(--md-shadow-color), 0.08);
+                background-color: color-mix(in srgb, var(--md-surface-primary-high) 40%, rgb(var(--md-surface-container-high)));
+            }
+            
+            /* 2. 主按钮 - MD3 Filled Button */
             .btn-primary {
-                /* 亚克力下载按钮 */
-                @apply bg-primary/70 hover:bg-primary/80 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 backdrop-blur-md border border-white/20 dark:border-primary/30;
+                @apply font-medium py-3 px-8 rounded-full transition-all duration-300 transform focus:outline-none;
+                background-color: rgb(var(--md-primary));
+                color: rgb(var(--md-on-primary));
+                box-shadow: 0px 1px 3px 1px rgba(var(--md-shadow-color), 0.15),
+                            0px 1px 2px 0px rgba(var(--md-shadow-color), 0.30);
+                border: none;
             }
-            .section-padding {
-                @apply py-8 md:py-12;
+            .btn-primary:hover {
+                background-color: rgba(var(--md-primary), 0.9);
+                box-shadow: 0px 2px 6px 2px rgba(var(--md-shadow-color), 0.15),
+                            0px 1px 2px 0px rgba(var(--md-shadow-color), 0.30);
+                transform: translateY(-1px) scale(1.02);
             }
+            .btn-primary:active {
+                box-shadow: 0px 1px 2px 0px rgba(var(--md-shadow-color), 0.30),
+                            0px 1px 3px 1px rgba(var(--md-shadow-color), 0.15);
+                transform: translateY(0px) scale(0.99);
+            }
+            
+            /* 3. 联系区域容器 - 更强的主题色跟随 */
             .contact-card {
-                /* 亚克力效果 */
-                @apply bg-gradient-to-r from-blue-50/80 to-indigo-50/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-xl shadow-md p-6 border border-blue-100/30 dark:border-gray-600/30;
+                @apply backdrop-blur-md rounded-2xl shadow-md p-6 border transition-all duration-300;
+                background-color: color-mix(in srgb, var(--md-surface-primary-medium) 25%, rgb(var(--md-surface-container-high)));
+                border-color: rgba(var(--md-outline-variant), 0.25);
+                box-shadow: 0px 2px 6px 2px rgba(var(--md-shadow-color), 0.05);
+            }
+            .contact-card:hover {
+                background-color: color-mix(in srgb, var(--md-surface-primary-high) 35%, rgb(var(--md-surface-container-highest)));
             }
             
-            /* 圆形按钮（黑夜/通知） */
+            /* 4. 圆形功能按钮 - 主题色边框 */
             .circle-btn {
-                @apply fixed top-4 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-800 dark:text-gray-200 w-12 h-12 flex items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/30 dark:border-gray-600/30;
+                @apply fixed top-4 z-50 backdrop-blur-md w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300;
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-highest)));
+                color: rgb(var(--md-primary));
+                border: 1.5px solid rgba(var(--md-primary), 0.3);
+                box-shadow: 0px 1px 3px 1px rgba(var(--md-shadow-color), 0.1);
+            }
+            .circle-btn:hover {
+                background-color: color-mix(in srgb, var(--md-surface-primary-medium) 30%, rgb(var(--md-surface-container-highest)));
+                box-shadow: 0px 2px 6px 2px rgba(var(--md-shadow-color), 0.15);
+                border-color: rgba(var(--md-primary), 0.5);
             }
             
-            /* 通知栏动画 */
+            /* 5. 通知面板 */
             .notification-panel {
-                @apply fixed top-16 right-4 z-40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl shadow-xl p-5 border border-gray-200/30 dark:border-gray-700/30 max-w-xs opacity-0 invisible;
+                @apply fixed top-16 right-4 z-40 backdrop-blur-md rounded-2xl shadow-xl p-5 border max-w-xs opacity-0 invisible;
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 15%, rgb(var(--md-surface-container-high)));
+                border-color: rgba(var(--md-primary), 0.2);
                 transform: translateX(20px) rotate(2deg) scale(0.95);
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
@@ -68,35 +188,73 @@
                 @apply opacity-0 invisible;
             }
             
-            .dark-bg {
-                @apply bg-gray-50 dark:bg-gray-900 transition-colors duration-300;
+            /* 6. 贡献者卡片 - 微透明的纯主题色（根据需求修改） */
+            .contributor-card {
+                @apply backdrop-blur-md rounded-2xl shadow-md p-4 transition-all duration-300 hover:shadow-lg border;
+                /* 改为微透明的纯主题色 */
+                background-color: rgba(var(--md-primary), 0.15);
+                border-color: rgba(var(--md-primary), 0.3);
+            }
+            .contributor-card:hover {
+                background-color: rgba(var(--md-primary), 0.25);
+                transform: translateY(-2px);
+                border-color: rgba(var(--md-primary), 0.5);
             }
             
-            .dark-text {
-                @apply text-gray-700 dark:text-gray-300;
-            }
-            
-            .dark-text-secondary {
-                @apply text-secondary dark:text-gray-400;
-            }
-            
-            .dark-info-bg {
-                @apply bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-md;
-            }
-            
+            /* 7. 联系方式内部项 - 轻微主题色跟随 */
             .dark-contact-item {
-                @apply bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm shadow-sm dark:shadow-gray-800 border border-white/20 dark:border-gray-800/20 rounded-lg;
+                @apply backdrop-blur-sm shadow-sm rounded-xl p-4 transition-colors duration-200;
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 10%, rgb(var(--md-surface-container-lowest)));
+                border: 1px solid rgba(var(--md-outline-variant), 0.15);
+            }
+            .dark-contact-item:hover {
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-lowest)));
+                border-color: rgba(var(--md-primary), 0.2);
             }
             
+            /* 8. 图标背景 - 主题色更明显 */
             .icon-bg {
-                @apply bg-blue-100/80 dark:bg-blue-800/80 backdrop-blur-sm w-12 h-12 flex items-center justify-center rounded-full mr-3;
+                @apply backdrop-blur-sm w-12 h-12 flex items-center justify-center rounded-full mr-3 transition-colors duration-300;
+                background-color: rgba(var(--md-primary), 0.15);
             }
-            
             .icon-color {
-                @apply text-blue-600 dark:text-blue-300 text-xl;
+                color: rgb(var(--md-primary));
+                transition: color 0.3s ease;
             }
             
-            /* 背景壁纸样式 */
+            /* 9. 壁纸信息卡片 */
+            .wallpaper-info {
+                @apply backdrop-blur-md p-4 rounded-2xl text-sm md:text-base max-w-3xl mx-auto mt-6 mb-8 transition-colors duration-300;
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-high)));
+                color: rgb(var(--md-on-surface));
+                border: 1px solid rgba(var(--md-outline-variant), 0.2);
+            }
+            
+            /* 10. 源切换按钮 - 主题色状态更明显 */
+            .source-btn {
+                @apply px-4 py-2 text-sm rounded-full transition-all backdrop-blur-sm border font-medium;
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 10%, rgb(var(--md-surface-container)));
+                color: rgb(var(--md-on-surface-variant));
+                border-color: rgba(var(--md-outline-variant), 0.4);
+            }
+            .source-btn.active {
+                background-color: rgba(var(--md-primary), 0.2);
+                color: rgb(var(--md-primary));
+                border-color: rgba(var(--md-primary), 0.4);
+                font-weight: 600;
+            }
+            .source-btn:hover:not(.active) {
+                background-color: rgba(var(--md-primary), 0.1);
+                color: rgb(var(--md-on-surface));
+            }
+            
+            /* 11. 底部时间显示 */
+            .time-display {
+                @apply text-sm font-medium;
+                color: rgb(var(--md-on-surface-variant));
+            }
+            
+            /* 12. 背景壁纸样式 */
             .bg-wallpaper {
                 position: fixed;
                 top: 0;
@@ -115,12 +273,22 @@
                 filter: brightness(0.7) contrast(1.1);
             }
             
-            /* 壁纸信息卡片 — 重新设计以容纳切换按钮 */
-            .wallpaper-info {
-                @apply bg-black/60 backdrop-blur-md text-white p-4 rounded-lg text-sm md:text-base max-w-3xl mx-auto mt-6 mb-8;
+            /* 13. 贡献者头像 */
+            .contributor-avatar {
+                @apply w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 mx-auto mb-3;
+                border-color: rgba(var(--md-primary), 0.3);
             }
             
-            /* 雪花效果 */
+            .contributor-name {
+                @apply text-center font-medium truncate;
+                color: rgb(var(--md-on-surface));
+            }
+            
+            .section-padding {
+                @apply py-8 md:py-12;
+            }
+            
+            /* 14. 雪花效果 */
             .snowflake {
                 position: fixed;
                 pointer-events: none;
@@ -137,28 +305,35 @@
                 box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
             }
             
-            .contributor-card {
-                @apply bg-white/80 dark:bg-gray-700/80 backdrop-blur-md rounded-xl shadow-md p-4 transition-all duration-300 hover:shadow-lg hover:scale-105 border border-white/20 dark:border-gray-600/20;
+            /* 15. 链接样式 - 使用主题色 */
+            a {
+                transition: color 0.2s ease;
+            }
+            a:not(.btn-primary):hover {
+                color: rgb(var(--md-primary)) !important;
             }
             
-            .contributor-avatar {
-                @apply w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-white/40 dark:border-gray-600/40 mx-auto mb-3;
+            /* 16. 标题样式增强 */
+            .section-title {
+                @apply text-xl font-semibold mb-4 flex items-center;
+                color: rgb(var(--md-primary));
             }
             
-            .contributor-name {
-                @apply text-center font-medium text-gray-800 dark:text-gray-200 truncate;
+            /* 17. 分隔线 - 轻微主题色 */
+            .divider {
+                @apply my-4;
+                border-top: 1px solid rgba(var(--md-primary), 0.1);
             }
             
-            .time-display {
-                @apply text-gray-600 dark:text-gray-400 text-sm font-medium;
+            /* 18. 次要主标题（如QQ、bilibili等）使用更重的颜色 - 根据需求修改 */
+            .contact-title {
+                @apply font-medium;
+                color: rgba(var(--md-primary), 0.9) !important;
+                font-weight: 600;
             }
             
-            /* 源切换按钮风格 */
-            .source-btn {
-                @apply px-3 py-1 text-xs rounded-full bg-white/20 hover:bg-white/30 transition-all backdrop-blur-sm border border-white/10;
-            }
-            .source-btn.active {
-                @apply bg-primary/60 hover:bg-primary/70 border-white/30 ring-2 ring-white/20;
+            .dark .contact-title {
+                color: rgba(var(--md-primary), 0.95) !important;
             }
         }
     </style>
@@ -167,14 +342,14 @@
         let notificationOpen = false;
         let notificationTimer = null;
         let isProcessingNotification = false;
-
+        
         // 雪花效果
         let snowflakes = [];
         let snowflakeIdCounter = 0;
-
-        // 壁纸当前源 ('bing' 或 'loli')
+        
+        // 壁纸当前源
         let currentSource = 'bing';
-
+        
         // 贡献者列表
         const contributors = [
             { name: '凋灵斯拉是个up主', image: '凋灵斯拉是个up主.jpg' },
@@ -186,10 +361,282 @@
             { name: 'NEETSama', image: 'NEETSama.jpg' },
             { name: 'asosa', image: 'asosa.jpg' }
         ];
-
+        
         // 提示定时器
         let hintTimer = null;
-
+        
+        // --- 改进的色彩提取算法 ---
+        
+        /**
+         * 从图片中提取主色 - 改进版
+         * 使用k-means聚类算法提高精度
+         * @param {string} imageUrl - 图片URL
+         * @returns {Promise<Array>} - 返回 [r, g, b] 数组
+         */
+        async function getDominantColorFromImage(imageUrl) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.src = imageUrl;
+                img.onload = function() {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // 缩小图片以加快处理，但保持足够细节
+                        const scale = 0.2; // 增加到20%以提高精度
+                        canvas.width = Math.max(img.width * scale, 100);
+                        canvas.height = Math.max(img.height * scale, 100);
+                        
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const pixels = imageData.data;
+                        const pixelCount = canvas.width * canvas.height;
+                        
+                        // 方法1: 使用改进的平均算法（排除极端颜色）
+                        const colors = [];
+                        for (let i = 0; i < pixels.length; i += 4) {
+                            const r = pixels[i];
+                            const g = pixels[i + 1];
+                            const b = pixels[i + 2];
+                            
+                            // 转换为HSL以更好地分析颜色
+                            const hsl = rgbToHsl(r, g, b);
+                            
+                            // 排除过于暗或过于亮的颜色（可能是阴影或高光）
+                            if (hsl[2] < 0.1 || hsl[2] > 0.9) continue;
+                            
+                            // 排除过于不饱和的颜色（可能是灰色）
+                            if (hsl[1] < 0.1) continue;
+                            
+                            colors.push([r, g, b]);
+                        }
+                        
+                        // 如果有足够的有意义颜色，使用它们
+                        if (colors.length > pixelCount * 0.3) { // 至少30%的像素是有意义的
+                            let r = 0, g = 0, b = 0;
+                            for (const color of colors) {
+                                r += color[0];
+                                g += color[1];
+                                b += color[2];
+                            }
+                            r = Math.floor(r / colors.length);
+                            g = Math.floor(g / colors.length);
+                            b = Math.floor(b / colors.length);
+                            resolve([r, g, b]);
+                        } else {
+                            // 否则使用简单k-means聚类
+                            resolve(kMeansDominantColor(pixels, canvas.width, canvas.height));
+                        }
+                    } catch (error) {
+                        console.warn('高级取色失败，使用基础算法:', error);
+                        // 回退到简单平均算法
+                        const simpleColor = getSimpleAverageColor(img);
+                        resolve(simpleColor);
+                    }
+                };
+                img.onerror = () => reject(new Error('图片加载失败'));
+            });
+        }
+        
+        /**
+         * 简单k-means聚类算法提取主色
+         */
+        function kMeansDominantColor(pixels, width, height) {
+            const pixelCount = width * height;
+            const sampleSize = Math.min(100, pixelCount);
+            const samples = [];
+            
+            // 随机取样
+            for (let i = 0; i < sampleSize; i++) {
+                const idx = Math.floor(Math.random() * pixelCount) * 4;
+                samples.push([pixels[idx], pixels[idx + 1], pixels[idx + 2]]);
+            }
+            
+            // 使用简化k-means (k=3)
+            let centroids = [
+                [255, 0, 0],    // 红
+                [0, 255, 0],    // 绿
+                [0, 0, 255]     // 蓝
+            ];
+            
+            // 迭代3次
+            for (let iter = 0; iter < 3; iter++) {
+                const clusters = [[], [], []];
+                
+                // 分配样本到最近的质心
+                for (const sample of samples) {
+                    let minDist = Infinity;
+                    let clusterIdx = 0;
+                    
+                    for (let i = 0; i < centroids.length; i++) {
+                        const dist = colorDistance(sample, centroids[i]);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            clusterIdx = i;
+                        }
+                    }
+                    
+                    clusters[clusterIdx].push(sample);
+                }
+                
+                // 重新计算质心
+                for (let i = 0; i < centroids.length; i++) {
+                    if (clusters[i].length > 0) {
+                        let r = 0, g = 0, b = 0;
+                        for (const sample of clusters[i]) {
+                            r += sample[0];
+                            g += sample[1];
+                            b += sample[2];
+                        }
+                        centroids[i] = [
+                            Math.floor(r / clusters[i].length),
+                            Math.floor(g / clusters[i].length),
+                            Math.floor(b / clusters[i].length)
+                        ];
+                    }
+                }
+            }
+            
+            // 找到最大的簇
+            let maxClusterSize = 0;
+            let dominantColor = centroids[0];
+            
+            // 计算每个簇的大小（简化版）
+            const allSamples = [];
+            for (let i = 0; i < pixels.length; i += 4) {
+                allSamples.push([pixels[i], pixels[i + 1], pixels[i + 2]]);
+            }
+            
+            const clusterCounts = [0, 0, 0];
+            for (const sample of allSamples.slice(0, 200)) { // 只检查200个样本
+                let minDist = Infinity;
+                let clusterIdx = 0;
+                
+                for (let i = 0; i < centroids.length; i++) {
+                    const dist = colorDistance(sample, centroids[i]);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        clusterIdx = i;
+                    }
+                }
+                
+                clusterCounts[clusterIdx]++;
+            }
+            
+            for (let i = 0; i < clusterCounts.length; i++) {
+                if (clusterCounts[i] > maxClusterSize) {
+                    maxClusterSize = clusterCounts[i];
+                    dominantColor = centroids[i];
+                }
+            }
+            
+            return dominantColor;
+        }
+        
+        /**
+         * 计算颜色距离
+         */
+        function colorDistance(color1, color2) {
+            const dr = color1[0] - color2[0];
+            const dg = color1[1] - color2[1];
+            const db = color1[2] - color2[2];
+            return Math.sqrt(dr * dr + dg * dg + db * db);
+        }
+        
+        /**
+         * RGB转HSL
+         */
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            
+            if (max === min) {
+                h = s = 0; // 灰色
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                
+                h /= 6;
+            }
+            
+            return [h, s, l];
+        }
+        
+        /**
+         * 简单平均颜色（备用方法）
+         */
+        function getSimpleAverageColor(img) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width * 0.1;
+            canvas.height = img.height * 0.1;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+            let r = 0, g = 0, b = 0, count = 0;
+            
+            for (let i = 0; i < imageData.length; i += 4) {
+                r += imageData[i];
+                g += imageData[i + 1];
+                b += imageData[i + 2];
+                count++;
+            }
+            
+            return [Math.floor(r / count), Math.floor(g / count), Math.floor(b / count)];
+        }
+        
+        /**
+         * 根据主色生成并应用完整的MD3调色板
+         * 增强版：生成更多与主题色相关的变量
+         */
+        function applyDynamicColorPalette(primaryColor) {
+            const [r, g, b] = primaryColor;
+            const root = document.documentElement;
+            
+            // 设置主色
+            root.style.setProperty('--md-primary', `${r}, ${g}, ${b}`);
+            
+            // 计算 on-primary 颜色（确保文字可读性）
+            const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            const onPrimary = luminance > 160 ? '20, 20, 20' : '255, 255, 255';
+            root.style.setProperty('--md-on-primary', onPrimary);
+            
+            // 生成主色容器颜色（比主色浅/深）
+            const primaryContainer = adjustColorBrightness(primaryColor, luminance > 160 ? 0.8 : 1.2);
+            root.style.setProperty('--md-primary-container', `${primaryContainer[0]}, ${primaryContainer[1]}, ${primaryContainer[2]}`);
+            
+            // 生成主题色相关的表面色
+            root.style.setProperty('--md-surface-primary-low', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.05 : 0.08})`);
+            root.style.setProperty('--md-surface-primary-medium', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.08 : 0.12})`);
+            root.style.setProperty('--md-surface-primary-high', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.12 : 0.18})`);
+            
+            console.log('动态主题色已应用:', primaryColor, '亮度:', luminance.toFixed(0));
+        }
+        
+        /**
+         * 调整颜色亮度
+         */
+        function adjustColorBrightness(color, factor) {
+            return [
+                Math.min(255, Math.max(0, Math.floor(color[0] * factor))),
+                Math.min(255, Math.max(0, Math.floor(color[1] * factor))),
+                Math.min(255, Math.max(0, Math.floor(color[2] * factor)))
+            ];
+        }
+        
         // --- 黑夜模式 ---
         function initDarkMode() {
             const savedTheme = localStorage.getItem('theme');
@@ -215,6 +662,9 @@
             }
             updateToggleIcon();
             updateWallpaperFilter();
+            
+            // 更新主题色相关的透明度变量
+            updateThemeColorVariables();
         }
         
         function updateToggleIcon() {
@@ -231,10 +681,21 @@
             const isDark = document.documentElement.classList.contains('dark');
             wallpaper.style.filter = isDark ? 'brightness(0.7) contrast(1.1)' : 'brightness(0.85) contrast(1.05)';
         }
-
+        
+        function updateThemeColorVariables() {
+            const root = document.documentElement;
+            const primary = getComputedStyle(root).getPropertyValue('--md-primary').trim();
+            const [r, g, b] = primary.split(',').map(v => parseInt(v.trim()));
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            // 更新主题色相关的表面色透明度
+            root.style.setProperty('--md-surface-primary-low', `rgba(${r}, ${g}, ${b}, ${isDark ? 0.08 : 0.05})`);
+            root.style.setProperty('--md-surface-primary-medium', `rgba(${r}, ${g}, ${b}, ${isDark ? 0.12 : 0.08})`);
+            root.style.setProperty('--md-surface-primary-high', `rgba(${r}, ${g}, ${b}, ${isDark ? 0.18 : 0.12})`);
+        }
+        
         // --- 壁纸加载函数 ---
-
-        // 加载Bing每日壁纸
+        
         async function loadBingWallpaper() {
             const captionDiv = document.getElementById('wallpaperCaption');
             const sourceLabel = document.getElementById('wallpaperSourceLabel');
@@ -243,12 +704,24 @@
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const data = await response.json();
                 if (data && data.url) {
-                    document.getElementById('bgWallpaper').style.backgroundImage = `url(${data.url})`;
+                    const imageUrl = data.url;
+                    document.getElementById('bgWallpaper').style.backgroundImage = `url(${imageUrl})`;
+                    
+                    // 加载图片并提取主题色
+                    try {
+                        const dominantColor = await getDominantColorFromImage(imageUrl);
+                        applyDynamicColorPalette(dominantColor);
+                    } catch (colorError) {
+                        console.warn('主题色提取失败，使用备用算法:', colorError);
+                        const simpleColor = await getSimpleAverageColorFromUrl(imageUrl);
+                        applyDynamicColorPalette(simpleColor);
+                    }
+                    
                     if (captionDiv) {
                         captionDiv.innerHTML = `
                             <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>📷 Bing 每日壁纸</p>
                             <p>${data.copyright || '无版权信息'}</p>
-                            ${data.copyrightLink ? `<p class="mt-2"><a href="${data.copyrightLink}" target="_blank" class="text-blue-300 hover:text-blue-200 underline">查看原图</a></p>` : ''}
+                            ${data.copyrightLink ? `<p class="mt-2"><a href="${data.copyrightLink}" target="_blank" class="hover:underline" style="color: rgb(var(--md-primary))">查看原图</a></p>` : ''}
                         `;
                     }
                     if (sourceLabel) sourceLabel.innerText = '当前源: Bing';
@@ -257,7 +730,16 @@
                 }
             } catch (error) {
                 console.error('Bing壁纸加载失败:', error);
-                document.getElementById('bgWallpaper').style.backgroundImage = 'url(https://picsum.photos/1920/1080?random=1)';
+                const fallbackUrl = 'https://picsum.photos/1920/1080?random=1';
+                document.getElementById('bgWallpaper').style.backgroundImage = `url(${fallbackUrl})`;
+                // 尝试从占位图取色
+                try {
+                    const simpleColor = await getSimpleAverageColorFromUrl(fallbackUrl);
+                    applyDynamicColorPalette(simpleColor);
+                } catch(e) { 
+                    console.warn('占位图取色失败，使用默认蓝色');
+                }
+                
                 if (captionDiv) {
                     captionDiv.innerHTML = `<p class="font-medium mb-1"><i class="fa fa-exclamation-triangle mr-2"></i>Bing壁纸加载失败，使用随机占位</p>`;
                 }
@@ -265,38 +747,61 @@
                 updateWallpaperFilter();
             }
         }
-
-        // 加载LoliAPI壁纸 (直接图片)
-        function loadLoliWallpaper() {
+        
+        async function getSimpleAverageColorFromUrl(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.onload = function() {
+                    resolve(getSimpleAverageColor(img));
+                };
+                img.onerror = function() {
+                    resolve([66, 133, 244]); // 默认蓝色
+                };
+                img.src = url;
+            });
+        }
+        
+        async function loadLoliWallpaper() {
             const captionDiv = document.getElementById('wallpaperCaption');
             const sourceLabel = document.getElementById('wallpaperSourceLabel');
             const wallpaperDiv = document.getElementById('bgWallpaper');
-            // 添加时间戳防止缓存
             const apiUrl = `https://www.loliapi.com/acg/?_=${Date.now()}`;
             
-            // 清空介绍区域（Loli源不显示介绍）
             if (captionDiv) {
-                captionDiv.innerHTML = ''; // 清空内容
+                captionDiv.innerHTML = '<p class="font-medium mb-1"><i class="fa fa-image mr-2"></i>🎨 Loli API 随机图片</p><p>图片来源于 Loli API，无版权信息</p>';
             }
             
-            // 使用图片预加载方式，确保图片有效再设置背景
-            const img = new Image();
-            img.onload = function() {
-                wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
-                if (sourceLabel) sourceLabel.innerText = '当前源: Loli';
-                updateWallpaperFilter();
-            };
-            img.onerror = function() {
-                console.error('Loli壁纸加载失败，回退Bing');
-                // 加载失败时切回Bing并提示（Bing会恢复介绍）
-                loadBingWallpaper();
-                setActiveSourceButton('bing');
-                currentSource = 'bing';
-                if (sourceLabel) sourceLabel.innerText = '当前源: Bing (自动回退)';
-            };
-            img.src = apiUrl; // 开始加载
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.onload = async function() {
+                    wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
+                    // 从加载成功的图片中取色
+                    try {
+                        const dominantColor = await getDominantColorFromImage(apiUrl);
+                        applyDynamicColorPalette(dominantColor);
+                    } catch(e) {
+                        console.warn('Loli壁纸高级取色失败，使用简单平均:', e);
+                        const simpleColor = getSimpleAverageColor(img);
+                        applyDynamicColorPalette(simpleColor);
+                    }
+                    
+                    if (sourceLabel) sourceLabel.innerText = '当前源: Loli';
+                    updateWallpaperFilter();
+                    resolve();
+                };
+                img.onerror = function() {
+                    console.error('Loli壁纸加载失败，回退Bing');
+                    loadBingWallpaper();
+                    setActiveSourceButton('bing');
+                    currentSource = 'bing';
+                    resolve();
+                };
+                img.src = apiUrl;
+            });
         }
-
+        
         // --- 源切换控制 ---
         function setActiveSourceButton(source) {
             const btnBing = document.getElementById('btnBingSource');
@@ -310,52 +815,47 @@
                 btnBing.classList.remove('active');
             }
         }
-
-        function switchToBing() {
+        
+        async function switchToBing() {
             if (currentSource === 'bing') return;
             currentSource = 'bing';
             setActiveSourceButton('bing');
-            loadBingWallpaper();
+            await loadBingWallpaper();
         }
-
-        function switchToLoli() {
+        
+        async function switchToLoli() {
             if (currentSource === 'loli') return;
             currentSource = 'loli';
             setActiveSourceButton('loli');
-            loadLoliWallpaper();
+            await loadLoliWallpaper();
         }
-
+        
         // --- 刷新按钮处理 ---
-        function refreshWallpaper() {
+        async function refreshWallpaper() {
             if (currentSource === 'bing') {
-                // 显示提示
                 showBingHint();
-                loadBingWallpaper();
+                await loadBingWallpaper();
             } else {
-                loadLoliWallpaper();
+                await loadLoliWallpaper();
             }
         }
-
-        // 显示Bing刷新提示
+        
         function showBingHint() {
             const hintDiv = document.getElementById('wallpaperHint');
             if (!hintDiv) return;
-            // 清除之前的定时器
             if (hintTimer) clearTimeout(hintTimer);
-            // 显示提示
             hintDiv.classList.remove('hidden');
-            // 3秒后隐藏
             hintTimer = setTimeout(() => {
                 hintDiv.classList.add('hidden');
                 hintTimer = null;
             }, 3000);
         }
-
+        
         // --- 通知栏 ---
         function toggleNotification() {
             if (isProcessingNotification) return;
             isProcessingNotification = true;
-
+        
             const panel = document.getElementById('notificationPanel');
             const icon = document.getElementById('notificationIcon');
             
@@ -384,7 +884,7 @@
                 isProcessingNotification = false;
             }
         }
-
+        
         // 点击外部关闭通知
         document.addEventListener('click', function(event) {
             const panel = document.getElementById('notificationPanel');
@@ -396,7 +896,7 @@
                 toggleNotification();
             }
         });
-
+        
         // --- 雪花效果 ---
         function createSnowflake(x, y) {
             const size = Math.random() * 5 + 3;
@@ -424,7 +924,7 @@
             
             setTimeout(() => removeSnowflake(id), 5000);
         }
-
+        
         function updateSnowflakes() {
             for (let i = snowflakes.length - 1; i >= 0; i--) {
                 const s = snowflakes[i];
@@ -440,7 +940,7 @@
             }
             requestAnimationFrame(updateSnowflakes);
         }
-
+        
         function removeSnowflake(id) {
             snowflakes = snowflakes.filter(s => s.id !== id);
             const el = document.getElementById(id);
@@ -449,7 +949,7 @@
                 setTimeout(() => el.remove(), 300);
             }
         }
-
+        
         function handleClick(event) {
             if (event.target.closest('#darkModeToggle') || event.target.closest('#notificationToggle')) return;
             const count = Math.floor(Math.random() * 6) + 5;
@@ -459,7 +959,7 @@
                 createSnowflake(event.clientX + offsetX, event.clientY + offsetY);
             }
         }
-
+        
         // --- 时间显示 ---
         function updateTime() {
             const timeElement = document.getElementById('currentTime');
@@ -475,7 +975,7 @@
             const weekday = weekdays[now.getDay()];
             timeElement.innerHTML = `<i class="fa fa-clock-o mr-1"></i> ${year}-${month}-${day} ${weekday} ${hours}:${minutes}:${seconds}`;
         }
-
+        
         // --- 渲染贡献者 ---
         function renderContributors() {
             const container = document.getElementById('contributorsList');
@@ -493,7 +993,7 @@
                 container.appendChild(card);
             });
         }
-
+        
         // --- 页面初始化 ---
         window.onload = async function() {
             initDarkMode();
@@ -512,10 +1012,7 @@
             document.getElementById('btnLoliSource').addEventListener('click', switchToLoli);
             document.getElementById('refreshWallpaperBtn').addEventListener('click', refreshWallpaper);
             
-            // 设置初始激活按钮
             setActiveSourceButton('bing');
-            
-            // 雪花效果
             document.addEventListener('click', handleClick);
             updateSnowflakes();
         };
@@ -538,13 +1035,13 @@
     <!-- 通知栏 -->
     <div id="notificationPanel" class="notification-panel">
         <div class="flex items-start">
-            <div class="bg-red-100 dark:bg-red-900/50 p-2 rounded-full mr-3">
-                <i class="fa fa-info-circle text-red-600 dark:text-red-400"></i>
+            <div class="icon-bg">
+                <i class="fa fa-info-circle icon-color"></i>
             </div>
             <div class="flex-1">
-                <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-1">重要通知</h3>
-                <p class="text-gray-700 dark:text-gray-300 text-sm">由于种种原因，我宣布更新日志不再公开。对于CB604BL等人所发起的0.14客户端研究授权我表示理解但不愿加入，我以此表达抱歉并做出了我认为正确的做法：表达他们对客户端制作做出贡献的感谢</p>
-                <button onclick="toggleNotification()" class="mt-3 text-xs text-primary hover:text-primary/80 flex items-center">
+                <h3 class="font-semibold mb-1" style="color: rgb(var(--md-on-surface));">重要通知</h3>
+                <p class="text-sm" style="color: rgb(var(--md-on-surface-variant));">由于种种原因，我宣布更新日志不再公开。对于CB604BL等人所发起的0.14客户端研究授权我表示理解但不愿加入，我以此表达抱歉并做出了我认为正确的做法：表达他们对客户端制作做出贡献的感谢</p>
+                <button onclick="toggleNotification()" class="mt-3 text-xs flex items-center hover:opacity-80" style="color: rgb(var(--md-primary));">
                     <i class="fa fa-times mr-1"></i> 关闭
                 </button>
             </div>
@@ -552,21 +1049,19 @@
     </div>
     
     <div class="container mx-auto px-4 max-w-3xl">
-        <!-- 头部区域 - 已去除所有光效，仅保留标题图片 -->
+        <!-- 头部区域 -->
         <header class="text-center section-padding">
-            <!-- 原光效容器已移除，仅保留干净图片 -->
             <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg max-w-full h-auto"/>
-            <!-- 副标题已删除 -->
         </header>
         
         <!-- 下载区域 -->
         <section class="section-padding text-center">
             <a href="https://www.123865.com/s/EvgbVv-uvStd" 
                class="btn-primary inline-flex items-center justify-center">
-                <i class="fa fa-download mr-2"></i> 下载White Client稳定版本 <span class="text-sm text-gray-200">(版本: 3.4)</span>
+                <i class="fa fa-download mr-2"></i> 下载White Client稳定版本 <span class="text-sm opacity-90">(版本: 3.4)</span>
             </a>
             
-            <div class="mt-6 text-gray-600 dark:text-gray-400 text-sm">
+            <div class="mt-6 text-sm" style="color: rgb(var(--md-on-surface-variant));">
                 <p>jjjmmmdexh制作</p>
             </div>
         </section>
@@ -574,24 +1069,35 @@
         <!-- info 联系方式 -->
         <section class="section-padding">
             <div class="contact-card">
-                <h2 class="text-xl font-semibold text-dark dark:text-gray-200 mb-4 flex items-center">
-                    <i class="fa fa-envelope text-primary mr-2"></i>关于
+                <h2 class="section-title">
+                    <i class="fa fa-envelope mr-2"></i>关于
                 </h2>
                 
-                <div class="space-y-4 dark-text">
+                <div class="space-y-4">
                     <div class="flex items-center p-3 dark-contact-item">
                         <div class="icon-bg"><i class="fa fa-qq icon-color"></i></div>
-                        <div><p class="font-medium">QQ</p><p class="text-sm text-gray-500 dark:text-gray-400">1591123827</p></div>
+                        <div>
+                            <p class="contact-title">QQ</p>
+                            <p class="text-sm" style="color: rgb(var(--md-on-surface-variant));">1591123827</p>
+                        </div>
                     </div>
                     <div class="flex items-center p-3 dark-contact-item">
                         <div class="icon-bg"><i class="fa fa-envelope icon-color"></i></div>
-                        <div><p class="font-medium">E-MAIL</p><a href="mailto:name1591123827@163.com" class="text-sm text-primary hover:underline">name1591123827@163.com</a></div>
+                        <div>
+                            <p class="contact-title">E-MAIL</p>
+                            <a href="mailto:name1591123827@163.com" class="text-sm hover:underline" style="color: rgb(var(--md-primary));">name1591123827@163.com</a>
+                        </div>
                     </div>
                     <div class="flex items-center p-3 dark-contact-item">
                         <div class="icon-bg">
-                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-color"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .356-.124.657-.373.906l-1.174 1.12zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.789 1.894v7.52c.02.765.283 1.395.789 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.128.789-1.893v-7.52c-.02-.765-.283-1.396-.789-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z" fill="currentColor"/></svg>
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-color">
+                                <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .356-.124.657-.373.906l-1.174 1.12zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.789 1.894v7.52c.02.765.283 1.395.789 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.128.789-1.893v-7.52c-.02-.765-.283-1.396-.789-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z" fill="currentColor"/>
+                            </svg>
                         </div>
-                        <div><p class="font-medium">bilibili</p><a href="https://space.bilibili.com/3546584027499085" target="_blank" class="text-sm text-primary hover:underline">jjjmmmdexh</a></div>
+                        <div>
+                            <p class="contact-title">bilibili</p>
+                            <a href="https://space.bilibili.com/3546584027499085" target="_blank" class="text-sm hover:underline" style="color: rgb(var(--md-primary));">jjjmmmdexh</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -600,37 +1106,38 @@
         <!-- 贡献者区域 -->
         <section class="section-padding">
             <div class="contact-card">
-                <h2 class="text-xl font-semibold text-dark dark:text-gray-200 mb-6 flex items-center">
-                    <i class="fa fa-users text-primary mr-2"></i>贡献者
+                <h2 class="section-title">
+                    <i class="fa fa-users mr-2"></i>贡献者
                 </h2>
                 <div id="contributorsList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
-                <div class="mt-6 text-sm text-gray-500 dark:text-gray-400 text-center">
+                <div class="divider"></div>
+                <div class="mt-4 text-sm text-center" style="color: rgb(var(--md-on-surface-variant));">
                     <p>感谢所有贡献者为White Client做出的贡献！</p>
                 </div>
             </div>
         </section>
         
-        <!-- 壁纸信息 + 源切换 (重构) -->
+        <!-- 壁纸信息 + 源切换 -->
         <section class="px-4">
             <div id="wallpaperInfo" class="wallpaper-info">
                 <!-- 切换按钮行 -->
                 <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
                     <div class="flex items-center space-x-2">
-                        <span class="text-sm text-white/80 mr-1">选择壁纸API：</span>
+                        <span class="text-sm opacity-80 mr-1">选择壁纸API：</span>
                         <button id="btnBingSource" class="source-btn active">Bing API</button>
                         <button id="btnLoliSource" class="source-btn">Loli API</button>
-                        <a href="https://www.loliapi.com/" target="_blank" class="ml-2 text-xs text-blue-300 hover:underline" title="API文档">📄 文档</a>
+                        <a href="https://www.loliapi.com/" target="_blank" class="ml-2 text-xs hover:underline opacity-70" title="API文档">📄 文档</a>
                     </div>
                     <div class="flex items-center">
                         <span id="wallpaperSourceLabel" class="text-xs opacity-70">当前源: Bing</span>
-                        <button id="refreshWallpaperBtn" class="ml-2 text-white/70 hover:text-white transition-colors" title="刷新壁纸">
+                        <button id="refreshWallpaperBtn" class="ml-2 transition-colors hover:opacity-80" style="color: rgb(var(--md-on-surface-variant));" title="刷新壁纸">
                             <i class="fa fa-refresh"></i>
                         </button>
                     </div>
                 </div>
                 <!-- 提示区域（用于Bing刷新提示） -->
-                <div id="wallpaperHint" class="text-xs text-yellow-300 mb-2 hidden">此bing壁纸一般在新的一天后更新</div>
-                <!-- 壁纸描述动态区域：Bing源显示介绍，Loli源清空 -->
+                <div id="wallpaperHint" class="text-xs mb-2 hidden" style="color: rgb(var(--md-primary)); opacity: 0.9;">此Bing壁纸一般在新的一天后更新</div>
+                <!-- 壁纸描述动态区域 -->
                 <div id="wallpaperCaption" class="text-sm">
                     <!-- 初始由JS填充 -->
                 </div>
@@ -640,7 +1147,7 @@
         <!-- 底部时间 -->
         <footer class="py-6 text-center">
             <div id="currentTime" class="time-display mb-2"></div>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">All things by jjjmmmdexh</p>
+            <p class="text-sm" style="color: rgb(var(--md-on-surface-variant));">All things by jjjmmmdexh</p>
         </footer>
     </div>
 </body>
