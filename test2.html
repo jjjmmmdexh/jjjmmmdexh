@@ -3,149 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>White Client - MD3 Design</title>
+    <title>White Client - 主题色适配版</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 使用 Material Icons (MD3 推荐) 替代 Font Awesome -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        // ===== MD3 浅色主题色彩系统 =====
-                        // 主色 (Primary) - 基于原#007bff调整的紫色系
-                        'primary': '#6750A4',
-                        'on-primary': '#FFFFFF',
-                        'primary-container': '#EADDFF',
-                        'on-primary-container': '#21005D',
-                        // 次要色 (Secondary)
-                        'secondary': '#625B71',
-                        'on-secondary': '#FFFFFF',
-                        'secondary-container': '#E8DEF8',
-                        'on-secondary-container': '#1D192B',
-                        // 表面色 (Surface)
-                        'surface': '#FEF7FF',
-                        'on-surface': '#1D1B20',
-                        'surface-variant': '#E7E0EC',
-                        'on-surface-variant': '#49454F',
-                        'outline': '#79747E',
-                        'outline-variant': '#CAC4D0',
-                        // 错误色 (Error)
-                        'error': '#B3261E',
-                        'on-error': '#FFFFFF',
-                        'error-container': '#F9DEDC',
-                        'on-error-container': '#410E0B',
-                        // 成功/信息色
-                        'success': '#0D7C4D',
-                        'on-success': '#FFFFFF',
-                        'success-container': '#A4F6CA',
-                        'on-success-container': '#002112',
+                        primary: '#007bff',
+                        secondary: '#6c757d',
+                        dark: '#343a40',
+                        light: '#f8f9fa',
+                        bilibili: '#00A1D6'
                     },
                     fontFamily: {
-                        // MD3 推荐字体
-                        sans: ['Roboto', 'system-ui', 'sans-serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
                     },
-                    // 扩展阴影以匹配 MD3 海拔
-                    boxShadow: {
-                        '1': '0px 1px 2px 0px rgba(0, 0, 0, 0.30), 0px 1px 3px 1px rgba(0, 0, 0, 0.15)',
-                        '2': '0px 1px 2px 0px rgba(0, 0, 0, 0.30), 0px 2px 6px 2px rgba(0, 0, 0, 0.15)',
-                        '3': '0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.30)',
-                        '4': '0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px 0px rgba(0, 0, 0, 0.30)',
-                        '5': '0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.30)',
-                    },
-                    // 圆角系统
-                    borderRadius: {
-                        'extra-small': '4px',
-                        'small': '8px',
-                        'medium': '12px',
-                        'large': '16px',
-                        'extra-large': '28px',
-                        'full': '9999px',
-                    }
                 }
             }
         }
     </script>
     <style type="text/tailwindcss">
-        @layer base {
-            /* 基础样式 */
-            body {
-                @apply bg-surface text-on-surface antialiased;
-            }
+        /* 增强的MD3动态色彩变量系统 */
+        :root {
+            /* 从壁纸提取的原色 (Primary) */
+            --md-primary: 66, 133, 244;
+            --md-primary-light: 150, 180, 255;
+            --md-primary-container: 225, 235, 255;
+            --md-on-primary: 255, 255, 255;
+            --md-on-primary-container: 10, 30, 90;
+            
+            /* 次要色/容器色 (Surface) - 基础中性色 */
+            --md-surface: 255, 255, 255;
+            --md-surface-dim: 227, 227, 227;
+            --md-on-surface: 28, 27, 31;
+            --md-on-surface-variant: 73, 69, 78;
+            
+            /* 增强的表面容器 - 与主题色关联 */
+            --md-surface-container-lowest: 255, 255, 255;
+            --md-surface-container-low: 247, 247, 247;
+            --md-surface-container: 242, 242, 242;
+            --md-surface-container-high: 235, 235, 235;
+            --md-surface-container-highest: 230, 230, 230;
+            
+            /* 轮廓 (Outline) */
+            --md-outline: 121, 116, 126;
+            --md-outline-variant: 196, 199, 197;
+            
+            /* 阴影 */
+            --md-shadow-color: 0, 0, 0;
+            
+            /* 圆角 */
+            --md-shape-extra-small: 4px;
+            --md-shape-small: 8px;
+            --md-shape-medium: 12px;
+            --md-shape-large: 16px;
+            --md-shape-extra-large: 28px;
+            --md-shape-full: 9999px;
+            
+            /* 新增：主题色相关的表面色（透明度较低） */
+            --md-surface-primary-low: rgba(var(--md-primary), 0.05);
+            --md-surface-primary-medium: rgba(var(--md-primary), 0.08);
+            --md-surface-primary-high: rgba(var(--md-primary), 0.12);
         }
+        
+        /* 暗色主题变量覆写 */
+        .dark {
+            --md-surface: 28, 27, 31;
+            --md-surface-dim: 18, 18, 18;
+            --md-on-surface: 230, 225, 229;
+            --md-on-surface-variant: 202, 196, 208;
+            
+            --md-surface-container-lowest: 18, 18, 18;
+            --md-surface-container-low: 35, 33, 37;
+            --md-surface-container: 40, 38, 44;
+            --md-surface-container-high: 50, 48, 52;
+            --md-surface-container-highest: 61, 58, 66;
+            
+            --md-outline: 147, 143, 153;
+            --md-outline-variant: 70, 70, 70;
+            
+            /* 暗色模式下主题色相关表面色的透明度更高 */
+            --md-surface-primary-low: rgba(var(--md-primary), 0.08);
+            --md-surface-primary-medium: rgba(var(--md-primary), 0.12);
+            --md-surface-primary-high: rgba(var(--md-primary), 0.18);
+        }
+        
         @layer utilities {
-            /* MD3 卡片样式 - 移除毛玻璃，使用纯色与阴影 */
-            .md3-card {
-                @apply bg-surface rounded-large shadow-1 p-6 transition-all duration-200 border border-outline-variant/30;
+            /* 基础样式 */
+            .dark-bg {
+                @apply transition-colors duration-300;
+                background-color: rgb(var(--md-surface));
+                color: rgb(var(--md-on-surface));
             }
-            .md3-card:hover {
-                @apply shadow-2;
+            
+            .dark-text {
+                color: rgb(var(--md-on-surface));
             }
-            /* 贡献者卡片专用 */
-            .md3-contributor-card {
-                @apply bg-surface-variant/50 rounded-large shadow-1 p-4 transition-all duration-200 flex flex-col items-center;
+            
+            .dark-text-secondary {
+                color: rgb(var(--md-on-surface-variant));
             }
-            .md3-contributor-card:hover {
-                @apply shadow-2 bg-surface-variant/70;
+            
+            /* 1. 设备/信息卡片 - 增强的主题色跟随 */
+            .device-card {
+                @apply backdrop-blur-md rounded-2xl p-6 transition-all duration-300 hover:shadow-lg border;
+                /* 使用主题色相关的表面色，但不透明 */
+                background-color: color-mix(in srgb, var(--md-surface-primary-medium) 30%, rgb(var(--md-surface-container)));
+                border-color: rgba(var(--md-outline-variant), 0.3);
+                box-shadow: 
+                    0px 1px 3px 0px rgba(var(--md-shadow-color), 0.1),
+                    0px 4px 8px 3px rgba(var(--md-shadow-color), 0.05);
             }
-            /* 扩展FAB (主要下载按钮) */
-            .md3-extended-fab {
-                @apply bg-primary-container text-on-primary-container font-medium py-4 px-8 rounded-full shadow-3 hover:shadow-4 active:shadow-2 transition-all duration-200 flex items-center justify-center;
-                /* 状态层 */
-                position: relative;
-                overflow: hidden;
+            .device-card:hover {
+                box-shadow: 
+                    0px 2px 6px 0px rgba(var(--md-shadow-color), 0.15),
+                    0px 8px 12px 6px rgba(var(--md-shadow-color), 0.08);
+                background-color: color-mix(in srgb, var(--md-surface-primary-high) 40%, rgb(var(--md-surface-container-high)));
             }
-            .md3-extended-fab::after {
-                content: '';
-                @apply absolute inset-0 bg-on-primary-container opacity-0 transition-opacity duration-200;
+            
+            /* 2. 主按钮 - MD3 Filled Button */
+            .btn-primary {
+                @apply font-medium py-3 px-8 rounded-full transition-all duration-300 transform focus:outline-none;
+                background-color: rgb(var(--md-primary));
+                color: rgb(var(--md-on-primary));
+                box-shadow: 0px 1px 3px 1px rgba(var(--md-shadow-color), 0.15),
+                            0px 1px 2px 0px rgba(var(--md-shadow-color), 0.30);
+                border: none;
             }
-            .md3-extended-fab:hover::after {
-                opacity: 0.08;
+            .btn-primary:hover {
+                background-color: rgba(var(--md-primary), 0.9);
+                box-shadow: 0px 2px 6px 2px rgba(var(--md-shadow-color), 0.15),
+                            0px 1px 2px 0px rgba(var(--md-shadow-color), 0.30);
+                transform: translateY(-1px) scale(1.02);
             }
-            .md3-extended-fab:active::after {
-                opacity: 0.12;
+            .btn-primary:active {
+                box-shadow: 0px 1px 2px 0px rgba(var(--md-shadow-color), 0.30),
+                            0px 1px 3px 1px rgba(var(--md-shadow-color), 0.15);
+                transform: translateY(0px) scale(0.99);
             }
-            /* 辅助按钮 (Segmented Button / Chip 样式) */
-            .md3-assist-chip {
-                @apply bg-surface-variant text-on-surface-variant font-medium py-2 px-4 rounded-full shadow-0 hover:shadow-1 transition-all duration-200 border border-outline-variant;
+            
+            /* 3. 联系区域容器 - 更强的主题色跟随 */
+            .contact-card {
+                @apply backdrop-blur-md rounded-2xl shadow-md p-6 border transition-all duration-300;
+                background-color: color-mix(in srgb, var(--md-surface-primary-medium) 25%, rgb(var(--md-surface-container-high)));
+                border-color: rgba(var(--md-outline-variant), 0.25);
+                box-shadow: 0px 2px 6px 2px rgba(var(--md-shadow-color), 0.05);
             }
-            .md3-assist-chip.active {
-                @apply bg-secondary-container text-on-secondary-container border-0 shadow-1;
+            .contact-card:hover {
+                background-color: color-mix(in srgb, var(--md-surface-primary-high) 35%, rgb(var(--md-surface-container-highest)));
             }
-            /* 图标按钮 (圆形按钮) */
-            .md3-icon-button {
-                @apply w-12 h-12 rounded-full flex items-center justify-center text-on-surface-variant bg-surface-variant shadow-0 hover:shadow-1 transition-all duration-200;
-                position: relative;
-                overflow: hidden;
+            
+            /* 4. 圆形功能按钮 - 主题色边框 */
+            .circle-btn {
+                @apply fixed top-4 z-50 backdrop-blur-md w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300;
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-highest)));
+                color: rgb(var(--md-primary));
+                border: 1.5px solid rgba(var(--md-primary), 0.3);
+                box-shadow: 0px 1px 3px 1px rgba(var(--md-shadow-color), 0.1);
             }
-            .md3-icon-button::after {
-                content: '';
-                @apply absolute inset-0 bg-on-surface opacity-0 transition-opacity duration-200;
+            .circle-btn:hover {
+                background-color: color-mix(in srgb, var(--md-surface-primary-medium) 30%, rgb(var(--md-surface-container-highest)));
+                box-shadow: 0px 2px 6px 2px rgba(var(--md-shadow-color), 0.15);
+                border-color: rgba(var(--md-primary), 0.5);
             }
-            .md3-icon-button:hover::after {
-                opacity: 0.08;
+            
+            /* 5. 通知面板 */
+            .notification-panel {
+                @apply fixed top-16 right-4 z-40 backdrop-blur-md rounded-2xl shadow-xl p-5 border max-w-xs opacity-0 invisible;
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 15%, rgb(var(--md-surface-container-high)));
+                border-color: rgba(var(--md-primary), 0.2);
+                transform: translateX(20px) rotate(2deg) scale(0.95);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
-            .md3-icon-button:active::after {
-                opacity: 0.12;
+            
+            .notification-panel.open {
+                @apply opacity-100 visible;
+                transform: translateX(0) rotate(0deg) scale(1);
             }
-            /* 通知面板 - 调整为 MD3 Snackbar 样式 */
-            .md3-snackbar {
-                @apply fixed top-20 right-4 z-40 bg-inverse-surface text-inverse-on-surface rounded-medium shadow-3 p-4 max-w-xs;
-                transform: translateY(-20px);
-                opacity: 0;
-                transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            
+            .notification-panel.closing {
+                transform: translateX(20px) rotate(-2deg) scale(0.95);
+                @apply opacity-0 invisible;
             }
-            .md3-snackbar.open {
-                transform: translateY(0);
-                opacity: 1;
+            
+            /* 6. 贡献者卡片 - 微透明的纯主题色 */
+            .contributor-card {
+                @apply backdrop-blur-md rounded-2xl shadow-md p-4 transition-all duration-300 hover:shadow-lg border;
+                /* 改为微透明的纯主题色 */
+                background-color: rgba(var(--md-primary), 0.15);
+                border-color: rgba(var(--md-primary), 0.3);
             }
-            /* 列表项/联系信息项 */
-            .md3-list-item {
-                @apply flex items-center p-4 rounded-medium bg-surface-variant/30 hover:bg-surface-variant/50 transition-colors duration-200;
+            .contributor-card:hover {
+                background-color: rgba(var(--md-primary), 0.25);
+                transform: translateY(-2px);
+                border-color: rgba(var(--md-primary), 0.5);
             }
-            /* 背景壁纸样式 (保留功能，调整滤镜) */
+            
+            /* 7. 联系方式内部项 - 轻微主题色跟随 */
+            .dark-contact-item {
+                @apply backdrop-blur-sm shadow-sm rounded-xl p-4 transition-colors duration-200;
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 10%, rgb(var(--md-surface-container-lowest)));
+                border: 1px solid rgba(var(--md-outline-variant), 0.15);
+            }
+            .dark-contact-item:hover {
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-lowest)));
+                border-color: rgba(var(--md-primary), 0.2);
+            }
+            
+            /* 8. 图标背景 - 主题色更明显 */
+            .icon-bg {
+                @apply backdrop-blur-sm w-12 h-12 flex items-center justify-center rounded-full mr-3 transition-colors duration-300;
+                background-color: rgba(var(--md-primary), 0.15);
+            }
+            .icon-color {
+                color: rgb(var(--md-primary));
+                transition: color 0.3s ease;
+            }
+            
+            /* 9. 壁纸信息卡片 */
+            .wallpaper-info {
+                @apply backdrop-blur-md p-4 rounded-2xl text-sm md:text-base max-w-3xl mx-auto mt-6 mb-8 transition-colors duration-300;
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-high)));
+                color: rgb(var(--md-on-surface));
+                border: 1px solid rgba(var(--md-outline-variant), 0.2);
+            }
+            
+            /* 10. 源切换按钮 - 主题色状态更明显 */
+            .source-btn {
+                @apply px-4 py-2 text-sm rounded-full transition-all backdrop-blur-sm border font-medium;
+                background-color: color-mix(in srgb, var(--md-surface-primary-low) 10%, rgb(var(--md-surface-container)));
+                color: rgb(var(--md-on-surface-variant));
+                border-color: rgba(var(--md-outline-variant), 0.4);
+            }
+            .source-btn.active {
+                background-color: rgba(var(--md-primary), 0.2);
+                color: rgb(var(--md-primary));
+                border-color: rgba(var(--md-primary), 0.4);
+                font-weight: 600;
+            }
+            .source-btn:hover:not(.active) {
+                background-color: rgba(var(--md-primary), 0.1);
+                color: rgb(var(--md-on-surface));
+            }
+            
+            /* 11. 底部时间显示 */
+            .time-display {
+                @apply text-sm font-medium;
+                color: rgb(var(--md-on-surface-variant));
+            }
+            
+            /* 12. 背景壁纸样式 */
             .bg-wallpaper {
                 position: fixed;
                 top: 0;
@@ -156,32 +266,135 @@
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
-                filter: brightness(0.92) saturate(1.1);
+                filter: brightness(0.85) contrast(1.05);
                 transition: filter 0.5s ease;
             }
+            
             .dark .bg-wallpaper {
-                filter: brightness(0.5) saturate(1.2) contrast(1.1);
+                filter: brightness(0.7) contrast(1.1);
             }
-            /* 壁纸信息卡片 */
-            .wallpaper-info-md3 {
-                @apply bg-surface/85 backdrop-blur-sm rounded-large p-5 text-sm md:text-base max-w-3xl mx-auto mt-6 mb-8 shadow-2 border border-outline-variant/20;
+            
+            /* 13. 贡献者头像 */
+            .contributor-avatar {
+                @apply w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 mx-auto mb-3;
+                border-color: rgba(var(--md-primary), 0.3);
             }
-            /* 时间显示 */
-            .time-display-md3 {
-                @apply text-on-surface-variant text-sm font-medium tracking-wide;
+            
+            .contributor-name {
+                @apply text-center font-medium truncate;
+                color: rgb(var(--md-on-surface));
+            }
+            
+            .section-padding {
+                @apply py-8 md:py-12;
+            }
+            
+            /* 14. 气泡效果 - 替换雪花效果 */
+            .bubble {
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                border-radius: 50%;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+                background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(var(--md-primary), 0.6));
+                box-shadow: 
+                    inset 0 0 20px rgba(255, 255, 255, 0.8),
+                    0 0 20px rgba(var(--md-primary), 0.5);
+            }
+            
+            .dark .bubble {
+                background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(var(--md-primary), 0.7));
+                box-shadow: 
+                    inset 0 0 20px rgba(255, 255, 255, 0.9),
+                    0 0 20px rgba(var(--md-primary), 0.6);
+            }
+            
+            /* 15. 链接样式 - 使用主题色 */
+            a {
+                transition: color 0.2s ease;
+            }
+            a:not(.btn-primary):hover {
+                color: rgb(var(--md-primary)) !important;
+            }
+            
+            /* 16. 标题样式增强 */
+            .section-title {
+                @apply text-xl font-semibold mb-4 flex items-center;
+                color: rgb(var(--md-primary));
+            }
+            
+            /* 17. 分隔线 - 轻微主题色 */
+            .divider {
+                @apply my-4;
+                border-top: 1px solid rgba(var(--md-primary), 0.1);
+            }
+            
+            /* 18. 次要主标题（如QQ、bilibili等）使用更重的颜色 */
+            .contact-title {
+                @apply font-medium;
+                color: rgba(var(--md-primary), 0.9) !important;
+                font-weight: 600;
+            }
+            
+            .dark .contact-title {
+                color: rgba(var(--md-primary), 0.95) !important;
+            }
+            
+            /* 19. 标题图片颜色适配 */
+            .title-image-container {
+                @apply relative inline-block;
+            }
+            
+            .title-image {
+                filter: 
+                    brightness(0) invert(1) 
+                    sepia(1) 
+                    saturate(1000%) 
+                    hue-rotate(calc(var(--primary-hue, 0) * 1deg))
+                    brightness(0.9)
+                    contrast(1.2);
+                transition: filter 0.5s ease;
+            }
+            
+            .title-image-light {
+                filter: 
+                    brightness(0) invert(1) 
+                    sepia(1) 
+                    saturate(1000%) 
+                    hue-rotate(calc(var(--primary-hue, 0) * 1deg))
+                    brightness(1.3)
+                    contrast(1.1)
+                    opacity(0.8);
+                transition: filter 0.5s ease;
+            }
+            
+            /* 20. 图片遮罩层，用于颜色适配 */
+            .title-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                mix-blend-mode: multiply;
+                pointer-events: none;
             }
         }
     </style>
     <script>
-        // ===== 全局变量与配置 (功能逻辑基本保留，仅样式类名更新) =====
+        // --- 全局变量 ---
         let notificationOpen = false;
         let notificationTimer = null;
         let isProcessingNotification = false;
-        let snowflakes = [];
-        let snowflakeIdCounter = 0;
+        
+        // 气泡效果
+        let bubbles = [];
+        let bubbleIdCounter = 0;
+        
+        // 壁纸当前源
         let currentSource = 'bing';
-        let hintTimer = null;
-
+        
+        // 贡献者列表
         const contributors = [
             { name: '凋灵斯拉是个up主', image: '凋灵斯拉是个up主.jpg' },
             { name: 'TOM', image: 'TOM.jpg' },
@@ -192,7 +405,326 @@
             { name: 'NEETSama', image: 'NEETSama.jpg' },
             { name: 'asosa', image: 'asosa.jpg' }
         ];
-
+        
+        // 提示定时器
+        let hintTimer = null;
+        
+        // --- 改进的色彩提取算法 ---
+        
+        /**
+         * 从图片中提取主色 - 改进版
+         * 使用k-means聚类算法提高精度
+         * @param {string} imageUrl - 图片URL
+         * @returns {Promise<Array>} - 返回 [r, g, b] 数组
+         */
+        async function getDominantColorFromImage(imageUrl) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.src = imageUrl;
+                img.onload = function() {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // 缩小图片以加快处理，但保持足够细节
+                        const scale = 0.2; // 增加到20%以提高精度
+                        canvas.width = Math.max(img.width * scale, 100);
+                        canvas.height = Math.max(img.height * scale, 100);
+                        
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const pixels = imageData.data;
+                        const pixelCount = canvas.width * canvas.height;
+                        
+                        // 方法1: 使用改进的平均算法（排除极端颜色）
+                        const colors = [];
+                        for (let i = 0; i < pixels.length; i += 4) {
+                            const r = pixels[i];
+                            const g = pixels[i + 1];
+                            const b = pixels[i + 2];
+                            
+                            // 转换为HSL以更好地分析颜色
+                            const hsl = rgbToHsl(r, g, b);
+                            
+                            // 排除过于暗或过于亮的颜色（可能是阴影或高光）
+                            if (hsl[2] < 0.1 || hsl[2] > 0.9) continue;
+                            
+                            // 排除过于不饱和的颜色（可能是灰色）
+                            if (hsl[1] < 0.1) continue;
+                            
+                            colors.push([r, g, b]);
+                        }
+                        
+                        // 如果有足够的有意义颜色，使用它们
+                        if (colors.length > pixelCount * 0.3) { // 至少30%的像素是有意义的
+                            let r = 0, g = 0, b = 0;
+                            for (const color of colors) {
+                                r += color[0];
+                                g += color[1];
+                                b += color[2];
+                            }
+                            r = Math.floor(r / colors.length);
+                            g = Math.floor(g / colors.length);
+                            b = Math.floor(b / colors.length);
+                            resolve([r, g, b]);
+                        } else {
+                            // 否则使用简单k-means聚类
+                            resolve(kMeansDominantColor(pixels, canvas.width, canvas.height));
+                        }
+                    } catch (error) {
+                        console.warn('高级取色失败，使用基础算法:', error);
+                        // 回退到简单平均算法
+                        const simpleColor = getSimpleAverageColor(img);
+                        resolve(simpleColor);
+                    }
+                };
+                img.onerror = () => reject(new Error('图片加载失败'));
+            });
+        }
+        
+        /**
+         * 简单k-means聚类算法提取主色
+         */
+        function kMeansDominantColor(pixels, width, height) {
+            const pixelCount = width * height;
+            const sampleSize = Math.min(100, pixelCount);
+            const samples = [];
+            
+            // 随机取样
+            for (let i = 0; i < sampleSize; i++) {
+                const idx = Math.floor(Math.random() * pixelCount) * 4;
+                samples.push([pixels[idx], pixels[idx + 1], pixels[idx + 2]]);
+            }
+            
+            // 使用简化k-means (k=3)
+            let centroids = [
+                [255, 0, 0],    // 红
+                [0, 255, 0],    // 绿
+                [0, 0, 255]     // 蓝
+            ];
+            
+            // 迭代3次
+            for (let iter = 0; iter < 3; iter++) {
+                const clusters = [[], [], []];
+                
+                // 分配样本到最近的质心
+                for (const sample of samples) {
+                    let minDist = Infinity;
+                    let clusterIdx = 0;
+                    
+                    for (let i = 0; i < centroids.length; i++) {
+                        const dist = colorDistance(sample, centroids[i]);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            clusterIdx = i;
+                        }
+                    }
+                    
+                    clusters[clusterIdx].push(sample);
+                }
+                
+                // 重新计算质心
+                for (let i = 0; i < centroids.length; i++) {
+                    if (clusters[i].length > 0) {
+                        let r = 0, g = 0, b = 0;
+                        for (const sample of clusters[i]) {
+                            r += sample[0];
+                            g += sample[1];
+                            b += sample[2];
+                        }
+                        centroids[i] = [
+                            Math.floor(r / clusters[i].length),
+                            Math.floor(g / clusters[i].length),
+                            Math.floor(b / clusters[i].length)
+                        ];
+                    }
+                }
+            }
+            
+            // 找到最大的簇
+            let maxClusterSize = 0;
+            let dominantColor = centroids[0];
+            
+            // 计算每个簇的大小（简化版）
+            const allSamples = [];
+            for (let i = 0; i < pixels.length; i += 4) {
+                allSamples.push([pixels[i], pixels[i + 1], pixels[i + 2]]);
+            }
+            
+            const clusterCounts = [0, 0, 0];
+            for (const sample of allSamples.slice(0, 200)) { // 只检查200个样本
+                let minDist = Infinity;
+                let clusterIdx = 0;
+                
+                for (let i = 0; i < centroids.length; i++) {
+                    const dist = colorDistance(sample, centroids[i]);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        clusterIdx = i;
+                    }
+                }
+                
+                clusterCounts[clusterIdx]++;
+            }
+            
+            for (let i = 0; i < clusterCounts.length; i++) {
+                if (clusterCounts[i] > maxClusterSize) {
+                    maxClusterSize = clusterCounts[i];
+                    dominantColor = centroids[i];
+                }
+            }
+            
+            return dominantColor;
+        }
+        
+        /**
+         * 计算颜色距离
+         */
+        function colorDistance(color1, color2) {
+            const dr = color1[0] - color2[0];
+            const dg = color1[1] - color2[1];
+            const db = color1[2] - color2[2];
+            return Math.sqrt(dr * dr + dg * dg + db * db);
+        }
+        
+        /**
+         * RGB转HSL
+         */
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            
+            if (max === min) {
+                h = s = 0; // 灰色
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                
+                h /= 6;
+            }
+            
+            return [h, s, l];
+        }
+        
+        /**
+         * 简单平均颜色（备用方法）
+         */
+        function getSimpleAverageColor(img) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width * 0.1;
+            canvas.height = img.height * 0.1;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+            let r = 0, g = 0, b = 0, count = 0;
+            
+            for (let i = 0; i < imageData.length; i += 4) {
+                r += imageData[i];
+                g += imageData[i + 1];
+                b += imageData[i + 2];
+                count++;
+            }
+            
+            return [Math.floor(r / count), Math.floor(g / count), Math.floor(b / count)];
+        }
+        
+        /**
+         * 根据主色生成并应用完整的MD3调色板
+         * 增强版：生成更多与主题色相关的变量
+         */
+        function applyDynamicColorPalette(primaryColor) {
+            const [r, g, b] = primaryColor;
+            const root = document.documentElement;
+            
+            // 计算色相值
+            const hsl = rgbToHsl(r, g, b);
+            const hue = hsl[0] * 360;
+            
+            // 设置主色
+            root.style.setProperty('--md-primary', `${r}, ${g}, ${b}`);
+            
+            // 设置主色浅色版本
+            const lightColor = adjustColorBrightness(primaryColor, 1.3);
+            root.style.setProperty('--md-primary-light', `${lightColor[0]}, ${lightColor[1]}, ${lightColor[2]}`);
+            
+            // 设置CSS变量用于标题图片滤镜
+            root.style.setProperty('--primary-hue', hue);
+            
+            // 计算 on-primary 颜色（确保文字可读性）
+            const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            const onPrimary = luminance > 160 ? '20, 20, 20' : '255, 255, 255';
+            root.style.setProperty('--md-on-primary', onPrimary);
+            
+            // 生成主色容器颜色（比主色浅/深）
+            const primaryContainer = adjustColorBrightness(primaryColor, luminance > 160 ? 0.8 : 1.2);
+            root.style.setProperty('--md-primary-container', `${primaryContainer[0]}, ${primaryContainer[1]}, ${primaryContainer[2]}`);
+            
+            // 生成主题色相关的表面色
+            root.style.setProperty('--md-surface-primary-low', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.05 : 0.08})`);
+            root.style.setProperty('--md-surface-primary-medium', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.08 : 0.12})`);
+            root.style.setProperty('--md-surface-primary-high', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.12 : 0.18})`);
+            
+            console.log('动态主题色已应用:', primaryColor, '亮度:', luminance.toFixed(0), '色相:', hue.toFixed(0));
+            
+            // 更新标题图片颜色
+            updateTitleImageColor(primaryColor, hue);
+        }
+        
+        /**
+         * 调整颜色亮度
+         */
+        function adjustColorBrightness(color, factor) {
+            return [
+                Math.min(255, Math.max(0, Math.floor(color[0] * factor))),
+                Math.min(255, Math.max(0, Math.floor(color[1] * factor))),
+                Math.min(255, Math.max(0, Math.floor(color[2] * factor)))
+            ];
+        }
+        
+        /**
+         * 更新标题图片颜色
+         */
+        function updateTitleImageColor(primaryColor, hue) {
+            const [r, g, b] = primaryColor;
+            const root = document.documentElement;
+            
+            // 计算浅色版本
+            const lightColor = adjustColorBrightness(primaryColor, 1.3);
+            
+            // 更新标题图片的CSS滤镜变量
+            root.style.setProperty('--primary-hue', hue);
+            
+            // 创建标题图片的遮罩层
+            const titleContainer = document.getElementById('titleContainer');
+            if (titleContainer) {
+                // 移除现有的遮罩层
+                const existingOverlay = titleContainer.querySelector('.title-overlay');
+                if (existingOverlay) {
+                    existingOverlay.remove();
+                }
+                
+                // 创建新的遮罩层
+                const overlay = document.createElement('div');
+                overlay.className = 'title-overlay';
+                overlay.style.background = `linear-gradient(135deg, rgba(${r}, ${g}, ${b}, 0.9) 0%, rgba(${lightColor[0]}, ${lightColor[1]}, ${lightColor[2]}, 0.7) 100%)`;
+                titleContainer.appendChild(overlay);
+            }
+        }
+        
         // --- 黑夜模式 ---
         function initDarkMode() {
             const savedTheme = localStorage.getItem('theme');
@@ -200,26 +732,8 @@
             const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
             if (isDark) {
                 document.documentElement.classList.add('dark');
-                // 动态应用深色主题色
-                document.documentElement.style.setProperty('--color-primary', '#D0BCFF');
-                document.documentElement.style.setProperty('--color-on-primary', '#371E73');
-                document.documentElement.style.setProperty('--color-primary-container', '#4F378B');
-                document.documentElement.style.setProperty('--color-on-primary-container', '#EADDFF');
-                document.documentElement.style.setProperty('--color-surface', '#1D1B20');
-                document.documentElement.style.setProperty('--color-on-surface', '#E6E1E5');
-                document.documentElement.style.setProperty('--color-surface-variant', '#49454F');
-                document.documentElement.style.setProperty('--color-on-surface-variant', '#CAC4D0');
             } else {
                 document.documentElement.classList.remove('dark');
-                // 恢复浅色主题色
-                document.documentElement.style.removeProperty('--color-primary');
-                document.documentElement.style.removeProperty('--color-on-primary');
-                document.documentElement.style.removeProperty('--color-primary-container');
-                document.documentElement.style.removeProperty('--color-on-primary-container');
-                document.documentElement.style.removeProperty('--color-surface');
-                document.documentElement.style.removeProperty('--color-on-surface');
-                document.documentElement.style.removeProperty('--color-surface-variant');
-                document.documentElement.style.removeProperty('--color-on-surface-variant');
             }
             updateToggleIcon();
             updateWallpaperFilter();
@@ -234,15 +748,18 @@
                 document.documentElement.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
             }
-            // 重新初始化以应用颜色变量
-            initDarkMode();
+            updateToggleIcon();
+            updateWallpaperFilter();
+            
+            // 更新主题色相关的透明度变量
+            updateThemeColorVariables();
         }
         
         function updateToggleIcon() {
             const isDark = document.documentElement.classList.contains('dark');
             const toggleIcon = document.getElementById('darkModeIcon');
             if (toggleIcon) {
-                toggleIcon.textContent = isDark ? 'light_mode' : 'dark_mode';
+                toggleIcon.className = isDark ? 'fa fa-sun-o' : 'fa fa-moon-o';
             }
         }
         
@@ -250,10 +767,23 @@
             const wallpaper = document.getElementById('bgWallpaper');
             if (!wallpaper) return;
             const isDark = document.documentElement.classList.contains('dark');
-            wallpaper.style.filter = isDark ? 'brightness(0.5) saturate(1.2) contrast(1.1)' : 'brightness(0.92) saturate(1.1)';
+            wallpaper.style.filter = isDark ? 'brightness(0.7) contrast(1.1)' : 'brightness(0.85) contrast(1.05)';
         }
-
-        // --- 壁纸加载函数 (功能逻辑不变) ---
+        
+        function updateThemeColorVariables() {
+            const root = document.documentElement;
+            const primary = getComputedStyle(root).getPropertyValue('--md-primary').trim();
+            const [r, g, b] = primary.split(',').map(v => parseInt(v.trim()));
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            // 更新主题色相关的表面色透明度
+            root.style.setProperty('--md-surface-primary-low', `rgba(${r}, ${g}, ${b}, ${isDark ? 0.08 : 0.05})`);
+            root.style.setProperty('--md-surface-primary-medium', `rgba(${r}, ${g}, ${b}, ${isDark ? 0.12 : 0.08})`);
+            root.style.setProperty('--md-surface-primary-high', `rgba(${r}, ${g}, ${b}, ${isDark ? 0.18 : 0.12})`);
+        }
+        
+        // --- 壁纸加载函数 ---
+        
         async function loadBingWallpaper() {
             const captionDiv = document.getElementById('wallpaperCaption');
             const sourceLabel = document.getElementById('wallpaperSourceLabel');
@@ -262,12 +792,24 @@
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const data = await response.json();
                 if (data && data.url) {
-                    document.getElementById('bgWallpaper').style.backgroundImage = `url(${data.url})`;
+                    const imageUrl = data.url;
+                    document.getElementById('bgWallpaper').style.backgroundImage = `url(${imageUrl})`;
+                    
+                    // 加载图片并提取主题色
+                    try {
+                        const dominantColor = await getDominantColorFromImage(imageUrl);
+                        applyDynamicColorPalette(dominantColor);
+                    } catch (colorError) {
+                        console.warn('主题色提取失败，使用备用算法:', colorError);
+                        const simpleColor = await getSimpleAverageColorFromUrl(imageUrl);
+                        applyDynamicColorPalette(simpleColor);
+                    }
+                    
                     if (captionDiv) {
                         captionDiv.innerHTML = `
-                            <p class="font-medium mb-1 flex items-center"><span class="material-icons mr-2 text-primary">photo</span>📷 Bing 每日壁纸</p>
-                            <p class="text-on-surface-variant">${data.copyright || '无版权信息'}</p>
-                            ${data.copyrightLink ? `<p class="mt-2"><a href="${data.copyrightLink}" target="_blank" class="text-primary hover:underline">查看原图</a></p>` : ''}
+                            <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>📷 Bing 每日壁纸</p>
+                            <p>${data.copyright || '无版权信息'}</p>
+                            ${data.copyrightLink ? `<p class="mt-2"><a href="${data.copyrightLink}" target="_blank" class="hover:underline" style="color: rgb(var(--md-primary))">查看原图</a></p>` : ''}
                         `;
                     }
                     if (sourceLabel) sourceLabel.innerText = '当前源: Bing';
@@ -276,38 +818,78 @@
                 }
             } catch (error) {
                 console.error('Bing壁纸加载失败:', error);
-                document.getElementById('bgWallpaper').style.backgroundImage = 'url(https://picsum.photos/1920/1080?random=1)';
+                const fallbackUrl = 'https://picsum.photos/1920/1080?random=1';
+                document.getElementById('bgWallpaper').style.backgroundImage = `url(${fallbackUrl})`;
+                // 尝试从占位图取色
+                try {
+                    const simpleColor = await getSimpleAverageColorFromUrl(fallbackUrl);
+                    applyDynamicColorPalette(simpleColor);
+                } catch(e) { 
+                    console.warn('占位图取色失败，使用默认蓝色');
+                }
+                
                 if (captionDiv) {
-                    captionDiv.innerHTML = `<p class="font-medium mb-1 flex items-center"><span class="material-icons mr-2 text-error">warning</span>Bing壁纸加载失败，使用随机占位</p>`;
+                    captionDiv.innerHTML = `<p class="font-medium mb-1"><i class="fa fa-exclamation-triangle mr-2"></i>Bing壁纸加载失败，使用随机占位</p>`;
                 }
             } finally {
                 updateWallpaperFilter();
             }
         }
-
-        function loadLoliWallpaper() {
+        
+        async function getSimpleAverageColorFromUrl(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.onload = function() {
+                    resolve(getSimpleAverageColor(img));
+                };
+                img.onerror = function() {
+                    resolve([66, 133, 244]); // 默认蓝色
+                };
+                img.src = url;
+            });
+        }
+        
+        async function loadLoliWallpaper() {
             const captionDiv = document.getElementById('wallpaperCaption');
             const sourceLabel = document.getElementById('wallpaperSourceLabel');
             const wallpaperDiv = document.getElementById('bgWallpaper');
             const apiUrl = `https://www.loliapi.com/acg/?_=${Date.now()}`;
             
-            if (captionDiv) captionDiv.innerHTML = '';
-            const img = new Image();
-            img.onload = function() {
-                wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
-                if (sourceLabel) sourceLabel.innerText = '当前源: Loli';
-                updateWallpaperFilter();
-            };
-            img.onerror = function() {
-                console.error('Loli壁纸加载失败，回退Bing');
-                loadBingWallpaper();
-                setActiveSourceButton('bing');
-                currentSource = 'bing';
-                if (sourceLabel) sourceLabel.innerText = '当前源: Bing (自动回退)';
-            };
-            img.src = apiUrl;
+            if (captionDiv) {
+                captionDiv.innerHTML = '<p class="font-medium mb-1"><i class="fa fa-image mr-2"></i>🎨 Loli API 随机图片</p><p>图片来源于 Loli API，无版权信息</p>';
+            }
+            
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.onload = async function() {
+                    wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
+                    // 从加载成功的图片中取色
+                    try {
+                        const dominantColor = await getDominantColorFromImage(apiUrl);
+                        applyDynamicColorPalette(dominantColor);
+                    } catch(e) {
+                        console.warn('Loli壁纸高级取色失败，使用简单平均:', e);
+                        const simpleColor = getSimpleAverageColor(img);
+                        applyDynamicColorPalette(simpleColor);
+                    }
+                    
+                    if (sourceLabel) sourceLabel.innerText = '当前源: Loli';
+                    updateWallpaperFilter();
+                    resolve();
+                };
+                img.onerror = function() {
+                    console.error('Loli壁纸加载失败，回退Bing');
+                    loadBingWallpaper();
+                    setActiveSourceButton('bing');
+                    currentSource = 'bing';
+                    resolve();
+                };
+                img.src = apiUrl;
+            });
         }
-
+        
         // --- 源切换控制 ---
         function setActiveSourceButton(source) {
             const btnBing = document.getElementById('btnBingSource');
@@ -321,31 +903,31 @@
                 btnBing.classList.remove('active');
             }
         }
-
-        function switchToBing() {
+        
+        async function switchToBing() {
             if (currentSource === 'bing') return;
             currentSource = 'bing';
             setActiveSourceButton('bing');
-            loadBingWallpaper();
+            await loadBingWallpaper();
         }
-
-        function switchToLoli() {
+        
+        async function switchToLoli() {
             if (currentSource === 'loli') return;
             currentSource = 'loli';
             setActiveSourceButton('loli');
-            loadLoliWallpaper();
+            await loadLoliWallpaper();
         }
-
+        
         // --- 刷新按钮处理 ---
-        function refreshWallpaper() {
+        async function refreshWallpaper() {
             if (currentSource === 'bing') {
                 showBingHint();
-                loadBingWallpaper();
+                await loadBingWallpaper();
             } else {
-                loadLoliWallpaper();
+                await loadLoliWallpaper();
             }
         }
-
+        
         function showBingHint() {
             const hintDiv = document.getElementById('wallpaperHint');
             if (!hintDiv) return;
@@ -356,32 +938,42 @@
                 hintTimer = null;
             }, 3000);
         }
-
+        
         // --- 通知栏 ---
         function toggleNotification() {
             if (isProcessingNotification) return;
             isProcessingNotification = true;
+        
             const panel = document.getElementById('notificationPanel');
             const icon = document.getElementById('notificationIcon');
+            
             clearTimeout(notificationTimer);
+            
             if (notificationOpen) {
-                panel.classList.remove('open');
-                icon.textContent = 'notifications';
+                panel.classList.add('closing');
+                icon.classList.remove('fa-bell-slash');
+                icon.classList.add('fa-bell');
+                
                 setTimeout(() => {
+                    panel.classList.remove('open', 'closing');
                     notificationOpen = false;
                     isProcessingNotification = false;
-                }, 300);
+                }, 400);
             } else {
                 panel.classList.add('open');
-                icon.textContent = 'notifications_off';
+                icon.classList.remove('fa-bell');
+                icon.classList.add('fa-bell-slash');
+                
                 notificationTimer = setTimeout(() => {
                     toggleNotification();
                 }, 8000);
+                
                 notificationOpen = true;
                 isProcessingNotification = false;
             }
         }
-
+        
+        // 点击外部关闭通知
         document.addEventListener('click', function(event) {
             const panel = document.getElementById('notificationPanel');
             const toggleBtn = document.getElementById('notificationToggle');
@@ -392,72 +984,94 @@
                 toggleNotification();
             }
         });
-
-        // --- 雪花效果 (保留原逻辑) ---
-        function createSnowflake(x, y) {
-            const size = Math.random() * 5 + 3;
-            const id = `snowflake-${snowflakeIdCounter++}`;
-            const snowflake = document.createElement('div');
-            snowflake.id = id;
-            snowflake.className = 'snowflake';
-            snowflake.style.width = `${size}px`;
-            snowflake.style.height = `${size}px`;
-            snowflake.style.left = `${x}px`;
-            snowflake.style.top = `${y}px`;
-            snowflake.style.opacity = '1';
-            snowflake.style.position = 'fixed';
-            snowflake.style.pointerEvents = 'none';
-            snowflake.style.zIndex = '9999';
-            snowflake.style.borderRadius = '50%';
-            snowflake.style.background = 'rgba(255, 255, 255, 0.8)';
-            snowflake.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.8)';
-            document.body.appendChild(snowflake);
+        
+        // --- 气泡效果 ---
+        function createBubble(x, y) {
+            const size = Math.random() * 20 + 10; // 10-30px
+            const id = `bubble-${bubbleIdCounter++}`;
+            
+            const bubble = document.createElement('div');
+            bubble.id = id;
+            bubble.className = 'bubble';
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${x}px`;
+            bubble.style.top = `${y}px`;
+            bubble.style.opacity = '0.8';
+            
+            document.body.appendChild(bubble);
+            
             const info = {
-                id, element: snowflake, x, y, size,
-                velocityX: (Math.random() - 0.5) * 2,
-                velocityY: Math.random() * 1 + 1,
+                id, element: bubble, x, y, size,
+                velocityX: (Math.random() - 0.5) * 1.5,
+                velocityY: -(Math.random() * 2 + 1), // 向上移动
                 rotation: Math.random() * 360,
-                rotationSpeed: (Math.random() - 0.5) * 2
+                rotationSpeed: (Math.random() - 0.5) * 1,
+                scale: 1,
+                scaleSpeed: (Math.random() - 0.5) * 0.01,
+                opacity: 0.8,
+                opacitySpeed: -0.002
             };
-            snowflakes.push(info);
-            setTimeout(() => removeSnowflake(id), 5000);
+            bubbles.push(info);
+            
+            setTimeout(() => removeBubble(id), 5000);
         }
-
-        function updateSnowflakes() {
-            for (let i = snowflakes.length - 1; i >= 0; i--) {
-                const s = snowflakes[i];
-                s.x += s.velocityX;
-                s.y += s.velocityY;
-                s.rotation += s.rotationSpeed;
-                s.element.style.left = `${s.x}px`;
-                s.element.style.top = `${s.y}px`;
-                s.element.style.transform = `rotate(${s.rotation}deg)`;
-                const life = 1 - (s.y / window.innerHeight);
-                s.element.style.opacity = life > 0 ? life : 0;
-                if (s.y > window.innerHeight) removeSnowflake(s.id);
+        
+        function updateBubbles() {
+            for (let i = bubbles.length - 1; i >= 0; i--) {
+                const b = bubbles[i];
+                
+                // 更新位置
+                b.x += b.velocityX;
+                b.y += b.velocityY;
+                
+                // 添加轻微的摆动
+                b.x += Math.sin(Date.now() * 0.001 + i) * 0.3;
+                
+                // 更新旋转
+                b.rotation += b.rotationSpeed;
+                
+                // 更新大小
+                b.scale += b.scaleSpeed;
+                b.scale = Math.max(0.5, Math.min(1.5, b.scale));
+                
+                // 更新透明度
+                b.opacity += b.opacitySpeed;
+                b.opacity = Math.max(0, Math.min(0.9, b.opacity));
+                
+                // 应用变换
+                b.element.style.left = `${b.x}px`;
+                b.element.style.top = `${b.y}px`;
+                b.element.style.transform = `translate(-50%, -50%) rotate(${b.rotation}deg) scale(${b.scale})`;
+                b.element.style.opacity = b.opacity;
+                
+                // 如果气泡移出屏幕顶部，移除它
+                if (b.y < -50 || b.x < -50 || b.x > window.innerWidth + 50) {
+                    removeBubble(b.id);
+                }
             }
-            requestAnimationFrame(updateSnowflakes);
+            requestAnimationFrame(updateBubbles);
         }
-
-        function removeSnowflake(id) {
-            snowflakes = snowflakes.filter(s => s.id !== id);
+        
+        function removeBubble(id) {
+            bubbles = bubbles.filter(b => b.id !== id);
             const el = document.getElementById(id);
             if (el) {
                 el.style.opacity = '0';
-                setTimeout(() => el.remove(), 300);
+                setTimeout(() => el.remove(), 500);
             }
         }
-
+        
         function handleClick(event) {
             if (event.target.closest('#darkModeToggle') || event.target.closest('#notificationToggle')) return;
-            const count = Math.floor(Math.random() * 6) + 5;
+            const count = Math.floor(Math.random() * 5) + 3; // 3-7个气泡
             for (let i = 0; i < count; i++) {
-                const offsetX = (Math.random() - 0.5) * 20;
-                const offsetY = (Math.random() - 0.5) * 20;
-                createSnowflake(event.clientX + offsetX, event.clientY + offsetY);
+                const offsetX = (Math.random() - 0.5) * 30;
+                const offsetY = (Math.random() - 0.5) * 30;
+                createBubble(event.clientX + offsetX, event.clientY + offsetY);
             }
         }
-
+        
         // --- 时间显示 ---
         function updateTime() {
             const timeElement = document.getElementById('currentTime');
@@ -471,9 +1085,9 @@
             const seconds = String(now.getSeconds()).padStart(2, '0');
             const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
             const weekday = weekdays[now.getDay()];
-            timeElement.innerHTML = `<span class="material-icons align-middle mr-1 text-base">schedule</span> ${year}-${month}-${day} ${weekday} ${hours}:${minutes}:${seconds}`;
+            timeElement.innerHTML = `<i class="fa fa-clock-o mr-1"></i> ${year}-${month}-${day} ${weekday} ${hours}:${minutes}:${seconds}`;
         }
-
+        
         // --- 渲染贡献者 ---
         function renderContributors() {
             const container = document.getElementById('contributorsList');
@@ -481,143 +1095,122 @@
             container.innerHTML = '';
             contributors.forEach(c => {
                 const card = document.createElement('div');
-                card.className = 'md3-contributor-card';
+                card.className = 'contributor-card';
                 card.innerHTML = `
-                    <img src="${c.image}" alt="${c.name}" class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-outline-variant mx-auto mb-3" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iNDAiIGZpbGw9IiM2NzUwQTQiLz4KPHBhdGggZD0iTTQwIDI2LjY2NzdDNDQuNjA2IDI2LjY2NzcgNDguMzMzNiAzMC4zOTQ0IDQ4LjMzMzYgMzVWNDEuNjY3N0MzOC4zMzM2IDQzLjMzNDQgMjYuNjY2OSA0NC4xNjcxIDI2LjY2NjkgNDRWNDMuMzM0NEMyNi42NjY5IDQwLjI2NzcgMjUuMzMzNiAzNy4yMDA4IDI1LjMzMzYgMzVDMjUuMzMzNiAzMC4zOTQ0IDI5LjA2MDIgMjYuNjY3NyAzMy42NjY5IDI2LjY2NzdINDBaTTU1LjYwMDIgNTcuMzM0NEgyNC4zMzM2QzI3LjM2NjkgNTIuMzMzNyAzMy4wNjY5IDQ4LjMzMzcgNDAgNDguMzMzN0M0Ni45MzM2IDQ4LjMzMzcgNTIuNjY2OSA1Mi4zMzM3IDU1LjYwMDIgNTcuMzMzNFY1Ny4zMzQ0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+'; this.alt='${c.name} 头像'">
-                    <p class="contributor-name text-center font-medium text-on-surface truncate">${c.name}</p>
+                    <div class="text-center">
+                        <img src="${c.image}" alt="${c.name}" class="contributor-avatar" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iNDAiIGZpbGw9IiM0Njg1RkYiLz4KPHBhdGggZD0iTTQwIDI2LjY2NzdDNDQuNjA2IDI2LjY2NzcgNDguMzMzNiAzMC4zOTQ0IDQ4LjMzMzYgMzVWNDEuNjY3N0MzOC4zMzM2IDQzLjMzNDQgMjYuNjY2OSA0NC4xNjcxIDI2LjY2NjkgNDRWNDMuMzM0NEMyNi42NjY5IDQwLjI2NzcgMjUuMzMzNiAzNy4yMDA4IDI1LjMzMzYgMzVDMjUuMzMzNiAzMC4zOTQ0IDI5LjA2MDIgMjYuNjY3NyAzMy42NjY5IDI2LjY2NzdINDBaTTU1LjYwMDIgNTcuMzM0NEgyNC4zMzM2QzI3LjM2NjkgNTIuMzMzNyAzMy4wNjY5IDQ4LjMzMzcgNDAgNDguMzMzN0M0Ni45MzM2IDQ4LjMzMzcgNTIuNjY2OSA1Mi4zMzM3IDU1LjYwMDIgNTcuMzMzNFY1Ny4zMzQ0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+'; this.alt='${c.name} 头像'">
+                        <p class="contributor-name">${c.name}</p>
+                    </div>
                 `;
                 container.appendChild(card);
             });
         }
-
+        
         // --- 页面初始化 ---
         window.onload = async function() {
             initDarkMode();
+            
+            // 初始默认加载Bing壁纸
             await loadBingWallpaper();
+            
             renderContributors();
             updateTime();
             setInterval(updateTime, 1000);
+            
             // 事件绑定
             document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
             document.getElementById('notificationToggle').addEventListener('click', toggleNotification);
             document.getElementById('btnBingSource').addEventListener('click', switchToBing);
             document.getElementById('btnLoliSource').addEventListener('click', switchToLoli);
             document.getElementById('refreshWallpaperBtn').addEventListener('click', refreshWallpaper);
+            
             setActiveSourceButton('bing');
-            // 雪花效果
             document.addEventListener('click', handleClick);
-            updateSnowflakes();
+            updateBubbles();
         };
     </script>
-    <style>
-        /* 深色主题颜色覆写 (通过CSS变量) */
-        .dark {
-            --color-primary: #D0BCFF;
-            --color-on-primary: #371E73;
-            --color-primary-container: #4F378B;
-            --color-on-primary-container: #EADDFF;
-            --color-surface: #1D1B20;
-            --color-on-surface: #E6E1E5;
-            --color-surface-variant: #49454F;
-            --color-on-surface-variant: #CAC4D0;
-            --color-inverse-surface: #E6E1E5;
-            --color-inverse-on-surface: #1D1B20;
-        }
-        /* 应用CSS变量到具体的Tailwind类 (示例) */
-        .bg-inverse-surface {
-            background-color: var(--color-inverse-surface, #1D1B20);
-        }
-        .text-inverse-on-surface {
-            color: var(--color-inverse-on-surface, #E6E1E5);
-        }
-    </style>
 </head>
-<body class="min-h-screen font-sans transition-colors duration-300">
+<body class="dark-bg min-h-screen font-sans transition-colors duration-300">
     <!-- 背景壁纸 -->
     <div id="bgWallpaper" class="bg-wallpaper"></div>
     
-    <!-- 顶部应用栏 (App Bar) 替代悬浮按钮 -->
-    <header class="sticky top-0 z-30 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30">
-        <div class="container mx-auto px-4 py-3 max-w-3xl flex justify-between items-center">
-            <div class="flex items-center">
-                <img src="title.png" alt="White Client" width="120" height="auto" class="rounded-medium"/>
-            </div>
-            <div class="flex items-center space-x-2">
-                <!-- 黑夜模式切换 -->
-                <button id="darkModeToggle" class="md3-icon-button" title="切换黑夜模式">
-                    <span id="darkModeIcon" class="material-icons">dark_mode</span>
-                </button>
-                <!-- 通知按钮 -->
-                <button id="notificationToggle" class="md3-icon-button" title="查看通知">
-                    <span id="notificationIcon" class="material-icons">notifications</span>
-                </button>
-            </div>
-        </div>
-    </header>
+    <!-- 黑夜模式按钮 -->
+    <button id="darkModeToggle" class="circle-btn right-4" title="切换黑夜模式">
+        <i id="darkModeIcon" class="fa fa-moon-o text-xl"></i>
+    </button>
     
-    <!-- 通知面板 (MD3 Snackbar样式) -->
-    <div id="notificationPanel" class="md3-snackbar">
+    <!-- 通知按钮 -->
+    <button id="notificationToggle" class="circle-btn right-20" title="查看通知">
+        <i id="notificationIcon" class="fa fa-bell text-xl"></i>
+    </button>
+    
+    <!-- 通知栏 -->
+    <div id="notificationPanel" class="notification-panel">
         <div class="flex items-start">
-            <div class="bg-error-container text-on-error-container p-2 rounded-full mr-3">
-                <span class="material-icons text-base">info</span>
+            <div class="icon-bg">
+                <i class="fa fa-info-circle icon-color"></i>
             </div>
             <div class="flex-1">
-                <h3 class="font-semibold mb-1">重要通知</h3>
-                <p class="text-sm opacity-90">由于种种原因，我宣布更新日志不再公开。对于CB604BL等人所发起的0.14客户端研究授权我表示理解但不愿加入，我以此表达抱歉并做出了我认为正确的做法：表达他们对客户端制作做出贡献的感谢</p>
-                <button onclick="toggleNotification()" class="mt-3 text-xs text-primary hover:underline flex items-center">
-                    <span class="material-icons text-sm mr-1">close</span> 关闭
+                <h3 class="font-semibold mb-1" style="color: rgb(var(--md-on-surface));">重要通知</h3>
+                <p class="text-sm" style="color: rgb(var(--md-on-surface-variant));">由于种种原因，我宣布更新日志不再公开。对于CB604BL等人所发起的0.14客户端研究授权我表示理解但不愿加入，我以此表达抱歉并做出了我认为正确的做法：表达他们对客户端制作做出贡献的感谢</p>
+                <button onclick="toggleNotification()" class="mt-3 text-xs flex items-center hover:opacity-80" style="color: rgb(var(--md-primary));">
+                    <i class="fa fa-times mr-1"></i> 关闭
                 </button>
             </div>
         </div>
     </div>
     
-    <main class="container mx-auto px-4 max-w-3xl">
+    <div class="container mx-auto px-4 max-w-3xl">
+        <!-- 头部区域 - 标题图片颜色适配 -->
+        <header class="text-center section-padding">
+            <div id="titleContainer" class="title-image-container">
+                <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg max-w-full h-auto title-image"/>
+            </div>
+        </header>
+        
         <!-- 下载区域 -->
-        <section class="py-12 md:py-16 text-center">
+        <section class="section-padding text-center">
             <a href="https://www.123865.com/s/EvgbVv-uvStd" 
-               class="md3-extended-fab inline-flex items-center justify-center">
-                <span class="material-icons mr-2">download</span> 下载 White Client 稳定版
-                <span class="ml-2 text-sm opacity-80">(版本: 3.4)</span>
+               class="btn-primary inline-flex items-center justify-center">
+                <i class="fa fa-download mr-2"></i> 下载White Client稳定版本 <span class="text-sm opacity-90">(版本: 3.4)</span>
             </a>
-            <div class="mt-6 text-on-surface-variant text-sm">
+            
+            <div class="mt-6 text-sm" style="color: rgb(var(--md-on-surface-variant));">
                 <p>jjjmmmdexh制作</p>
             </div>
         </section>
         
-        <!-- 关于/联系方式区域 -->
-        <section class="py-8 md:py-12">
-            <div class="md3-card">
-                <h2 class="text-xl md:text-2xl font-semibold text-on-surface mb-6 flex items-center">
-                    <span class="material-icons text-primary mr-3">info</span>关于
+        <!-- info 联系方式 -->
+        <section class="section-padding">
+            <div class="contact-card">
+                <h2 class="section-title">
+                    <i class="fa fa-envelope mr-2"></i>关于
                 </h2>
-                <div class="space-y-3">
-                    <div class="md3-list-item">
-                        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container mr-4">
-                            <span class="material-icons">chat</span>
-                        </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center p-3 dark-contact-item">
+                        <div class="icon-bg"><i class="fa fa-qq icon-color"></i></div>
                         <div>
-                            <p class="font-medium text-on-surface">QQ</p>
-                            <p class="text-sm text-on-surface-variant">1591123827</p>
+                            <p class="contact-title">QQ</p>
+                            <p class="text-sm" style="color: rgb(var(--md-on-surface-variant));">1591123827</p>
                         </div>
                     </div>
-                    <div class="md3-list-item">
-                        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-secondary-container text-on-secondary-container mr-4">
-                            <span class="material-icons">email</span>
-                        </div>
+                    <div class="flex items-center p-3 dark-contact-item">
+                        <div class="icon-bg"><i class="fa fa-envelope icon-color"></i></div>
                         <div>
-                            <p class="font-medium text-on-surface">E-MAIL</p>
-                            <a href="mailto:name1591123827@163.com" class="text-sm text-primary hover:underline">name1591123827@163.com</a>
+                            <p class="contact-title">E-MAIL</p>
+                            <a href="mailto:name1591123827@163.com" class="text-sm hover:underline" style="color: rgb(var(--md-primary));">name1591123827@163.com</a>
                         </div>
                     </div>
-                    <div class="md3-list-item">
-                        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-tertiary-container text-on-tertiary-container mr-4">
-                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                                <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .356-.124.657-.373.906l-1.174 1.12zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.789 1.894v7.52c.02.765.283 1.395.789 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.128.789-1.893v-7.52c-.02-.765-.283-1.396-.789-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
+                    <div class="flex items-center p-3 dark-contact-item">
+                        <div class="icon-bg">
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-color">
+                                <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .356-.124.657-.373.906l-1.174 1.12zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.789 1.894v7.52c.02.765.283 1.395.789 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.128.789-1.893v-7.52c-.02-.765-.283-1.396-.789-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z" fill="currentColor"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="font-medium text-on-surface">bilibili</p>
-                            <a href="https://space.bilibili.com/3546584027499085" target="_blank" class="text-sm text-primary hover:underline">jjjmmmdexh</a>
+                            <p class="contact-title">bilibili</p>
+                            <a href="https://space.bilibili.com/3546584027499085" target="_blank" class="text-sm hover:underline" style="color: rgb(var(--md-primary));">jjjmmmdexh</a>
                         </div>
                     </div>
                 </div>
@@ -625,13 +1218,14 @@
         </section>
         
         <!-- 贡献者区域 -->
-        <section class="py-8 md:py-12">
-            <div class="md3-card">
-                <h2 class="text-xl md:text-2xl font-semibold text-on-surface mb-6 flex items-center">
-                    <span class="material-icons text-primary mr-3">groups</span>贡献者
+        <section class="section-padding">
+            <div class="contact-card">
+                <h2 class="section-title">
+                    <i class="fa fa-users mr-2"></i>贡献者
                 </h2>
                 <div id="contributorsList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
-                <div class="mt-6 text-sm text-on-surface-variant text-center">
+                <div class="divider"></div>
+                <div class="mt-4 text-sm text-center" style="color: rgb(var(--md-on-surface-variant));">
                     <p>感谢所有贡献者为White Client做出的贡献！</p>
                 </div>
             </div>
@@ -639,40 +1233,36 @@
         
         <!-- 壁纸信息 + 源切换 -->
         <section class="px-4">
-            <div id="wallpaperInfo" class="wallpaper-info-md3">
+            <div id="wallpaperInfo" class="wallpaper-info">
                 <!-- 切换按钮行 -->
-                <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
                     <div class="flex items-center space-x-2">
-                        <span class="text-sm text-on-surface-variant mr-1">选择壁纸API：</span>
-                        <button id="btnBingSource" class="md3-assist-chip active">Bing API</button>
-                        <button id="btnLoliSource" class="md3-assist-chip">Loli API</button>
-                        <a href="https://www.loliapi.com/" target="_blank" class="ml-2 text-xs text-primary hover:underline flex items-center" title="API文档">
-                            <span class="material-icons text-base mr-1">description</span>文档
-                        </a>
+                        <span class="text-sm opacity-80 mr-1">选择壁纸API：</span>
+                        <button id="btnBingSource" class="source-btn active">Bing API</button>
+                        <button id="btnLoliSource" class="source-btn">Loli API</button>
+                        <a href="https://www.loliapi.com/" target="_blank" class="ml-2 text-xs hover:underline opacity-70" title="API文档">📄 文档</a>
                     </div>
                     <div class="flex items-center">
-                        <span id="wallpaperSourceLabel" class="text-xs text-on-surface-variant">当前源: Bing</span>
-                        <button id="refreshWallpaperBtn" class="ml-2 md3-icon-button w-8 h-8 !p-0" title="刷新壁纸">
-                            <span class="material-icons text-base">refresh</span>
+                        <span id="wallpaperSourceLabel" class="text-xs opacity-70">当前源: Bing</span>
+                        <button id="refreshWallpaperBtn" class="ml-2 transition-colors hover:opacity-80" style="color: rgb(var(--md-on-surface-variant));" title="刷新壁纸">
+                            <i class="fa fa-refresh"></i>
                         </button>
                     </div>
                 </div>
-                <!-- 提示区域 -->
-                <div id="wallpaperHint" class="text-xs bg-primary-container/20 text-on-primary-container rounded-small px-3 py-2 mb-3 hidden">
-                    <span class="material-icons align-text-bottom text-sm mr-1">info</span>此Bing壁纸一般在新的一天后更新
-                </div>
+                <!-- 提示区域（用于Bing刷新提示） -->
+                <div id="wallpaperHint" class="text-xs mb-2 hidden" style="color: rgb(var(--md-primary)); opacity: 0.9;">此Bing壁纸一般在新的一天后更新</div>
                 <!-- 壁纸描述动态区域 -->
-                <div id="wallpaperCaption" class="text-sm text-on-surface">
+                <div id="wallpaperCaption" class="text-sm">
                     <!-- 初始由JS填充 -->
                 </div>
             </div>
         </section>
         
-        <!-- 底部 -->
-        <footer class="py-8 text-center">
-            <div id="currentTime" class="time-display-md3 mb-3"></div>
-            <p class="text-on-surface-variant text-sm">All things by jjjmmmdexh</p>
+        <!-- 底部时间 -->
+        <footer class="py-6 text-center">
+            <div id="currentTime" class="time-display mb-2"></div>
+            <p class="text-sm" style="color: rgb(var(--md-on-surface-variant));">All things by jjjmmmdexh</p>
         </footer>
-    </main>
+    </div>
 </body>
 </html>
