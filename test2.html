@@ -1,107 +1,151 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>White Client</title>
+    <title>White Client - MD3 Design</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 使用 Material Icons (MD3 推荐) 替代 Font Awesome -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: '#007bff',
-                        secondary: '#6c757d',
-                        dark: '#343a40',
-                        light: '#f8f9fa',
-                        bilibili: '#00A1D6' // Bilibili品牌蓝色
+                        // ===== MD3 浅色主题色彩系统 =====
+                        // 主色 (Primary) - 基于原#007bff调整的紫色系
+                        'primary': '#6750A4',
+                        'on-primary': '#FFFFFF',
+                        'primary-container': '#EADDFF',
+                        'on-primary-container': '#21005D',
+                        // 次要色 (Secondary)
+                        'secondary': '#625B71',
+                        'on-secondary': '#FFFFFF',
+                        'secondary-container': '#E8DEF8',
+                        'on-secondary-container': '#1D192B',
+                        // 表面色 (Surface)
+                        'surface': '#FEF7FF',
+                        'on-surface': '#1D1B20',
+                        'surface-variant': '#E7E0EC',
+                        'on-surface-variant': '#49454F',
+                        'outline': '#79747E',
+                        'outline-variant': '#CAC4D0',
+                        // 错误色 (Error)
+                        'error': '#B3261E',
+                        'on-error': '#FFFFFF',
+                        'error-container': '#F9DEDC',
+                        'on-error-container': '#410E0B',
+                        // 成功/信息色
+                        'success': '#0D7C4D',
+                        'on-success': '#FFFFFF',
+                        'success-container': '#A4F6CA',
+                        'on-success-container': '#002112',
                     },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        // MD3 推荐字体
+                        sans: ['Roboto', 'system-ui', 'sans-serif'],
                     },
+                    // 扩展阴影以匹配 MD3 海拔
+                    boxShadow: {
+                        '1': '0px 1px 2px 0px rgba(0, 0, 0, 0.30), 0px 1px 3px 1px rgba(0, 0, 0, 0.15)',
+                        '2': '0px 1px 2px 0px rgba(0, 0, 0, 0.30), 0px 2px 6px 2px rgba(0, 0, 0, 0.15)',
+                        '3': '0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.30)',
+                        '4': '0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px 0px rgba(0, 0, 0, 0.30)',
+                        '5': '0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.30)',
+                    },
+                    // 圆角系统
+                    borderRadius: {
+                        'extra-small': '4px',
+                        'small': '8px',
+                        'medium': '12px',
+                        'large': '16px',
+                        'extra-large': '28px',
+                        'full': '9999px',
+                    }
                 }
             }
         }
     </script>
     <style type="text/tailwindcss">
+        @layer base {
+            /* 基础样式 */
+            body {
+                @apply bg-surface text-on-surface antialiased;
+            }
+        }
         @layer utilities {
-            .content-auto {
-                content-visibility: auto;
+            /* MD3 卡片样式 - 移除毛玻璃，使用纯色与阴影 */
+            .md3-card {
+                @apply bg-surface rounded-large shadow-1 p-6 transition-all duration-200 border border-outline-variant/30;
             }
-            .device-card {
-                /* 亚克力/毛玻璃效果 */
-                @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-white/20 dark:border-gray-700/20;
+            .md3-card:hover {
+                @apply shadow-2;
             }
-            .btn-primary {
-                /* 亚克力下载按钮 - 调整透明度+圆形 */
-                @apply bg-primary/70 hover:bg-primary/80 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50 backdrop-blur-md border border-white/20 dark:border-primary/30;
+            /* 贡献者卡片专用 */
+            .md3-contributor-card {
+                @apply bg-surface-variant/50 rounded-large shadow-1 p-4 transition-all duration-200 flex flex-col items-center;
             }
-            .section-padding {
-                @apply py-8 md:py-12;
+            .md3-contributor-card:hover {
+                @apply shadow-2 bg-surface-variant/70;
             }
-            .contact-card {
-                /* 亚克力/毛玻璃效果 */
-                @apply bg-gradient-to-r from-blue-50/80 to-indigo-50/80 dark:from-gray-700/80 dark:to-gray-600/80 backdrop-blur-md rounded-xl shadow-md p-6 border border-blue-100/30 dark:border-gray-600/30;
+            /* 扩展FAB (主要下载按钮) */
+            .md3-extended-fab {
+                @apply bg-primary-container text-on-primary-container font-medium py-4 px-8 rounded-full shadow-3 hover:shadow-4 active:shadow-2 transition-all duration-200 flex items-center justify-center;
+                /* 状态层 */
+                position: relative;
+                overflow: hidden;
             }
-            
-            /* 圆形按钮样式（黑夜模式+通知按钮） */
-            .circle-btn {
-                @apply fixed top-4 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-800 dark:text-gray-200 w-12 h-12 flex items-center justify-center rounded-full shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200/30 dark:border-gray-600/30;
+            .md3-extended-fab::after {
+                content: '';
+                @apply absolute inset-0 bg-on-primary-container opacity-0 transition-opacity duration-200;
             }
-            
-            /* 通知栏样式 - 青柠起始页倾斜动画效果 */
-            .notification-panel {
-                @apply fixed top-16 right-4 z-40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-xl shadow-xl p-5 border border-gray-200/30 dark:border-gray-700/30 max-w-xs opacity-0 invisible;
-                transform: translateX(20px) rotate(2deg) scale(0.95);
-                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            .md3-extended-fab:hover::after {
+                opacity: 0.08;
             }
-            
-            .notification-panel.open {
-                @apply opacity-100 visible;
-                transform: translateX(0) rotate(0deg) scale(1);
+            .md3-extended-fab:active::after {
+                opacity: 0.12;
             }
-            
-            .notification-panel.closing {
-                transform: translateX(20px) rotate(-2deg) scale(0.95);
-                @apply opacity-0 invisible;
+            /* 辅助按钮 (Segmented Button / Chip 样式) */
+            .md3-assist-chip {
+                @apply bg-surface-variant text-on-surface-variant font-medium py-2 px-4 rounded-full shadow-0 hover:shadow-1 transition-all duration-200 border border-outline-variant;
             }
-            
-            /* 黑夜模式下的背景和文字颜色 */
-            .dark-bg {
-                @apply bg-gray-50 dark:bg-gray-900 transition-colors duration-300;
+            .md3-assist-chip.active {
+                @apply bg-secondary-container text-on-secondary-container border-0 shadow-1;
             }
-            
-            .dark-text {
-                @apply text-gray-700 dark:text-gray-300;
+            /* 图标按钮 (圆形按钮) */
+            .md3-icon-button {
+                @apply w-12 h-12 rounded-full flex items-center justify-center text-on-surface-variant bg-surface-variant shadow-0 hover:shadow-1 transition-all duration-200;
+                position: relative;
+                overflow: hidden;
             }
-            
-            .dark-text-secondary {
-                @apply text-secondary dark:text-gray-400;
+            .md3-icon-button::after {
+                content: '';
+                @apply absolute inset-0 bg-on-surface opacity-0 transition-opacity duration-200;
             }
-            
-            .dark-info-bg {
-                /* 亚克力/毛玻璃效果 */
-                @apply bg-gray-50/80 dark:bg-gray-700/80 backdrop-blur-md;
+            .md3-icon-button:hover::after {
+                opacity: 0.08;
             }
-            
-            .dark-contact-item {
-                /* 亚克力/毛玻璃效果 */
-                @apply bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm shadow-sm dark:shadow-gray-800 border border-white/20 dark:border-gray-800/20 rounded-lg;
+            .md3-icon-button:active::after {
+                opacity: 0.12;
             }
-            
-            /* 统一的图标背景样式 */
-            .icon-bg {
-                @apply bg-blue-100/80 dark:bg-blue-800/80 backdrop-blur-sm w-12 h-12 flex items-center justify-center rounded-full mr-3;
+            /* 通知面板 - 调整为 MD3 Snackbar 样式 */
+            .md3-snackbar {
+                @apply fixed top-20 right-4 z-40 bg-inverse-surface text-inverse-on-surface rounded-medium shadow-3 p-4 max-w-xs;
+                transform: translateY(-20px);
+                opacity: 0;
+                transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
             }
-            
-            /* 统一的图标颜色样式 */
-            .icon-color {
-                @apply text-blue-600 dark:text-blue-300 text-xl;
+            .md3-snackbar.open {
+                transform: translateY(0);
+                opacity: 1;
             }
-            
-            /* 背景壁纸样式 */
+            /* 列表项/联系信息项 */
+            .md3-list-item {
+                @apply flex items-center p-4 rounded-medium bg-surface-variant/30 hover:bg-surface-variant/50 transition-colors duration-200;
+            }
+            /* 背景壁纸样式 (保留功能，调整滤镜) */
             .bg-wallpaper {
                 position: fixed;
                 top: 0;
@@ -112,69 +156,77 @@
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
-                filter: brightness(0.85) contrast(1.05);
+                filter: brightness(0.92) saturate(1.1);
                 transition: filter 0.5s ease;
             }
-            
             .dark .bg-wallpaper {
-                filter: brightness(0.7) contrast(1.1);
+                filter: brightness(0.5) saturate(1.2) contrast(1.1);
             }
-            
-            /* 壁纸信息卡片样式 */
-            .wallpaper-info {
-                @apply bg-black/60 backdrop-blur-md text-white p-4 rounded-lg text-sm md:text-base max-w-3xl mx-auto mt-6 mb-8;
+            /* 壁纸信息卡片 */
+            .wallpaper-info-md3 {
+                @apply bg-surface/85 backdrop-blur-sm rounded-large p-5 text-sm md:text-base max-w-3xl mx-auto mt-6 mb-8 shadow-2 border border-outline-variant/20;
             }
-            
-            /* 雪花效果样式 */
-            .snowflake {
-                position: fixed;
-                pointer-events: none;
-                z-index: 9999;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.8);
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-            
-            .dark .snowflake {
-                background: rgba(255, 255, 255, 0.9);
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+            /* 时间显示 */
+            .time-display-md3 {
+                @apply text-on-surface-variant text-sm font-medium tracking-wide;
             }
         }
     </style>
     <script>
-        // 全局变量 - 防止通知反复弹出
+        // ===== 全局变量与配置 (功能逻辑基本保留，仅样式类名更新) =====
         let notificationOpen = false;
         let notificationTimer = null;
         let isProcessingNotification = false;
-
-        // 雪花效果相关变量
         let snowflakes = [];
         let snowflakeIdCounter = 0;
+        let currentSource = 'bing';
+        let hintTimer = null;
 
-        // 黑夜模式相关函数
+        const contributors = [
+            { name: '凋灵斯拉是个up主', image: '凋灵斯拉是个up主.jpg' },
+            { name: 'TOM', image: 'TOM.jpg' },
+            { name: 'Ternus340', image: 'Ternus340.jpg' },
+            { name: 'Xigua', image: 'Xigua.jpg' },
+            { name: 'CB604BL', image: 'CB604BL.jpg' },
+            { name: 'Sunch233', image: 'Sunch233.jpg' },
+            { name: 'NEETSama', image: 'NEETSama.jpg' },
+            { name: 'asosa', image: 'asosa.jpg' }
+        ];
+
+        // --- 黑夜模式 ---
         function initDarkMode() {
-            // 从localStorage获取保存的主题设置
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            // 如果有保存的设置就使用，否则使用系统偏好
             const isDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-            
             if (isDark) {
                 document.documentElement.classList.add('dark');
+                // 动态应用深色主题色
+                document.documentElement.style.setProperty('--color-primary', '#D0BCFF');
+                document.documentElement.style.setProperty('--color-on-primary', '#371E73');
+                document.documentElement.style.setProperty('--color-primary-container', '#4F378B');
+                document.documentElement.style.setProperty('--color-on-primary-container', '#EADDFF');
+                document.documentElement.style.setProperty('--color-surface', '#1D1B20');
+                document.documentElement.style.setProperty('--color-on-surface', '#E6E1E5');
+                document.documentElement.style.setProperty('--color-surface-variant', '#49454F');
+                document.documentElement.style.setProperty('--color-on-surface-variant', '#CAC4D0');
             } else {
                 document.documentElement.classList.remove('dark');
+                // 恢复浅色主题色
+                document.documentElement.style.removeProperty('--color-primary');
+                document.documentElement.style.removeProperty('--color-on-primary');
+                document.documentElement.style.removeProperty('--color-primary-container');
+                document.documentElement.style.removeProperty('--color-on-primary-container');
+                document.documentElement.style.removeProperty('--color-surface');
+                document.documentElement.style.removeProperty('--color-on-surface');
+                document.documentElement.style.removeProperty('--color-surface-variant');
+                document.documentElement.style.removeProperty('--color-on-surface-variant');
             }
-            
             updateToggleIcon();
-            updateWallpaperFilter(); // 更新壁纸滤镜
+            updateWallpaperFilter();
         }
         
         function toggleDarkMode() {
             const isDark = document.documentElement.classList.contains('dark');
-            
             if (isDark) {
                 document.documentElement.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
@@ -182,112 +234,157 @@
                 document.documentElement.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
             }
-            
-            updateToggleIcon();
-            updateWallpaperFilter(); // 更新壁纸滤镜
+            // 重新初始化以应用颜色变量
+            initDarkMode();
         }
         
         function updateToggleIcon() {
             const isDark = document.documentElement.classList.contains('dark');
             const toggleIcon = document.getElementById('darkModeIcon');
-            
             if (toggleIcon) {
-                toggleIcon.className = isDark ? 'fa fa-sun-o' : 'fa fa-moon-o';
+                toggleIcon.textContent = isDark ? 'light_mode' : 'dark_mode';
             }
         }
         
-        // 更新壁纸滤镜效果
         function updateWallpaperFilter() {
             const wallpaper = document.getElementById('bgWallpaper');
             if (!wallpaper) return;
-            
             const isDark = document.documentElement.classList.contains('dark');
-            wallpaper.style.filter = isDark ? 'brightness(0.7) contrast(1.1)' : 'brightness(0.85) contrast(1.05)';
+            wallpaper.style.filter = isDark ? 'brightness(0.5) saturate(1.2) contrast(1.1)' : 'brightness(0.92) saturate(1.1)';
         }
-        
-        // 获取每日Bing壁纸
-        async function getBingWallpaper() {
+
+        // --- 壁纸加载函数 (功能逻辑不变) ---
+        async function loadBingWallpaper() {
+            const captionDiv = document.getElementById('wallpaperCaption');
+            const sourceLabel = document.getElementById('wallpaperSourceLabel');
             try {
-                // 使用跨域代理获取Bing壁纸API
                 const response = await fetch('https://bing.biturl.top/?resolution=1920&format=json&index=0&mkt=zh-CN');
-                
-                if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const data = await response.json();
-                
                 if (data && data.url) {
-                    // 设置背景壁纸
-                    const wallpaper = document.getElementById('bgWallpaper');
-                    wallpaper.style.backgroundImage = `url(${data.url})`;
-                    
-                    // 设置壁纸信息
-                    const infoElement = document.getElementById('wallpaperInfo');
-                    if (infoElement && data.copyright) {
-                        infoElement.innerHTML = `
-                            <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
-                            <p>${data.copyright}</p>
-                            ${data.copyrightLink ? `<p class="mt-2"><a href="${data.copyrightLink}" target="_blank" class="text-blue-300 hover:text-blue-200 underline">查看原图</a></p>` : ''}
+                    document.getElementById('bgWallpaper').style.backgroundImage = `url(${data.url})`;
+                    if (captionDiv) {
+                        captionDiv.innerHTML = `
+                            <p class="font-medium mb-1 flex items-center"><span class="material-icons mr-2 text-primary">photo</span>📷 Bing 每日壁纸</p>
+                            <p class="text-on-surface-variant">${data.copyright || '无版权信息'}</p>
+                            ${data.copyrightLink ? `<p class="mt-2"><a href="${data.copyrightLink}" target="_blank" class="text-primary hover:underline">查看原图</a></p>` : ''}
                         `;
                     }
+                    if (sourceLabel) sourceLabel.innerText = '当前源: Bing';
+                } else {
+                    throw new Error('无效的Bing数据');
                 }
             } catch (error) {
-                console.error('获取Bing壁纸失败:', error);
-                // 备用壁纸
-                const wallpaper = document.getElementById('bgWallpaper');
-                wallpaper.style.backgroundImage = 'url(https://picsum.photos/1920/1080?random=1)';
-                
-                const infoElement = document.getElementById('wallpaperInfo');
-                infoElement.innerHTML = `
-                    <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
-                    <p>每日Bing壁纸加载失败，显示备用壁纸</p>
-                `;
+                console.error('Bing壁纸加载失败:', error);
+                document.getElementById('bgWallpaper').style.backgroundImage = 'url(https://picsum.photos/1920/1080?random=1)';
+                if (captionDiv) {
+                    captionDiv.innerHTML = `<p class="font-medium mb-1 flex items-center"><span class="material-icons mr-2 text-error">warning</span>Bing壁纸加载失败，使用随机占位</p>`;
+                }
+            } finally {
+                updateWallpaperFilter();
             }
         }
-        
-        // 通知栏相关函数 - 修复反复弹出问题
+
+        function loadLoliWallpaper() {
+            const captionDiv = document.getElementById('wallpaperCaption');
+            const sourceLabel = document.getElementById('wallpaperSourceLabel');
+            const wallpaperDiv = document.getElementById('bgWallpaper');
+            const apiUrl = `https://www.loliapi.com/acg/?_=${Date.now()}`;
+            
+            if (captionDiv) captionDiv.innerHTML = '';
+            const img = new Image();
+            img.onload = function() {
+                wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
+                if (sourceLabel) sourceLabel.innerText = '当前源: Loli';
+                updateWallpaperFilter();
+            };
+            img.onerror = function() {
+                console.error('Loli壁纸加载失败，回退Bing');
+                loadBingWallpaper();
+                setActiveSourceButton('bing');
+                currentSource = 'bing';
+                if (sourceLabel) sourceLabel.innerText = '当前源: Bing (自动回退)';
+            };
+            img.src = apiUrl;
+        }
+
+        // --- 源切换控制 ---
+        function setActiveSourceButton(source) {
+            const btnBing = document.getElementById('btnBingSource');
+            const btnLoli = document.getElementById('btnLoliSource');
+            if (!btnBing || !btnLoli) return;
+            if (source === 'bing') {
+                btnBing.classList.add('active');
+                btnLoli.classList.remove('active');
+            } else {
+                btnLoli.classList.add('active');
+                btnBing.classList.remove('active');
+            }
+        }
+
+        function switchToBing() {
+            if (currentSource === 'bing') return;
+            currentSource = 'bing';
+            setActiveSourceButton('bing');
+            loadBingWallpaper();
+        }
+
+        function switchToLoli() {
+            if (currentSource === 'loli') return;
+            currentSource = 'loli';
+            setActiveSourceButton('loli');
+            loadLoliWallpaper();
+        }
+
+        // --- 刷新按钮处理 ---
+        function refreshWallpaper() {
+            if (currentSource === 'bing') {
+                showBingHint();
+                loadBingWallpaper();
+            } else {
+                loadLoliWallpaper();
+            }
+        }
+
+        function showBingHint() {
+            const hintDiv = document.getElementById('wallpaperHint');
+            if (!hintDiv) return;
+            if (hintTimer) clearTimeout(hintTimer);
+            hintDiv.classList.remove('hidden');
+            hintTimer = setTimeout(() => {
+                hintDiv.classList.add('hidden');
+                hintTimer = null;
+            }, 3000);
+        }
+
+        // --- 通知栏 ---
         function toggleNotification() {
-            // 防止快速重复点击
             if (isProcessingNotification) return;
             isProcessingNotification = true;
-
             const panel = document.getElementById('notificationPanel');
             const icon = document.getElementById('notificationIcon');
-            
-            // 清除自动关闭定时器
             clearTimeout(notificationTimer);
-            
             if (notificationOpen) {
-                // 关闭通知栏 - 反向倾斜动画
-                panel.classList.add('closing');
-                icon.classList.remove('fa-bell-slash');
-                icon.classList.add('fa-bell');
-                
+                panel.classList.remove('open');
+                icon.textContent = 'notifications';
                 setTimeout(() => {
-                    panel.classList.remove('open', 'closing');
                     notificationOpen = false;
                     isProcessingNotification = false;
-                }, 400);
+                }, 300);
             } else {
-                // 打开通知栏 - 倾斜动画
                 panel.classList.add('open');
-                icon.classList.remove('fa-bell');
-                icon.classList.add('fa-bell-slash');
-                
-                // 自动关闭（8秒）
+                icon.textContent = 'notifications_off';
                 notificationTimer = setTimeout(() => {
                     toggleNotification();
                 }, 8000);
-                
                 notificationOpen = true;
                 isProcessingNotification = false;
             }
         }
-        
-        // 点击页面其他区域关闭通知栏
+
         document.addEventListener('click', function(event) {
             const panel = document.getElementById('notificationPanel');
             const toggleBtn = document.getElementById('notificationToggle');
-            
             if (notificationOpen && !isProcessingNotification &&
                 !panel.contains(event.target) && 
                 event.target !== toggleBtn && 
@@ -296,13 +393,10 @@
             }
         });
 
-        // ==================== 雪花效果相关函数 ====================
+        // --- 雪花效果 (保留原逻辑) ---
         function createSnowflake(x, y) {
-            // 生成随机大小的雪花 (3-8px)
             const size = Math.random() * 5 + 3;
             const id = `snowflake-${snowflakeIdCounter++}`;
-            
-            // 创建雪花元素
             const snowflake = document.createElement('div');
             snowflake.id = id;
             snowflake.className = 'snowflake';
@@ -311,270 +405,274 @@
             snowflake.style.left = `${x}px`;
             snowflake.style.top = `${y}px`;
             snowflake.style.opacity = '1';
-            
-            // 添加到页面
+            snowflake.style.position = 'fixed';
+            snowflake.style.pointerEvents = 'none';
+            snowflake.style.zIndex = '9999';
+            snowflake.style.borderRadius = '50%';
+            snowflake.style.background = 'rgba(255, 255, 255, 0.8)';
+            snowflake.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.8)';
             document.body.appendChild(snowflake);
-            
-            // 存储雪花信息
-            const snowflakeInfo = {
-                id,
-                element: snowflake,
-                x,
-                y,
-                size,
-                velocityX: (Math.random() - 0.5) * 2, // 水平速度 (-1 到 1)
-                velocityY: Math.random() * 1 + 1,      // 垂直速度 (1 到 2)
-                rotation: Math.random() * 360,         // 初始旋转角度
-                rotationSpeed: (Math.random() - 0.5) * 2 // 旋转速度 (-1 到 1)
+            const info = {
+                id, element: snowflake, x, y, size,
+                velocityX: (Math.random() - 0.5) * 2,
+                velocityY: Math.random() * 1 + 1,
+                rotation: Math.random() * 360,
+                rotationSpeed: (Math.random() - 0.5) * 2
             };
-            
-            snowflakes.push(snowflakeInfo);
-            
-            // 5秒后移除雪花
-            setTimeout(() => {
-                removeSnowflake(id);
-            }, 5000);
-            
-            return snowflakeInfo;
+            snowflakes.push(info);
+            setTimeout(() => removeSnowflake(id), 5000);
         }
 
         function updateSnowflakes() {
-            // 更新所有雪花的位置和状态
             for (let i = snowflakes.length - 1; i >= 0; i--) {
-                const snowflake = snowflakes[i];
-                
-                // 更新位置
-                snowflake.x += snowflake.velocityX;
-                snowflake.y += snowflake.velocityY;
-                
-                // 更新旋转
-                snowflake.rotation += snowflake.rotationSpeed;
-                
-                // 应用样式
-                snowflake.element.style.left = `${snowflake.x}px`;
-                snowflake.element.style.top = `${snowflake.y}px`;
-                snowflake.element.style.transform = `rotate(${snowflake.rotation}deg)`;
-                
-                // 淡出效果
-                const lifeProgress = 1 - (snowflake.y / window.innerHeight);
-                snowflake.element.style.opacity = lifeProgress > 0 ? lifeProgress : 0;
-                
-                // 如果雪花超出屏幕底部，移除它
-                if (snowflake.y > window.innerHeight) {
-                    removeSnowflake(snowflake.id);
-                }
+                const s = snowflakes[i];
+                s.x += s.velocityX;
+                s.y += s.velocityY;
+                s.rotation += s.rotationSpeed;
+                s.element.style.left = `${s.x}px`;
+                s.element.style.top = `${s.y}px`;
+                s.element.style.transform = `rotate(${s.rotation}deg)`;
+                const life = 1 - (s.y / window.innerHeight);
+                s.element.style.opacity = life > 0 ? life : 0;
+                if (s.y > window.innerHeight) removeSnowflake(s.id);
             }
-            
-            // 继续更新
             requestAnimationFrame(updateSnowflakes);
         }
 
         function removeSnowflake(id) {
-            // 从数组中移除
             snowflakes = snowflakes.filter(s => s.id !== id);
-            
-            // 从DOM中移除
-            const element = document.getElementById(id);
-            if (element) {
-                element.style.opacity = '0';
-                setTimeout(() => {
-                    element.remove();
-                }, 300);
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 300);
             }
         }
 
         function handleClick(event) {
-            // 防止在通知按钮/暗色模式按钮上点击时触发
-            const target = event.target;
-            if (target.closest('#darkModeToggle') || target.closest('#notificationToggle')) {
-                return;
-            }
-            
-            // 在点击位置创建多个雪花 (5-10个)
+            if (event.target.closest('#darkModeToggle') || event.target.closest('#notificationToggle')) return;
             const count = Math.floor(Math.random() * 6) + 5;
             for (let i = 0; i < count; i++) {
-                // 稍微偏移位置，让雪花散开
                 const offsetX = (Math.random() - 0.5) * 20;
                 const offsetY = (Math.random() - 0.5) * 20;
                 createSnowflake(event.clientX + offsetX, event.clientY + offsetY);
             }
         }
-        
+
+        // --- 时间显示 ---
+        function updateTime() {
+            const timeElement = document.getElementById('currentTime');
+            if (!timeElement) return;
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const weekday = weekdays[now.getDay()];
+            timeElement.innerHTML = `<span class="material-icons align-middle mr-1 text-base">schedule</span> ${year}-${month}-${day} ${weekday} ${hours}:${minutes}:${seconds}`;
+        }
+
+        // --- 渲染贡献者 ---
+        function renderContributors() {
+            const container = document.getElementById('contributorsList');
+            if (!container) return;
+            container.innerHTML = '';
+            contributors.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'md3-contributor-card';
+                card.innerHTML = `
+                    <img src="${c.image}" alt="${c.name}" class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-outline-variant mx-auto mb-3" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iNDAiIGZpbGw9IiM2NzUwQTQiLz4KPHBhdGggZD0iTTQwIDI2LjY2NzdDNDQuNjA2IDI2LjY2NzcgNDguMzMzNiAzMC4zOTQ0IDQ4LjMzMzYgMzVWNDEuNjY3N0MzOC4zMzM2IDQzLjMzNDQgMjYuNjY2OSA0NC4xNjcxIDI2LjY2NjkgNDRWNDMuMzM0NEMyNi42NjY5IDQwLjI2NzcgMjUuMzMzNiAzNy4yMDA4IDI1LjMzMzYgMzVDMjUuMzMzNiAzMC4zOTQ0IDI5LjA2MDIgMjYuNjY3NyAzMy42NjY5IDI2LjY2NzdINDBaTTU1LjYwMDIgNTcuMzM0NEgyNC4zMzM2QzI3LjM2NjkgNTIuMzMzNyAzMy4wNjY5IDQ4LjMzMzcgNDAgNDguMzMzN0M0Ni45MzM2IDQ4LjMzMzcgNTIuNjY2OSA1Mi4zMzM3IDU1LjYwMDIgNTcuMzMzNFY1Ny4zMzQ0WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+'; this.alt='${c.name} 头像'">
+                    <p class="contributor-name text-center font-medium text-on-surface truncate">${c.name}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- 页面初始化 ---
         window.onload = async function() {
-            // 初始化黑夜模式
             initDarkMode();
-            
-            // 加载Bing壁纸
-            await getBingWallpaper();
-            
-            // 添加事件监听
+            await loadBingWallpaper();
+            renderContributors();
+            updateTime();
+            setInterval(updateTime, 1000);
+            // 事件绑定
             document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
             document.getElementById('notificationToggle').addEventListener('click', toggleNotification);
-            
-            // 初始化雪花效果
+            document.getElementById('btnBingSource').addEventListener('click', switchToBing);
+            document.getElementById('btnLoliSource').addEventListener('click', switchToLoli);
+            document.getElementById('refreshWallpaperBtn').addEventListener('click', refreshWallpaper);
+            setActiveSourceButton('bing');
+            // 雪花效果
             document.addEventListener('click', handleClick);
             updateSnowflakes();
         };
     </script>
+    <style>
+        /* 深色主题颜色覆写 (通过CSS变量) */
+        .dark {
+            --color-primary: #D0BCFF;
+            --color-on-primary: #371E73;
+            --color-primary-container: #4F378B;
+            --color-on-primary-container: #EADDFF;
+            --color-surface: #1D1B20;
+            --color-on-surface: #E6E1E5;
+            --color-surface-variant: #49454F;
+            --color-on-surface-variant: #CAC4D0;
+            --color-inverse-surface: #E6E1E5;
+            --color-inverse-on-surface: #1D1B20;
+        }
+        /* 应用CSS变量到具体的Tailwind类 (示例) */
+        .bg-inverse-surface {
+            background-color: var(--color-inverse-surface, #1D1B20);
+        }
+        .text-inverse-on-surface {
+            color: var(--color-inverse-on-surface, #E6E1E5);
+        }
+    </style>
 </head>
-<body class="dark-bg min-h-screen font-sans transition-colors duration-300">
-    <!-- Bing壁纸背景 -->
+<body class="min-h-screen font-sans transition-colors duration-300">
+    <!-- 背景壁纸 -->
     <div id="bgWallpaper" class="bg-wallpaper"></div>
     
-    <!-- 黑夜模式切换按钮（圆形） -->
-    <button id="darkModeToggle" class="circle-btn right-4" title="切换黑夜模式">
-        <i id="darkModeIcon" class="fa fa-moon-o text-xl"></i>
-    </button>
+    <!-- 顶部应用栏 (App Bar) 替代悬浮按钮 -->
+    <header class="sticky top-0 z-30 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30">
+        <div class="container mx-auto px-4 py-3 max-w-3xl flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="title.png" alt="White Client" width="120" height="auto" class="rounded-medium"/>
+            </div>
+            <div class="flex items-center space-x-2">
+                <!-- 黑夜模式切换 -->
+                <button id="darkModeToggle" class="md3-icon-button" title="切换黑夜模式">
+                    <span id="darkModeIcon" class="material-icons">dark_mode</span>
+                </button>
+                <!-- 通知按钮 -->
+                <button id="notificationToggle" class="md3-icon-button" title="查看通知">
+                    <span id="notificationIcon" class="material-icons">notifications</span>
+                </button>
+            </div>
+        </div>
+    </header>
     
-    <!-- 通知按钮（圆形） -->
-    <button id="notificationToggle" class="circle-btn right-20" title="查看通知">
-        <i id="notificationIcon" class="fa fa-bell text-xl"></i>
-    </button>
-    
-    <!-- 通知栏 - 带青柠起始页风格的倾斜动画 -->
-    <div id="notificationPanel" class="notification-panel">
+    <!-- 通知面板 (MD3 Snackbar样式) -->
+    <div id="notificationPanel" class="md3-snackbar">
         <div class="flex items-start">
-            <div class="bg-red-100 dark:bg-red-900/50 p-2 rounded-full mr-3">
-                <i class="fa fa-info-circle text-red-600 dark:text-red-400"></i>
+            <div class="bg-error-container text-on-error-container p-2 rounded-full mr-3">
+                <span class="material-icons text-base">info</span>
             </div>
             <div class="flex-1">
-                <h3 class="font-semibold text-gray-800 dark:text-gray-200 mb-1">重要通知</h3>
-                <p class="text-gray-700 dark:text-gray-300 text-sm">由于种种原因，我宣布更新日志不再公开。</p>
-                <button onclick="toggleNotification()" class="mt-3 text-xs text-primary hover:text-primary/80 flex items-center">
-                    <i class="fa fa-times mr-1"></i> 关闭
+                <h3 class="font-semibold mb-1">重要通知</h3>
+                <p class="text-sm opacity-90">由于种种原因，我宣布更新日志不再公开。对于CB604BL等人所发起的0.14客户端研究授权我表示理解但不愿加入，我以此表达抱歉并做出了我认为正确的做法：表达他们对客户端制作做出贡献的感谢</p>
+                <button onclick="toggleNotification()" class="mt-3 text-xs text-primary hover:underline flex items-center">
+                    <span class="material-icons text-sm mr-1">close</span> 关闭
                 </button>
             </div>
         </div>
     </div>
     
-    <div class="container mx-auto px-4 max-w-3xl">
-        <!-- 头部区域 -->
-        <header class="text-center section-padding">
-            <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg shadow-lg max-w-full h-auto"/>
-            <p class="dark-text-secondary text-lg mb-2">开放*创新</p>
-            <p class="dark-text-secondary">Client</p>
-        </header>
-        
+    <main class="container mx-auto px-4 max-w-3xl">
         <!-- 下载区域 -->
-        <section class="section-padding text-center">
-            <!-- 圆形亚克力效果的下载按钮 -->
+        <section class="py-12 md:py-16 text-center">
             <a href="https://www.123865.com/s/EvgbVv-uvStd" 
-               class="btn-primary inline-flex items-center justify-center">
-                <i class="fa fa-download mr-2"></i> 下载White Client <span class="text-sm text-gray-200">(版本: 3.4)</span>
+               class="md3-extended-fab inline-flex items-center justify-center">
+                <span class="material-icons mr-2">download</span> 下载 White Client 稳定版
+                <span class="ml-2 text-sm opacity-80">(版本: 3.4)</span>
             </a>
-            
-            <div class="mt-6 text-gray-600 dark:text-gray-400 text-sm">
+            <div class="mt-6 text-on-surface-variant text-sm">
                 <p>jjjmmmdexh制作</p>
             </div>
         </section>
         
-        <!-- 联系区域 -->
-        <section class="section-padding">
-            <div class="contact-card">
-                <h2 class="text-xl font-semibold text-dark dark:text-gray-200 mb-4 flex items-center">
-                    <i class="fa fa-envelope text-primary mr-2"></i>关于
+        <!-- 关于/联系方式区域 -->
+        <section class="py-8 md:py-12">
+            <div class="md3-card">
+                <h2 class="text-xl md:text-2xl font-semibold text-on-surface mb-6 flex items-center">
+                    <span class="material-icons text-primary mr-3">info</span>关于
                 </h2>
-                
-                <div class="space-y-4 dark-text">
-                    <!-- QQ联系方式（统一样式） -->
-                    <div class="flex items-center p-3 dark-contact-item">
-                        <div class="icon-bg">
-                            <i class="fa fa-qq icon-color"></i>
+                <div class="space-y-3">
+                    <div class="md3-list-item">
+                        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary-container text-on-primary-container mr-4">
+                            <span class="material-icons">chat</span>
                         </div>
                         <div>
-                            <p class="font-medium">QQ</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">1591123827</p>
+                            <p class="font-medium text-on-surface">QQ</p>
+                            <p class="text-sm text-on-surface-variant">1591123827</p>
                         </div>
                     </div>
-                    
-                    <!-- 邮箱联系方式（统一样式） -->
-                    <div class="flex items-center p-3 dark-contact-item">
-                        <div class="icon-bg">
-                            <i class="fa fa-envelope icon-color"></i>
+                    <div class="md3-list-item">
+                        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-secondary-container text-on-secondary-container mr-4">
+                            <span class="material-icons">email</span>
                         </div>
                         <div>
-                            <p class="font-medium">E-MAIL</p>
+                            <p class="font-medium text-on-surface">E-MAIL</p>
                             <a href="mailto:name1591123827@163.com" class="text-sm text-primary hover:underline">name1591123827@163.com</a>
                         </div>
                     </div>
-                    
-                    <!-- Bilibili联系方式（统一颜色样式） -->
-                    <div class="flex items-center p-3 dark-contact-item">
-                        <div class="icon-bg">
-                            <!-- B站图标使用统一的颜色风格 -->
-                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-color">
-                                <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .356-.124.657-.373.906l-1.174 1.12zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.789 1.894v7.52c.02.765.283 1.395.789 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.128.789-1.893v-7.52c-.02-.765-.283-1.396-.789-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z" fill="currentColor"/>
+                    <div class="md3-list-item">
+                        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-tertiary-container text-on-tertiary-container mr-4">
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                                <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.51.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .356-.124.657-.373.906l-1.174 1.12zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.789 1.894v7.52c.02.765.283 1.395.789 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.128.789-1.893v-7.52c-.02-.765-.283-1.396-.789-1.894-.507-.497-1.134-.755-1.88-.773H5.333zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="font-medium">bilibili</p>
+                            <p class="font-medium text-on-surface">bilibili</p>
                             <a href="https://space.bilibili.com/3546584027499085" target="_blank" class="text-sm text-primary hover:underline">jjjmmmdexh</a>
                         </div>
                     </div>
                 </div>
-                
-                <div class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                </div>
             </div>
         </section>
-
-        <!-- 贡献者列表区域 -->
-        <section class="section-padding">
-            <div class="contact-card">
-                <h2 class="text-xl font-semibold text-dark dark:text-gray-200 mb-4 flex items-center">
-                    <i class="fa fa-users text-primary mr-2"></i>贡献者列表
+        
+        <!-- 贡献者区域 -->
+        <section class="py-8 md:py-12">
+            <div class="md3-card">
+                <h2 class="text-xl md:text-2xl font-semibold text-on-surface mb-6 flex items-center">
+                    <span class="material-icons text-primary mr-3">groups</span>贡献者
                 </h2>
-                <!-- 贡献者网格布局 - 响应式适配 -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    <!-- 每个贡献者项 - 亚克力风格 + 圆形头像 -->
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="凋灵斯拉是个up主.jpg" alt="凋灵斯拉是个up主" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">凋灵斯拉是个up主</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="TOM.jpg" alt="TOM" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">TOM</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="Ternus340.jpg" alt="Ternus340" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">Ternus340</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="Xigua.jpg" alt="Xigua" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">Xigua</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="CB604BL.jpg" alt="CB604BL" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">CB604BL</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="Sunch233.jpg" alt="Sunch233" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">Sunch233</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="NEETSama.jpg" alt="NEETSama" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">NEETSama</p>
-                    </div>
-                    <div class="dark-contact-item p-4 flex flex-col items-center text-center">
-                        <img src="asosa.jpg" alt="asosa" class="w-16 h-16 rounded-full mb-2 object-cover border-2 border-blue-200 dark:border-blue-700">
-                        <p class="dark-text font-medium text-sm">asosa</p>
-                    </div>
+                <div id="contributorsList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+                <div class="mt-6 text-sm text-on-surface-variant text-center">
+                    <p>感谢所有贡献者为White Client做出的贡献！</p>
                 </div>
             </div>
         </section>
         
-        <!-- 壁纸信息区域 -->
+        <!-- 壁纸信息 + 源切换 -->
         <section class="px-4">
-            <div id="wallpaperInfo" class="wallpaper-info">
-                <p class="font-medium mb-1"><i class="fa fa-camera mr-2"></i>今日壁纸</p>
-                <p>加载中...</p>
+            <div id="wallpaperInfo" class="wallpaper-info-md3">
+                <!-- 切换按钮行 -->
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-on-surface-variant mr-1">选择壁纸API：</span>
+                        <button id="btnBingSource" class="md3-assist-chip active">Bing API</button>
+                        <button id="btnLoliSource" class="md3-assist-chip">Loli API</button>
+                        <a href="https://www.loliapi.com/" target="_blank" class="ml-2 text-xs text-primary hover:underline flex items-center" title="API文档">
+                            <span class="material-icons text-base mr-1">description</span>文档
+                        </a>
+                    </div>
+                    <div class="flex items-center">
+                        <span id="wallpaperSourceLabel" class="text-xs text-on-surface-variant">当前源: Bing</span>
+                        <button id="refreshWallpaperBtn" class="ml-2 md3-icon-button w-8 h-8 !p-0" title="刷新壁纸">
+                            <span class="material-icons text-base">refresh</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- 提示区域 -->
+                <div id="wallpaperHint" class="text-xs bg-primary-container/20 text-on-primary-container rounded-small px-3 py-2 mb-3 hidden">
+                    <span class="material-icons align-text-bottom text-sm mr-1">info</span>此Bing壁纸一般在新的一天后更新
+                </div>
+                <!-- 壁纸描述动态区域 -->
+                <div id="wallpaperCaption" class="text-sm text-on-surface">
+                    <!-- 初始由JS填充 -->
+                </div>
             </div>
         </section>
         
-        <!-- 底部区域 -->
-        <footer class="py-6 text-center text-gray-500 dark:text-gray-400 text-sm">
-            <p>All things by jjjmmmdexh</p>
+        <!-- 底部 -->
+        <footer class="py-8 text-center">
+            <div id="currentTime" class="time-display-md3 mb-3"></div>
+            <p class="text-on-surface-variant text-sm">All things by jjjmmmdexh</p>
         </footer>
-    </div>
+    </main>
 </body>
 </html>
