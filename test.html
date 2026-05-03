@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>White Client - 主题色适配版</title>
+    <title>White Client - MD3主题色适配版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -26,44 +26,35 @@
         }
     </script>
     <style type="text/tailwindcss">
-        /* 增强的MD3动态色彩变量系统 */
+        /* MD3动态色彩变量系统 */
         :root {
             /* 从壁纸提取的原色 (Primary) */
             --md-primary: 66, 133, 244;
             --md-primary-light: 150, 180, 255;
             --md-primary-container: 225, 235, 255;
             --md-on-primary: 255, 255, 255;
-            --md-on-primary-container: 10, 30, 90;
             
-            /* 次要色/容器色 (Surface) - 基础中性色 */
+            /* 次要色/容器色 (Surface) */
             --md-surface: 255, 255, 255;
             --md-surface-dim: 227, 227, 227;
             --md-on-surface: 28, 27, 31;
             --md-on-surface-variant: 73, 69, 78;
             
-            /* 增强的表面容器 - 与主题色关联 */
+            /* 表面容器 */
             --md-surface-container-lowest: 255, 255, 255;
             --md-surface-container-low: 247, 247, 247;
             --md-surface-container: 242, 242, 242;
             --md-surface-container-high: 235, 235, 235;
             --md-surface-container-highest: 230, 230, 230;
             
-            /* 轮廓 (Outline) */
+            /* 轮廓 */
             --md-outline: 121, 116, 126;
             --md-outline-variant: 196, 199, 197;
             
             /* 阴影 */
             --md-shadow-color: 0, 0, 0;
             
-            /* 圆角 */
-            --md-shape-extra-small: 4px;
-            --md-shape-small: 8px;
-            --md-shape-medium: 12px;
-            --md-shape-large: 16px;
-            --md-shape-extra-large: 28px;
-            --md-shape-full: 9999px;
-            
-            /* 新增：主题色相关的表面色（透明度较低） */
+            /* 主题色相关的表面色 */
             --md-surface-primary-low: rgba(var(--md-primary), 0.05);
             --md-surface-primary-medium: rgba(var(--md-primary), 0.08);
             --md-surface-primary-high: rgba(var(--md-primary), 0.12);
@@ -85,7 +76,6 @@
             --md-outline: 147, 143, 153;
             --md-outline-variant: 70, 70, 70;
             
-            /* 暗色模式下主题色相关表面色的透明度更高 */
             --md-surface-primary-low: rgba(var(--md-primary), 0.08);
             --md-surface-primary-medium: rgba(var(--md-primary), 0.12);
             --md-surface-primary-high: rgba(var(--md-primary), 0.18);
@@ -107,10 +97,9 @@
                 color: rgb(var(--md-on-surface-variant));
             }
             
-            /* 1. 设备/信息卡片 - 增强的主题色跟随 */
+            /* 设备/信息卡片 - MD3 Surface Container */
             .device-card {
                 @apply backdrop-blur-md rounded-2xl p-6 transition-all duration-300 hover:shadow-lg border;
-                /* 使用主题色相关的表面色，但不透明 */
                 background-color: color-mix(in srgb, var(--md-surface-primary-medium) 30%, rgb(var(--md-surface-container)));
                 border-color: rgba(var(--md-outline-variant), 0.3);
                 box-shadow: 
@@ -124,7 +113,7 @@
                 background-color: color-mix(in srgb, var(--md-surface-primary-high) 40%, rgb(var(--md-surface-container-high)));
             }
             
-            /* 2. 主按钮 - MD3 Filled Button */
+            /* 主按钮 - MD3 Filled Button */
             .btn-primary {
                 @apply font-medium py-3 px-8 rounded-full transition-all duration-300 transform focus:outline-none;
                 background-color: rgb(var(--md-primary));
@@ -145,7 +134,7 @@
                 transform: translateY(0px) scale(0.99);
             }
             
-            /* 3. 联系区域容器 - 更强的主题色跟随 */
+            /* 联系区域容器 */
             .contact-card {
                 @apply backdrop-blur-md rounded-2xl shadow-md p-6 border transition-all duration-300;
                 background-color: color-mix(in srgb, var(--md-surface-primary-medium) 25%, rgb(var(--md-surface-container-high)));
@@ -156,7 +145,7 @@
                 background-color: color-mix(in srgb, var(--md-surface-primary-high) 35%, rgb(var(--md-surface-container-highest)));
             }
             
-            /* 4. 圆形功能按钮 - 主题色边框 */
+            /* 圆形功能按钮 */
             .circle-btn {
                 @apply fixed top-4 z-50 backdrop-blur-md w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300;
                 background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-highest)));
@@ -170,7 +159,7 @@
                 border-color: rgba(var(--md-primary), 0.5);
             }
             
-            /* 5. 通知面板 */
+            /* 通知面板 */
             .notification-panel {
                 @apply fixed top-16 right-4 z-40 backdrop-blur-md rounded-2xl shadow-xl p-5 border max-w-xs opacity-0 invisible;
                 background-color: color-mix(in srgb, var(--md-surface-primary-low) 15%, rgb(var(--md-surface-container-high)));
@@ -189,10 +178,9 @@
                 @apply opacity-0 invisible;
             }
             
-            /* 6. 贡献者卡片 - 微透明的纯主题色 */
+            /* 贡献者卡片 - 微透明的纯主题色 */
             .contributor-card {
                 @apply backdrop-blur-md rounded-2xl shadow-md p-4 transition-all duration-300 hover:shadow-lg border;
-                /* 改为微透明的纯主题色 */
                 background-color: rgba(var(--md-primary), 0.15);
                 border-color: rgba(var(--md-primary), 0.3);
             }
@@ -202,7 +190,7 @@
                 border-color: rgba(var(--md-primary), 0.5);
             }
             
-            /* 7. 联系方式内部项 - 轻微主题色跟随 */
+            /* 联系方式内部项 */
             .dark-contact-item {
                 @apply backdrop-blur-sm shadow-sm rounded-xl p-4 transition-colors duration-200;
                 background-color: color-mix(in srgb, var(--md-surface-primary-low) 10%, rgb(var(--md-surface-container-lowest)));
@@ -213,7 +201,7 @@
                 border-color: rgba(var(--md-primary), 0.2);
             }
             
-            /* 8. 图标背景 - 主题色更明显 */
+            /* 图标背景 */
             .icon-bg {
                 @apply backdrop-blur-sm w-12 h-12 flex items-center justify-center rounded-full mr-3 transition-colors duration-300;
                 background-color: rgba(var(--md-primary), 0.15);
@@ -223,7 +211,7 @@
                 transition: color 0.3s ease;
             }
             
-            /* 9. 壁纸信息卡片 */
+            /* 壁纸信息卡片 */
             .wallpaper-info {
                 @apply backdrop-blur-md p-4 rounded-2xl text-sm md:text-base max-w-3xl mx-auto mt-6 mb-8 transition-colors duration-300;
                 background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-high)));
@@ -231,7 +219,7 @@
                 border: 1px solid rgba(var(--md-outline-variant), 0.2);
             }
             
-            /* 10. 源切换按钮 - 主题色状态更明显 */
+            /* 源切换按钮 */
             .source-btn {
                 @apply px-4 py-2 text-sm rounded-full transition-all backdrop-blur-sm border font-medium;
                 background-color: color-mix(in srgb, var(--md-surface-primary-low) 10%, rgb(var(--md-surface-container)));
@@ -249,13 +237,13 @@
                 color: rgb(var(--md-on-surface));
             }
             
-            /* 11. 底部时间显示 */
+            /* 底部时间显示 */
             .time-display {
                 @apply text-sm font-medium;
                 color: rgb(var(--md-on-surface-variant));
             }
             
-            /* 12. 背景壁纸样式 */
+            /* 背景壁纸样式 */
             .bg-wallpaper {
                 position: fixed;
                 top: 0;
@@ -274,7 +262,7 @@
                 filter: brightness(0.7) contrast(1.1);
             }
             
-            /* 13. 贡献者头像 */
+            /* 贡献者头像 */
             .contributor-avatar {
                 @apply w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 mx-auto mb-3;
                 border-color: rgba(var(--md-primary), 0.3);
@@ -289,7 +277,7 @@
                 @apply py-8 md:py-12;
             }
             
-            /* 14. 气泡效果 - 替换雪花效果 */
+            /* 气泡效果 */
             .bubble {
                 position: fixed;
                 pointer-events: none;
@@ -310,7 +298,7 @@
                     0 0 20px rgba(var(--md-primary), 0.6);
             }
             
-            /* 15. 链接样式 - 使用主题色 */
+            /* 链接样式 */
             a {
                 transition: color 0.2s ease;
             }
@@ -318,19 +306,19 @@
                 color: rgb(var(--md-primary)) !important;
             }
             
-            /* 16. 标题样式增强 */
+            /* 标题样式 */
             .section-title {
                 @apply text-xl font-semibold mb-4 flex items-center;
                 color: rgb(var(--md-primary));
             }
             
-            /* 17. 分隔线 - 轻微主题色 */
+            /* 分隔线 */
             .divider {
                 @apply my-4;
                 border-top: 1px solid rgba(var(--md-primary), 0.1);
             }
             
-            /* 18. 次要主标题（如QQ、bilibili等）使用更重的颜色 */
+            /* 次要主标题（如QQ、bilibili等）使用更重的颜色 */
             .contact-title {
                 @apply font-medium;
                 color: rgba(var(--md-primary), 0.9) !important;
@@ -341,43 +329,23 @@
                 color: rgba(var(--md-primary), 0.95) !important;
             }
             
-            /* 19. 标题图片颜色适配 */
+            /* 标题图片容器 */
             .title-image-container {
                 @apply relative inline-block;
             }
             
             .title-image {
-                filter: 
-                    brightness(0) invert(1) 
-                    sepia(1) 
-                    saturate(1000%) 
-                    hue-rotate(calc(var(--primary-hue, 0) * 1deg))
-                    brightness(0.9)
-                    contrast(1.2);
+                @apply mx-auto rounded-lg max-w-full h-auto;
+                filter: url(#titleColorFilter);
                 transition: filter 0.5s ease;
             }
             
-            .title-image-light {
-                filter: 
-                    brightness(0) invert(1) 
-                    sepia(1) 
-                    saturate(1000%) 
-                    hue-rotate(calc(var(--primary-hue, 0) * 1deg))
-                    brightness(1.3)
-                    contrast(1.1)
-                    opacity(0.8);
-                transition: filter 0.5s ease;
-            }
-            
-            /* 20. 图片遮罩层，用于颜色适配 */
-            .title-overlay {
+            /* SVG滤镜容器 */
+            .svg-filters {
                 position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                mix-blend-mode: multiply;
-                pointer-events: none;
+                width: 0;
+                height: 0;
+                overflow: hidden;
             }
         }
     </style>
@@ -412,10 +380,7 @@
         // --- 改进的色彩提取算法 ---
         
         /**
-         * 从图片中提取主色 - 改进版
-         * 使用k-means聚类算法提高精度
-         * @param {string} imageUrl - 图片URL
-         * @returns {Promise<Array>} - 返回 [r, g, b] 数组
+         * 从图片中提取主色
          */
         async function getDominantColorFromImage(imageUrl) {
             return new Promise((resolve, reject) => {
@@ -427,8 +392,7 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
-                        // 缩小图片以加快处理，但保持足够细节
-                        const scale = 0.2; // 增加到20%以提高精度
+                        const scale = 0.2;
                         canvas.width = Math.max(img.width * scale, 100);
                         canvas.height = Math.max(img.height * scale, 100);
                         
@@ -438,27 +402,21 @@
                         const pixels = imageData.data;
                         const pixelCount = canvas.width * canvas.height;
                         
-                        // 方法1: 使用改进的平均算法（排除极端颜色）
                         const colors = [];
                         for (let i = 0; i < pixels.length; i += 4) {
                             const r = pixels[i];
                             const g = pixels[i + 1];
                             const b = pixels[i + 2];
                             
-                            // 转换为HSL以更好地分析颜色
                             const hsl = rgbToHsl(r, g, b);
                             
-                            // 排除过于暗或过于亮的颜色（可能是阴影或高光）
                             if (hsl[2] < 0.1 || hsl[2] > 0.9) continue;
-                            
-                            // 排除过于不饱和的颜色（可能是灰色）
                             if (hsl[1] < 0.1) continue;
                             
                             colors.push([r, g, b]);
                         }
                         
-                        // 如果有足够的有意义颜色，使用它们
-                        if (colors.length > pixelCount * 0.3) { // 至少30%的像素是有意义的
+                        if (colors.length > pixelCount * 0.3) {
                             let r = 0, g = 0, b = 0;
                             for (const color of colors) {
                                 r += color[0];
@@ -470,12 +428,10 @@
                             b = Math.floor(b / colors.length);
                             resolve([r, g, b]);
                         } else {
-                            // 否则使用简单k-means聚类
                             resolve(kMeansDominantColor(pixels, canvas.width, canvas.height));
                         }
                     } catch (error) {
                         console.warn('高级取色失败，使用基础算法:', error);
-                        // 回退到简单平均算法
                         const simpleColor = getSimpleAverageColor(img);
                         resolve(simpleColor);
                     }
@@ -484,32 +440,25 @@
             });
         }
         
-        /**
-         * 简单k-means聚类算法提取主色
-         */
         function kMeansDominantColor(pixels, width, height) {
             const pixelCount = width * height;
             const sampleSize = Math.min(100, pixelCount);
             const samples = [];
             
-            // 随机取样
             for (let i = 0; i < sampleSize; i++) {
                 const idx = Math.floor(Math.random() * pixelCount) * 4;
                 samples.push([pixels[idx], pixels[idx + 1], pixels[idx + 2]]);
             }
             
-            // 使用简化k-means (k=3)
             let centroids = [
-                [255, 0, 0],    // 红
-                [0, 255, 0],    // 绿
-                [0, 0, 255]     // 蓝
+                [255, 0, 0],
+                [0, 255, 0],
+                [0, 0, 255]
             ];
             
-            // 迭代3次
             for (let iter = 0; iter < 3; iter++) {
                 const clusters = [[], [], []];
                 
-                // 分配样本到最近的质心
                 for (const sample of samples) {
                     let minDist = Infinity;
                     let clusterIdx = 0;
@@ -525,7 +474,6 @@
                     clusters[clusterIdx].push(sample);
                 }
                 
-                // 重新计算质心
                 for (let i = 0; i < centroids.length; i++) {
                     if (clusters[i].length > 0) {
                         let r = 0, g = 0, b = 0;
@@ -543,18 +491,16 @@
                 }
             }
             
-            // 找到最大的簇
             let maxClusterSize = 0;
             let dominantColor = centroids[0];
             
-            // 计算每个簇的大小（简化版）
             const allSamples = [];
             for (let i = 0; i < pixels.length; i += 4) {
                 allSamples.push([pixels[i], pixels[i + 1], pixels[i + 2]]);
             }
             
             const clusterCounts = [0, 0, 0];
-            for (const sample of allSamples.slice(0, 200)) { // 只检查200个样本
+            for (const sample of allSamples.slice(0, 200)) {
                 let minDist = Infinity;
                 let clusterIdx = 0;
                 
@@ -579,9 +525,6 @@
             return dominantColor;
         }
         
-        /**
-         * 计算颜色距离
-         */
         function colorDistance(color1, color2) {
             const dr = color1[0] - color2[0];
             const dg = color1[1] - color2[1];
@@ -589,9 +532,6 @@
             return Math.sqrt(dr * dr + dg * dg + db * db);
         }
         
-        /**
-         * RGB转HSL
-         */
         function rgbToHsl(r, g, b) {
             r /= 255;
             g /= 255;
@@ -602,7 +542,7 @@
             let h, s, l = (max + min) / 2;
             
             if (max === min) {
-                h = s = 0; // 灰色
+                h = s = 0;
             } else {
                 const d = max - min;
                 s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
@@ -619,9 +559,6 @@
             return [h, s, l];
         }
         
-        /**
-         * 简单平均颜色（备用方法）
-         */
         function getSimpleAverageColor(img) {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -643,56 +580,156 @@
         }
         
         /**
-         * 根据主色生成并应用完整的MD3调色板
-         * 增强版：生成更多与主题色相关的变量
+         * 创建动态SVG滤镜，实现精准颜色替换
          */
-        function applyDynamicColorPalette(primaryColor) {
+        function createDynamicSVGFilter(primaryColor, lightColor) {
             const [r, g, b] = primaryColor;
-            const root = document.documentElement;
+            const [lr, lg, lb] = lightColor;
             
-            // 计算色相值
-            const hsl = rgbToHsl(r, g, b);
-            const hue = hsl[0] * 360;
+            const existingSVG = document.getElementById('svgFilters');
+            if (existingSVG) {
+                existingSVG.remove();
+            }
             
-            // 设置主色
-            root.style.setProperty('--md-primary', `${r}, ${g}, ${b}`);
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.id = 'svgFilters';
+            svg.className = 'svg-filters';
             
-            // 设置主色浅色版本
-            const lightColor = adjustColorBrightness(primaryColor, 1.3);
-            root.style.setProperty('--md-primary-light', `${lightColor[0]}, ${lightColor[1]}, ${lightColor[2]}`);
+            const defs = document.createElementNS(svgNS, "defs");
             
-            // 设置CSS变量用于标题图片滤镜
-            root.style.setProperty('--primary-hue', hue);
+            const colorMatrixFilter = document.createElementNS(svgNS, "filter");
+            colorMatrixFilter.id = "titleColorFilter";
+            colorMatrixFilter.setAttribute("color-interpolation-filters", "sRGB");
             
-            // 计算 on-primary 颜色（确保文字可读性）
-            const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-            const onPrimary = luminance > 160 ? '20, 20, 20' : '255, 255, 255';
-            root.style.setProperty('--md-on-primary', onPrimary);
+            const feColorMatrix1 = document.createElementNS(svgNS, "feColorMatrix");
+            feColorMatrix1.setAttribute("type", "matrix");
+            feColorMatrix1.setAttribute("in", "SourceGraphic");
+            feColorMatrix1.setAttribute("result", "whiteMask");
+            feColorMatrix1.setAttribute("values", 
+                "0 0 0 0 0 " +
+                "0 0 0 0 0 " +
+                "0 0 0 0 0 " +
+                `1 1 1 0 ${-2.55}`
+            );
             
-            // 生成主色容器颜色（比主色浅/深）
-            const primaryContainer = adjustColorBrightness(primaryColor, luminance > 160 ? 0.8 : 1.2);
-            root.style.setProperty('--md-primary-container', `${primaryContainer[0]}, ${primaryContainer[1]}, ${primaryContainer[2]}`);
+            const feColorMatrix2 = document.createElementNS(svgNS, "feColorMatrix");
+            feColorMatrix2.setAttribute("type", "matrix");
+            feColorMatrix2.setAttribute("in", "whiteMask");
+            feColorMatrix2.setAttribute("result", "primaryColor");
+            feColorMatrix2.setAttribute("values", 
+                `${r/255} 0 0 0 0 ` +
+                `0 ${g/255} 0 0 0 ` +
+                `0 0 ${b/255} 0 0 ` +
+                "0 0 0 1 0"
+            );
             
-            // 生成主题色相关的表面色
-            root.style.setProperty('--md-surface-primary-low', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.05 : 0.08})`);
-            root.style.setProperty('--md-surface-primary-medium', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.08 : 0.12})`);
-            root.style.setProperty('--md-surface-primary-high', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.12 : 0.18})`);
+            const feColorMatrix3 = document.createElementNS(svgNS, "feColorMatrix");
+            feColorMatrix3.setAttribute("type", "luminanceToAlpha");
+            feColorMatrix3.setAttribute("in", "SourceGraphic");
+            feColorMatrix3.setAttribute("result", "alphaMask");
             
-            console.log('动态主题色已应用:', primaryColor, '亮度:', luminance.toFixed(0), '色相:', hue.toFixed(0));
+            const feColorMatrix4 = document.createElementNS(svgNS, "feColorMatrix");
+            feColorMatrix4.setAttribute("type", "matrix");
+            feColorMatrix4.setAttribute("in", "alphaMask");
+            feColorMatrix4.setAttribute("result", "lightColor");
+            feColorMatrix4.setAttribute("values", 
+                `${lr/255} 0 0 0 0 ` +
+                `0 ${lg/255} 0 0 0 ` +
+                `0 0 ${lb/255} 0 0 ` +
+                "0 0 0 0.7 0"
+            );
             
-            // 更新标题图片颜色
-            updateTitleImageColor(primaryColor, hue);
+            const feBlend = document.createElementNS(svgNS, "feBlend");
+            feBlend.setAttribute("mode", "lighten");
+            feBlend.setAttribute("in", "primaryColor");
+            feBlend.setAttribute("in2", "lightColor");
+            feBlend.setAttribute("result", "colored");
+            
+            const feComposite = document.createElementNS(svgNS, "feComposite");
+            feComposite.setAttribute("operator", "in");
+            feComposite.setAttribute("in", "colored");
+            feComposite.setAttribute("in2", "SourceAlpha");
+            
+            colorMatrixFilter.appendChild(feColorMatrix1);
+            colorMatrixFilter.appendChild(feColorMatrix2);
+            colorMatrixFilter.appendChild(feColorMatrix3);
+            colorMatrixFilter.appendChild(feColorMatrix4);
+            colorMatrixFilter.appendChild(feBlend);
+            colorMatrixFilter.appendChild(feComposite);
+            
+            defs.appendChild(colorMatrixFilter);
+            svg.appendChild(defs);
+            document.body.appendChild(svg);
         }
         
         /**
-         * 调整颜色亮度
+         * 备选方案：使用Canvas处理图片颜色
          */
-        function adjustColorBrightness(color, factor) {
-            return [
-                Math.min(255, Math.max(0, Math.floor(color[0] * factor))),
-                Math.min(255, Math.max(0, Math.floor(color[1] * factor))),
-                Math.min(255, Math.max(0, Math.floor(color[2] * factor)))
-            ];
+        function processTitleImageWithCanvas(primaryColor, lightColor) {
+            return new Promise((resolve) => {
+                const titleImg = document.querySelector('.title-image');
+                if (!titleImg) {
+                    resolve();
+                    return;
+                }
+                
+                if (!titleImg.complete) {
+                    titleImg.onload = function() {
+                        processImage(this, primaryColor, lightColor);
+                        resolve();
+                    };
+                } else {
+                    processImage(titleImg, primaryColor, lightColor);
+                    resolve();
+                }
+            });
+            
+            function processImage(img, primaryColor, lightColor) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                ctx.drawImage(img, 0, 0);
+                
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    const a = data[i + 3];
+                    
+                    if (a === 0) continue;
+                    
+                    if (r > 240 && g > 240 && b > 240) {
+                        data[i] = primaryColor[0];
+                        data[i + 1] = primaryColor[1];
+                        data[i + 2] = primaryColor[2];
+                    } 
+                    else if (a > 0) {
+                        const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+                        const mixRatio = Math.min(0.7, luminance / 255);
+                        
+                        data[i] = Math.round(lightColor[0] * mixRatio + r * (1 - mixRatio));
+                        data[i + 1] = Math.round(lightColor[1] * mixRatio + g * (1 - mixRatio));
+                        data[i + 2] = Math.round(lightColor[2] * mixRatio + b * (1 - mixRatio));
+                    }
+                }
+                
+                ctx.putImageData(imageData, 0, 0);
+                
+                const processedUrl = canvas.toDataURL('image/png');
+                img.src = processedUrl;
+                
+                const overlay = document.querySelector('.title-overlay');
+                if (overlay) {
+                    overlay.remove();
+                }
+            }
         }
         
         /**
@@ -700,29 +737,50 @@
          */
         function updateTitleImageColor(primaryColor, hue) {
             const [r, g, b] = primaryColor;
-            const root = document.documentElement;
-            
-            // 计算浅色版本
             const lightColor = adjustColorBrightness(primaryColor, 1.3);
             
-            // 更新标题图片的CSS滤镜变量
-            root.style.setProperty('--primary-hue', hue);
-            
-            // 创建标题图片的遮罩层
-            const titleContainer = document.getElementById('titleContainer');
-            if (titleContainer) {
-                // 移除现有的遮罩层
-                const existingOverlay = titleContainer.querySelector('.title-overlay');
-                if (existingOverlay) {
-                    existingOverlay.remove();
-                }
-                
-                // 创建新的遮罩层
-                const overlay = document.createElement('div');
-                overlay.className = 'title-overlay';
-                overlay.style.background = `linear-gradient(135deg, rgba(${r}, ${g}, ${b}, 0.9) 0%, rgba(${lightColor[0]}, ${lightColor[1]}, ${lightColor[2]}, 0.7) 100%)`;
-                titleContainer.appendChild(overlay);
+            try {
+                createDynamicSVGFilter(primaryColor, lightColor);
+            } catch (e) {
+                console.log('SVG滤镜创建失败，使用Canvas方案:', e);
+                processTitleImageWithCanvas(primaryColor, lightColor);
             }
+        }
+        
+        function applyDynamicColorPalette(primaryColor) {
+            const [r, g, b] = primaryColor;
+            const root = document.documentElement;
+            
+            const hsl = rgbToHsl(r, g, b);
+            const hue = hsl[0] * 360;
+            
+            root.style.setProperty('--md-primary', `${r}, ${g}, ${b}`);
+            
+            const lightColor = adjustColorBrightness(primaryColor, 1.3);
+            root.style.setProperty('--md-primary-light', `${lightColor[0]}, ${lightColor[1]}, ${lightColor[2]}`);
+            
+            const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            const onPrimary = luminance > 160 ? '20, 20, 20' : '255, 255, 255';
+            root.style.setProperty('--md-on-primary', onPrimary);
+            
+            const primaryContainer = adjustColorBrightness(primaryColor, luminance > 160 ? 0.8 : 1.2);
+            root.style.setProperty('--md-primary-container', `${primaryContainer[0]}, ${primaryContainer[1]}, ${primaryContainer[2]}`);
+            
+            root.style.setProperty('--md-surface-primary-low', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.05 : 0.08})`);
+            root.style.setProperty('--md-surface-primary-medium', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.08 : 0.12})`);
+            root.style.setProperty('--md-surface-primary-high', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.12 : 0.18})`);
+            
+            updateTitleImageColor(primaryColor, hue);
+            
+            console.log('动态主题色已应用:', primaryColor, '亮度:', luminance.toFixed(0), '色相:', hue.toFixed(0));
+        }
+        
+        function adjustColorBrightness(color, factor) {
+            return [
+                Math.min(255, Math.max(0, Math.floor(color[0] * factor))),
+                Math.min(255, Math.max(0, Math.floor(color[1] * factor))),
+                Math.min(255, Math.max(0, Math.floor(color[2] * factor)))
+            ];
         }
         
         // --- 黑夜模式 ---
@@ -751,7 +809,6 @@
             updateToggleIcon();
             updateWallpaperFilter();
             
-            // 更新主题色相关的透明度变量
             updateThemeColorVariables();
         }
         
@@ -776,7 +833,6 @@
             const [r, g, b] = primary.split(',').map(v => parseInt(v.trim()));
             const isDark = document.documentElement.classList.contains('dark');
             
-            // 更新主题色相关的表面色透明度
             root.style.setProperty('--md-surface-primary-low', `rgba(${r}, ${g}, ${b}, ${isDark ? 0.08 : 0.05})`);
             root.style.setProperty('--md-surface-primary-medium', `rgba(${r}, ${g}, ${b}, ${isDark ? 0.12 : 0.08})`);
             root.style.setProperty('--md-surface-primary-high', `rgba(${r}, ${g}, ${b}, ${isDark ? 0.18 : 0.12})`);
@@ -795,7 +851,6 @@
                     const imageUrl = data.url;
                     document.getElementById('bgWallpaper').style.backgroundImage = `url(${imageUrl})`;
                     
-                    // 加载图片并提取主题色
                     try {
                         const dominantColor = await getDominantColorFromImage(imageUrl);
                         applyDynamicColorPalette(dominantColor);
@@ -820,7 +875,6 @@
                 console.error('Bing壁纸加载失败:', error);
                 const fallbackUrl = 'https://picsum.photos/1920/1080?random=1';
                 document.getElementById('bgWallpaper').style.backgroundImage = `url(${fallbackUrl})`;
-                // 尝试从占位图取色
                 try {
                     const simpleColor = await getSimpleAverageColorFromUrl(fallbackUrl);
                     applyDynamicColorPalette(simpleColor);
@@ -844,7 +898,7 @@
                     resolve(getSimpleAverageColor(img));
                 };
                 img.onerror = function() {
-                    resolve([66, 133, 244]); // 默认蓝色
+                    resolve([66, 133, 244]);
                 };
                 img.src = url;
             });
@@ -865,7 +919,6 @@
                 img.crossOrigin = "Anonymous";
                 img.onload = async function() {
                     wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
-                    // 从加载成功的图片中取色
                     try {
                         const dominantColor = await getDominantColorFromImage(apiUrl);
                         applyDynamicColorPalette(dominantColor);
@@ -987,7 +1040,7 @@
         
         // --- 气泡效果 ---
         function createBubble(x, y) {
-            const size = Math.random() * 20 + 10; // 10-30px
+            const size = Math.random() * 20 + 10;
             const id = `bubble-${bubbleIdCounter++}`;
             
             const bubble = document.createElement('div');
@@ -1004,7 +1057,7 @@
             const info = {
                 id, element: bubble, x, y, size,
                 velocityX: (Math.random() - 0.5) * 1.5,
-                velocityY: -(Math.random() * 2 + 1), // 向上移动
+                velocityY: -(Math.random() * 2 + 1),
                 rotation: Math.random() * 360,
                 rotationSpeed: (Math.random() - 0.5) * 1,
                 scale: 1,
@@ -1021,31 +1074,20 @@
             for (let i = bubbles.length - 1; i >= 0; i--) {
                 const b = bubbles[i];
                 
-                // 更新位置
                 b.x += b.velocityX;
                 b.y += b.velocityY;
-                
-                // 添加轻微的摆动
                 b.x += Math.sin(Date.now() * 0.001 + i) * 0.3;
-                
-                // 更新旋转
                 b.rotation += b.rotationSpeed;
-                
-                // 更新大小
                 b.scale += b.scaleSpeed;
                 b.scale = Math.max(0.5, Math.min(1.5, b.scale));
-                
-                // 更新透明度
                 b.opacity += b.opacitySpeed;
                 b.opacity = Math.max(0, Math.min(0.9, b.opacity));
                 
-                // 应用变换
                 b.element.style.left = `${b.x}px`;
                 b.element.style.top = `${b.y}px`;
                 b.element.style.transform = `translate(-50%, -50%) rotate(${b.rotation}deg) scale(${b.scale})`;
                 b.element.style.opacity = b.opacity;
                 
-                // 如果气泡移出屏幕顶部，移除它
                 if (b.y < -50 || b.x < -50 || b.x > window.innerWidth + 50) {
                     removeBubble(b.id);
                 }
@@ -1066,7 +1108,7 @@
             if (event.target.closest('#darkModeToggle') || 
                 event.target.closest('#notificationToggle') || 
                 event.target.closest('#refreshWallpaperBtn')) return;
-            const count = Math.floor(Math.random() * 5) + 3; // 3-7个气泡
+            const count = Math.floor(Math.random() * 5) + 3;
             for (let i = 0; i < count; i++) {
                 const offsetX = (Math.random() - 0.5) * 30;
                 const offsetY = (Math.random() - 0.5) * 30;
@@ -1112,7 +1154,6 @@
         window.onload = async function() {
             initDarkMode();
             
-            // 初始默认加载Bing壁纸
             await loadBingWallpaper();
             
             renderContributors();
@@ -1133,10 +1174,17 @@
     </script>
 </head>
 <body class="dark-bg min-h-screen font-sans transition-colors duration-300">
+    <!-- SVG滤镜容器 -->
+    <svg id="svgFilters" class="svg-filters">
+        <defs>
+            <!-- 动态创建的滤镜会插入到这里 -->
+        </defs>
+    </svg>
+    
     <!-- 背景壁纸 -->
     <div id="bgWallpaper" class="bg-wallpaper"></div>
     
-    <!-- 刷新按钮 - 新增，放置在顶部最左侧 -->
+    <!-- 刷新按钮 -->
     <button id="refreshWallpaperBtn" class="circle-btn left-4" title="刷新壁纸">
         <i class="fa fa-refresh text-xl"></i>
     </button>
@@ -1168,10 +1216,10 @@
     </div>
     
     <div class="container mx-auto px-4 max-w-3xl">
-        <!-- 头部区域 - 标题图片颜色适配 -->
+        <!-- 头部区域 -->
         <header class="text-center section-padding">
             <div id="titleContainer" class="title-image-container">
-                <img src="title.png" alt="White Client" width="1538" height="472" class="mx-auto rounded-lg max-w-full h-auto title-image"/>
+                <img src="title.png" alt="White Client" width="1538" height="472" class="title-image"/>
             </div>
         </header>
         
@@ -1251,7 +1299,6 @@
                     </div>
                     <div class="flex items-center">
                         <span id="wallpaperSourceLabel" class="text-xs opacity-70">当前源: Bing</span>
-                        <!-- 已移除原来的刷新按钮，现在它是一个顶部的圆形按钮 -->
                     </div>
                 </div>
                 <!-- 提示区域（用于Bing刷新提示） -->
