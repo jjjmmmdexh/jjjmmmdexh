@@ -613,11 +613,33 @@
                 `1 1 1 0 ${-2.55}`
             );
             
+            const feColorMatrix1b = document.createElementNS(svgNS, "feColorMatrix");
+            feColorMatrix1b.setAttribute("type", "matrix");
+            feColorMatrix1b.setAttribute("in", "SourceGraphic");
+            feColorMatrix1b.setAttribute("result", "blackMask");
+            feColorMatrix1b.setAttribute("values", 
+                "1 0 0 0 0 " +
+                "0 1 0 0 0 " +
+                "0 0 1 0 0 " +
+                "-1 -1 -1 0 2.55"
+            );
+            
             const feColorMatrix2 = document.createElementNS(svgNS, "feColorMatrix");
             feColorMatrix2.setAttribute("type", "matrix");
             feColorMatrix2.setAttribute("in", "whiteMask");
-            feColorMatrix2.setAttribute("result", "primaryColor");
+            feColorMatrix2.setAttribute("result", "primaryFromWhite");
             feColorMatrix2.setAttribute("values", 
+                `${r/255} 0 0 0 0 ` +
+                `0 ${g/255} 0 0 0 ` +
+                `0 0 ${b/255} 0 0 ` +
+                "0 0 0 1 0"
+            );
+            
+            const feColorMatrix2b = document.createElementNS(svgNS, "feColorMatrix");
+            feColorMatrix2b.setAttribute("type", "matrix");
+            feColorMatrix2b.setAttribute("in", "blackMask");
+            feColorMatrix2b.setAttribute("result", "primaryFromBlack");
+            feColorMatrix2b.setAttribute("values", 
                 `${r/255} 0 0 0 0 ` +
                 `0 ${g/255} 0 0 0 ` +
                 `0 0 ${b/255} 0 0 ` +
@@ -640,11 +662,17 @@
                 "0 0 0 0.7 0"
             );
             
-            const feBlend = document.createElementNS(svgNS, "feBlend");
-            feBlend.setAttribute("mode", "lighten");
-            feBlend.setAttribute("in", "primaryColor");
-            feBlend.setAttribute("in2", "lightColor");
-            feBlend.setAttribute("result", "colored");
+            const feBlend1 = document.createElementNS(svgNS, "feBlend");
+            feBlend1.setAttribute("mode", "lighten");
+            feBlend1.setAttribute("in", "primaryFromWhite");
+            feBlend1.setAttribute("in2", "primaryFromBlack");
+            feBlend1.setAttribute("result", "primaryColor");
+            
+            const feBlend2 = document.createElementNS(svgNS, "feBlend");
+            feBlend2.setAttribute("mode", "lighten");
+            feBlend2.setAttribute("in", "primaryColor");
+            feBlend2.setAttribute("in2", "lightColor");
+            feBlend2.setAttribute("result", "colored");
             
             const feComposite = document.createElementNS(svgNS, "feComposite");
             feComposite.setAttribute("operator", "in");
@@ -652,10 +680,13 @@
             feComposite.setAttribute("in2", "SourceAlpha");
             
             colorMatrixFilter.appendChild(feColorMatrix1);
+            colorMatrixFilter.appendChild(feColorMatrix1b);
             colorMatrixFilter.appendChild(feColorMatrix2);
+            colorMatrixFilter.appendChild(feColorMatrix2b);
             colorMatrixFilter.appendChild(feColorMatrix3);
             colorMatrixFilter.appendChild(feColorMatrix4);
-            colorMatrixFilter.appendChild(feBlend);
+            colorMatrixFilter.appendChild(feBlend1);
+            colorMatrixFilter.appendChild(feBlend2);
             colorMatrixFilter.appendChild(feComposite);
             
             defs.appendChild(colorMatrixFilter);
@@ -709,7 +740,12 @@
                         data[i] = primaryColor[0];
                         data[i + 1] = primaryColor[1];
                         data[i + 2] = primaryColor[2];
-                    } 
+                    }
+                    else if (r < 15 && g < 15 && b < 15) {
+                        data[i] = primaryColor[0];
+                        data[i + 1] = primaryColor[1];
+                        data[i + 2] = primaryColor[2];
+                    }
                     else if (a > 0) {
                         const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
                         const mixRatio = Math.min(0.7, luminance / 255);
