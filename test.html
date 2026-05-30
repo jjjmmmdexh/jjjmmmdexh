@@ -147,7 +147,7 @@
             
             /* 圆形功能按钮 */
             .circle-btn {
-                @apply fixed top-4 z-50 backdrop-blur-md w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300;
+                @apply fixed top-4 z-50 backdrop-blur-md w-12 h-12 flex items-center justify-center rounded-lg transition-all duration-300;
                 background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-highest)));
                 color: rgb(var(--md-primary));
                 border: 1.5px solid rgba(var(--md-primary), 0.3);
@@ -983,13 +983,16 @@
         function setActiveSourceButton(source) {
             const btnBing = document.getElementById('btnBingSource');
             const btnLoli = document.getElementById('btnLoliSource');
+            const refreshBtn = document.getElementById('refreshWallpaperBtn');
             if (!btnBing || !btnLoli) return;
             if (source === 'bing') {
                 btnBing.classList.add('active');
                 btnLoli.classList.remove('active');
+                if (refreshBtn) refreshBtn.style.display = 'none';
             } else {
                 btnLoli.classList.add('active');
                 btnBing.classList.remove('active');
+                if (refreshBtn) refreshBtn.style.display = 'flex';
             }
         }
         
@@ -1204,6 +1207,9 @@
             document.getElementById('btnLoliSource').addEventListener('click', switchToLoli);
             
             setActiveSourceButton('bing');
+            // 初始隐藏刷新按钮（因为默认是Bing源）
+            const refreshBtn = document.getElementById('refreshWallpaperBtn');
+            if (refreshBtn) refreshBtn.style.display = 'none';
             document.addEventListener('click', handleClick);
             updateBubbles();
         };
