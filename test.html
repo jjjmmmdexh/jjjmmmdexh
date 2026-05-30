@@ -940,7 +940,7 @@
             });
         }
         
-        async function loadLoliWallpaper() {
+        async function loadYuanfangWallpaper() {
             const captionDiv = document.getElementById('wallpaperCaption');
             const sourceLabel = document.getElementById('wallpaperSourceLabel');
             const wallpaperDiv = document.getElementById('bgWallpaper');
@@ -950,33 +950,14 @@
                 captionDiv.innerHTML = '<p class="font-medium mb-1"><i class="fa fa-image mr-2"></i>🎨 远方随机风景图</p><p>图片来源于远方 API，无版权信息</p>';
             }
             
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.crossOrigin = "Anonymous";
-                img.onload = async function() {
-                    wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
-                    try {
-                        const dominantColor = await getDominantColorFromImage(apiUrl);
-                        applyDynamicColorPalette(dominantColor);
-                    } catch(e) {
-                        console.warn('Loli壁纸高级取色失败，使用简单平均:', e);
-                        const simpleColor = getSimpleAverageColor(img);
-                        applyDynamicColorPalette(simpleColor);
-                    }
-                    
-                    if (sourceLabel) sourceLabel.innerText = '当前源: 远方';
-                    updateWallpaperFilter();
-                    resolve();
-                };
-                img.onerror = function() {
-                    console.error('远方壁纸加载失败，回退Bing');
-                    loadBingWallpaper();
-                    setActiveSourceButton('bing');
-                    currentSource = 'bing';
-                    resolve();
-                };
-                img.src = apiUrl;
-            });
+            // 直接设置背景图片，不使用crossOrigin（远方API不支持CORS）
+            wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
+            
+            if (sourceLabel) sourceLabel.innerText = '当前源: 远方';
+            updateWallpaperFilter();
+            
+            // 使用默认主题色（无法从跨域图片提取颜色）
+            applyDynamicColorPalette([66, 133, 244]);
         }
         
         // --- 源切换控制 ---
@@ -989,7 +970,7 @@
                 btnBing.classList.add('active');
                 btnLoli.classList.remove('active');
                 if (refreshBtn) refreshBtn.style.display = 'none';
-            } else {
+            } else if (source === 'yuanfang') {
                 btnLoli.classList.add('active');
                 btnBing.classList.remove('active');
                 if (refreshBtn) refreshBtn.style.display = 'flex';
@@ -1003,11 +984,11 @@
             await loadBingWallpaper();
         }
         
-        async function switchToLoli() {
-            if (currentSource === 'loli') return;
-            currentSource = 'loli';
-            setActiveSourceButton('loli');
-            await loadLoliWallpaper();
+        async function switchToYuanfang() {
+            if (currentSource === 'yuanfang') return;
+            currentSource = 'yuanfang';
+            setActiveSourceButton('yuanfang');
+            await loadYuanfangWallpaper();
         }
         
         // --- 刷新按钮处理 ---
@@ -1016,7 +997,7 @@
                 showBingHint();
                 await loadBingWallpaper();
             } else {
-                await loadLoliWallpaper();
+                await loadYuanfangWallpaper();
             }
         }
         
@@ -1204,7 +1185,7 @@
             document.getElementById('notificationToggle').addEventListener('click', toggleNotification);
             document.getElementById('refreshWallpaperBtn').addEventListener('click', refreshWallpaper);
             document.getElementById('btnBingSource').addEventListener('click', switchToBing);
-            document.getElementById('btnLoliSource').addEventListener('click', switchToLoli);
+            document.getElementById('btnLoliSource').addEventListener('click', switchToYuanfang);
             
             setActiveSourceButton('bing');
             // 初始隐藏刷新按钮（因为默认是Bing源）
