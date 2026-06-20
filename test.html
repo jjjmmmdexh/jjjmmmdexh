@@ -1,3 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>White Client </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#007bff',
+                        secondary: '#6c757d',
+                        dark: '#343a40',
+                        light: '#f8f9fa',
+                        bilibili: '#00A1D6'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        /* MD3动态色彩变量系统 */
+        :root {
+            /* 从壁纸提取的原色 (Primary) */
+            --md-primary: 66, 133, 244;
+            --md-primary-light: 150, 180, 255;
+            --md-primary-container: 225, 235, 255;
+            --md-on-primary: 255, 255, 255;
+            
+            /* 次要色/容器色 (Surface) */
+            --md-surface: 255, 255, 255;
+            --md-surface-dim: 227, 227, 227;
+            --md-on-surface: 28, 27, 31;
+            --md-on-surface-variant: 73, 69, 78;
+            
+            /* 表面容器 */
+            --md-surface-container-lowest: 255, 255, 255;
+            --md-surface-container-low: 247, 247, 247;
+            --md-surface-container: 242, 242, 242;
+            --md-surface-container-high: 235, 235, 235;
+            --md-surface-container-highest: 230, 230, 230;
+            
+            /* 轮廓 */
+            --md-outline: 121, 116, 126;
+            --md-outline-variant: 196, 199, 197;
+            
+            /* 阴影 */
+            --md-shadow-color: 0, 0, 0;
+            
+            /* 主题色相关的表面色 */
+            --md-surface-primary-low: rgba(var(--md-primary), 0.05);
+            --md-surface-primary-medium: rgba(var(--md-primary), 0.08);
+            --md-surface-primary-high: rgba(var(--md-primary), 0.12);
+        }
+        
+        /* 暗色主题变量覆写 */
+        .dark {
+            --md-surface: 28, 27, 31;
+            --md-surface-dim: 18, 18, 18;
             --md-on-surface: 230, 225, 229;
             --md-on-surface-variant: 202, 196, 208;
             
@@ -81,7 +147,7 @@
             
             /* 圆形功能按钮 */
             .circle-btn {
-                @apply fixed top-2 z-50 backdrop-blur-md w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300;
+                @apply fixed top-4 z-50 backdrop-blur-md w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300;
                 background-color: color-mix(in srgb, var(--md-surface-primary-low) 20%, rgb(var(--md-surface-container-highest)));
                 color: rgb(var(--md-primary));
                 border: 1.5px solid rgba(var(--md-primary), 0.3);
@@ -95,7 +161,7 @@
             
             /* 通知面板 */
             .notification-panel {
-                @apply fixed top-12 right-4 z-40 backdrop-blur-md rounded-2xl shadow-xl p-5 border max-w-xs opacity-0 invisible;
+                @apply fixed top-16 right-4 z-40 backdrop-blur-md rounded-2xl shadow-xl p-5 border max-w-xs opacity-0 invisible;
                 background-color: color-mix(in srgb, var(--md-surface-primary-low) 15%, rgb(var(--md-surface-container-high)));
                 border-color: rgba(var(--md-primary), 0.2);
                 transform: translateX(20px) rotate(2deg) scale(0.95);
@@ -520,17 +586,26 @@
             const [r, g, b] = primaryColor;
             const [lr, lg, lb] = lightColor;
             
-            const existingSVG = document.getElementById('svgFilters');
-            if (existingSVG) {
-                existingSVG.remove();
+            const svg = document.getElementById('svgFilters');
+            if (!svg) {
+                console.warn('SVG滤镜容器不存在');
+                return;
             }
             
-            const svgNS = "http://www.w3.org/2000/svg";
-            const svg = document.createElementNS(svgNS, "svg");
-            svg.id = 'svgFilters';
-            svg.className = 'svg-filters';
+            // 清除旧的滤镜内容，而不是移除整个SVG元素
+            const existingDefs = svg.querySelector('defs');
+            if (existingDefs) {
+                while (existingDefs.firstChild) {
+                    existingDefs.removeChild(existingDefs.firstChild);
+                }
+            } else {
+                const svgNS = "http://www.w3.org/2000/svg";
+                const defs = document.createElementNS(svgNS, "defs");
+                svg.appendChild(defs);
+            }
             
-            const defs = document.createElementNS(svgNS, "defs");
+            const defs = svg.querySelector('defs');
+            const svgNS = "http://www.w3.org/2000/svg";
             
             const colorMatrixFilter = document.createElementNS(svgNS, "filter");
             colorMatrixFilter.id = "titleColorFilter";
@@ -624,9 +699,42 @@
             colorMatrixFilter.appendChild(feComposite);
             
             defs.appendChild(colorMatrixFilter);
-            svg.appendChild(defs);
-            document.body.appendChild(svg);
+            
+            // 强制标题图片重新应用CSS滤镜（关键修复）
+            forceTitleImageFilterUpdate();
         }
+        
+        /**
+         * 强制标题图片重新应用CSS SVG滤镜
+         * 通过切换滤镜属性来触发浏览器重新渲染
+         */
+        function forceTitleImageFilterUpdate() {
+            const titleImg = document.querySelector('.title-image');
+            if (!titleImg) return;
+            
+            // 保存原始滤镜值
+            const originalFilter = titleImg.style.filter;
+            
+            // 先移除滤镜，触发浏览器重新计算
+            titleImg.style.filter = 'none';
+            
+            // 强制回流，然后恢复滤镜（CSS中的 url(#titleColorFilter) 会重新生效）
+            void titleImg.offsetWidth;
+            
+            // 恢复为空字符串，让CSS规则中的 filter 生效
+            titleImg.style.filter = '';
+            
+            // 如果之前有内联filter，恢复它
+            if (originalFilter && originalFilter !== '') {
+                // 使用 requestAnimationFrame 确保浏览器已完成渲染
+                requestAnimationFrame(() => {
+                    titleImg.style.filter = originalFilter;
+                });
+            }
+        }
+        
+        // 存储原始标题图片URL，用于Canvas回退后恢复
+        let originalTitleImageSrc = 'title.png';
         
         /**
          * 备选方案：使用Canvas处理图片颜色
@@ -637,6 +745,11 @@
                 if (!titleImg) {
                     resolve();
                     return;
+                }
+                
+                // 保存原始图片源
+                if (titleImg.src && !titleImg.src.startsWith('data:')) {
+                    originalTitleImageSrc = titleImg.src;
                 }
                 
                 if (!titleImg.complete) {
@@ -695,6 +808,9 @@
                 const processedUrl = canvas.toDataURL('image/png');
                 img.src = processedUrl;
                 
+                // 使用Canvas方案时，移除SVG滤镜避免双重着色
+                img.style.filter = 'none';
+                
                 const overlay = document.querySelector('.title-overlay');
                 if (overlay) {
                     overlay.remove();
@@ -708,6 +824,12 @@
         function updateTitleImageColor(primaryColor, hue) {
             const [r, g, b] = primaryColor;
             const lightColor = adjustColorBrightness(primaryColor, 1.3);
+            
+            // 如果之前使用过Canvas回退方案，恢复原始图片源
+            const titleImg = document.querySelector('.title-image');
+            if (titleImg && titleImg.src.startsWith('data:')) {
+                titleImg.src = originalTitleImageSrc;
+            }
             
             try {
                 createDynamicSVGFilter(primaryColor, lightColor);
@@ -874,40 +996,56 @@
             });
         }
         
-        async function loadYuanfangWallpaper() {
+        async function loadLoliWallpaper() {
             const captionDiv = document.getElementById('wallpaperCaption');
             const sourceLabel = document.getElementById('wallpaperSourceLabel');
             const wallpaperDiv = document.getElementById('bgWallpaper');
-            const apiUrl = `https://tu.ltyuanfang.cn/api/fengjing.php?_=${Date.now()}`;
+            const apiUrl = `https://www.loliapi.com/acg/?_=${Date.now()}`;
             
             if (captionDiv) {
-                captionDiv.innerHTML = '<p class="font-medium mb-1"><i class="fa fa-image mr-2"></i>🎨 远方随机风景图</p><p>图片来源于远方 API，无版权信息</p>';
+                captionDiv.innerHTML = '<p class="font-medium mb-1"><i class="fa fa-image mr-2"></i>🎨 Loli API 随机图片</p><p>图片来源于 Loli API，无版权信息</p>';
             }
             
-            // 直接设置背景图片，不使用crossOrigin（远方API不支持CORS）
-            wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
-            
-            if (sourceLabel) sourceLabel.innerText = '当前源: 远方';
-            updateWallpaperFilter();
-            
-            // 使用默认主题色（无法从跨域图片提取颜色）
-            applyDynamicColorPalette([66, 133, 244]);
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.onload = async function() {
+                    wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
+                    try {
+                        const dominantColor = await getDominantColorFromImage(apiUrl);
+                        applyDynamicColorPalette(dominantColor);
+                    } catch(e) {
+                        console.warn('Loli壁纸高级取色失败，使用简单平均:', e);
+                        const simpleColor = getSimpleAverageColor(img);
+                        applyDynamicColorPalette(simpleColor);
+                    }
+                    
+                    if (sourceLabel) sourceLabel.innerText = '当前源: Loli';
+                    updateWallpaperFilter();
+                    resolve();
+                };
+                img.onerror = function() {
+                    console.error('Loli壁纸加载失败，回退Bing');
+                    loadBingWallpaper();
+                    setActiveSourceButton('bing');
+                    currentSource = 'bing';
+                    resolve();
+                };
+                img.src = apiUrl;
+            });
         }
         
         // --- 源切换控制 ---
         function setActiveSourceButton(source) {
             const btnBing = document.getElementById('btnBingSource');
             const btnLoli = document.getElementById('btnLoliSource');
-            const refreshBtn = document.getElementById('refreshWallpaperBtn');
             if (!btnBing || !btnLoli) return;
             if (source === 'bing') {
                 btnBing.classList.add('active');
                 btnLoli.classList.remove('active');
-                if (refreshBtn) refreshBtn.style.display = 'none';
-            } else if (source === 'yuanfang') {
+            } else {
                 btnLoli.classList.add('active');
                 btnBing.classList.remove('active');
-                if (refreshBtn) refreshBtn.style.display = 'flex';
             }
         }
         
@@ -918,11 +1056,11 @@
             await loadBingWallpaper();
         }
         
-        async function switchToYuanfang() {
-            if (currentSource === 'yuanfang') return;
-            currentSource = 'yuanfang';
-            setActiveSourceButton('yuanfang');
-            await loadYuanfangWallpaper();
+        async function switchToLoli() {
+            if (currentSource === 'loli') return;
+            currentSource = 'loli';
+            setActiveSourceButton('loli');
+            await loadLoliWallpaper();
         }
         
         // --- 刷新按钮处理 ---
@@ -931,7 +1069,7 @@
                 showBingHint();
                 await loadBingWallpaper();
             } else {
-                await loadYuanfangWallpaper();
+                await loadLoliWallpaper();
             }
         }
         
@@ -1119,12 +1257,9 @@
             document.getElementById('notificationToggle').addEventListener('click', toggleNotification);
             document.getElementById('refreshWallpaperBtn').addEventListener('click', refreshWallpaper);
             document.getElementById('btnBingSource').addEventListener('click', switchToBing);
-            document.getElementById('btnLoliSource').addEventListener('click', switchToYuanfang);
+            document.getElementById('btnLoliSource').addEventListener('click', switchToLoli);
             
             setActiveSourceButton('bing');
-            // 初始隐藏刷新按钮（因为默认是Bing源）
-            const refreshBtn = document.getElementById('refreshWallpaperBtn');
-            if (refreshBtn) refreshBtn.style.display = 'none';
             document.addEventListener('click', handleClick);
             updateBubbles();
         };
@@ -1143,17 +1278,17 @@
     
     <!-- 刷新按钮 -->
     <button id="refreshWallpaperBtn" class="circle-btn left-4" title="刷新壁纸">
-        <i class="fa fa-refresh text-sm"></i>
+        <i class="fa fa-refresh text-xl"></i>
     </button>
     
     <!-- 黑夜模式按钮 -->
     <button id="darkModeToggle" class="circle-btn right-4" title="切换黑夜模式">
-        <i id="darkModeIcon" class="fa fa-moon-o text-sm"></i>
+        <i id="darkModeIcon" class="fa fa-moon-o text-xl"></i>
     </button>
     
     <!-- 通知按钮 -->
-    <button id="notificationToggle" class="circle-btn right-16" title="查看通知">
-        <i id="notificationIcon" class="fa fa-bell text-sm"></i>
+    <button id="notificationToggle" class="circle-btn right-20" title="查看通知">
+        <i id="notificationIcon" class="fa fa-bell text-xl"></i>
     </button>
     
     <!-- 通知栏 -->
@@ -1251,8 +1386,8 @@
                     <div class="flex items-center space-x-2">
                         <span class="text-sm opacity-80 mr-1">选择壁纸API：</span>
                         <button id="btnBingSource" class="source-btn active">Bing API</button>
-                        <button id="btnLoliSource" class="source-btn">远方 API</button>
-                        <a href="https://api.ltyuanfang.cn/" target="_blank" class="ml-2 text-xs hover:underline opacity-70" title="API文档">📄 文档</a>
+                        <button id="btnLoliSource" class="source-btn">Loli API</button>
+                        <a href="https://www.loliapi.com/" target="_blank" class="ml-2 text-xs hover:underline opacity-70" title="API文档">📄 文档</a>
                     </div>
                     <div class="flex items-center">
                         <span id="wallpaperSourceLabel" class="text-xs opacity-70">当前源: Bing</span>
