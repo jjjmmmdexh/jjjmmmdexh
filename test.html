@@ -1084,26 +1084,44 @@
             wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
             updateWallpaperFilter();
             
-            // 尝试通过 CORS 代理获取图片数据进行取色
-            // 远景 API 服务器不返回 CORS 头，无法直接用 fetch/Image+crossOrigin
-            try {
-                const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(apiUrl);
-                const response = await fetch(proxyUrl);
-                if (response.ok) {
-                    const blob = await response.blob();
-                    const blobUrl = URL.createObjectURL(blob);
+            // 用隐藏的 img 加载图片，获取302重定向后的真实图片URL
+            // 远景 API 返回302到CDN，CORS代理需要直接图片URL才能正常工作
+            const img = new Image();
+            img.src = apiUrl;
+            img.onload = async function() {
+                const realUrl = img.currentSrc || img.src;
+                // 多级 CORS 代理取色
+                const proxyUrls = [
+                    `https://corsproxy.io/?${encodeURIComponent(realUrl)}`,
+                    `https://cors.eu.org/${realUrl}`,
+                ];
+                for (const proxyUrl of proxyUrls) {
                     try {
-                        const dominantColor = await getDominantColorFromImage(blobUrl);
-                        applyDynamicColorPalette(dominantColor);
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 10000);
+                        const response = await fetch(proxyUrl, { signal: controller.signal });
+                        clearTimeout(timeoutId);
+                        if (response.ok) {
+                            const blob = await response.blob();
+                            const blobUrl = URL.createObjectURL(blob);
+                            try {
+                                const dominantColor = await getDominantColorFromImage(blobUrl);
+                                applyDynamicColorPalette(dominantColor);
+                                URL.revokeObjectURL(blobUrl);
+                                return;
+                            } catch(e) {
+                                URL.revokeObjectURL(blobUrl);
+                            }
+                        }
                     } catch(e) {
-                        console.warn('远景壁纸取色失败:', e);
+                        // 继续下一个代理
                     }
-                    URL.revokeObjectURL(blobUrl);
                 }
-            } catch(e) {
-                console.warn('远景壁纸 CORS 代理取色失败，显示图片但跳过取色:', e);
-                // 图片已通过 CSS background 正常显示
-            }
+                console.warn('远景壁纸取色失败，所有代理均不可用');
+            };
+            img.onerror = function() {
+                console.warn('远景壁纸预览加载失败');
+            };
         }
         
         async function switchToYuanjing() {
