@@ -361,7 +361,7 @@
         let bubbleIdCounter = 0;
         
         // 壁纸当前源
-        let currentSource = 'bing';
+        let currentSource = localStorage.getItem('wallpaperSource') || 'bing';
         
         // 贡献者列表
         const contributors = [
@@ -444,64 +444,18 @@
         function kMeansDominantColor(pixels, width, height) {
             const pixelCount = width * height;
             const sampleSize = Math.min(100, pixelCount);
-            const samples = [];
-            
+            const allSamples = [];
             for (let i = 0; i < sampleSize; i++) {
                 const idx = Math.floor(Math.random() * pixelCount) * 4;
-                samples.push([pixels[idx], pixels[idx + 1], pixels[idx + 2]]);
+                allSamples.push([pixels[idx], pixels[idx+1], pixels[idx+2]]);
             }
             
-            let centroids = [
-                [255, 0, 0],
-                [0, 255, 0],
-                [0, 0, 255]
-            ];
-            
-            for (let iter = 0; iter < 3; iter++) {
-                const clusters = [[], [], []];
-                
-                for (const sample of samples) {
-                    let minDist = Infinity;
-                    let clusterIdx = 0;
-                    
-                    for (let i = 0; i < centroids.length; i++) {
-                        const dist = colorDistance(sample, centroids[i]);
-                        if (dist < minDist) {
-                            minDist = dist;
-                            clusterIdx = i;
-                        }
-                    }
-                    
-                    clusters[clusterIdx].push(sample);
-                }
-                
-                for (let i = 0; i < centroids.length; i++) {
-                    if (clusters[i].length > 0) {
-                        let r = 0, g = 0, b = 0;
-                        for (const sample of clusters[i]) {
-                            r += sample[0];
-                            g += sample[1];
-                            b += sample[2];
-                        }
-                        centroids[i] = [
-                            Math.floor(r / clusters[i].length),
-                            Math.floor(g / clusters[i].length),
-                            Math.floor(b / clusters[i].length)
-                        ];
-                    }
-                }
-            }
-            
+            const centroids = [allSamples[0], allSamples[Math.floor(sampleSize/2)], allSamples[sampleSize-1]];
+            let dominantColor = [66, 133, 244];
             let maxClusterSize = 0;
-            let dominantColor = centroids[0];
-            
-            const allSamples = [];
-            for (let i = 0; i < pixels.length; i += 4) {
-                allSamples.push([pixels[i], pixels[i + 1], pixels[i + 2]]);
-            }
             
             const clusterCounts = [0, 0, 0];
-            for (const sample of allSamples.slice(0, 200)) {
+            for (const sample of allSamples) {
                 let minDist = Infinity;
                 let clusterIdx = 0;
                 
@@ -622,11 +576,17 @@
                         resolve();
                     } catch(e) {
                         console.warn('标题图片预处理失败:', e);
+                        // 回退策略：如果 Canvas 处理失败，直接显示原图但可能无法着色
+                        titleMask.style.backgroundImage = 'url(title.png)';
+                        titleMask.style.backgroundSize = 'contain';
+                        titleMask.style.backgroundRepeat = 'no-repeat';
+                        titleMask.style.backgroundPosition = 'center';
                         resolve();
                     }
                 };
                 img.onerror = function() {
                     console.warn('标题图片加载失败');
+                    // 如果 title.png 加载失败，至少保留一个占位符或容器
                     resolve();
                 };
                 img.src = 'title.png';
@@ -656,7 +616,12 @@
             root.style.setProperty('--md-surface-primary-medium', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.08 : 0.12})`);
             root.style.setProperty('--md-surface-primary-high', `rgba(${r}, ${g}, ${b}, ${luminance > 160 ? 0.12 : 0.18})`);
             
-            // mask-image + background-color 自动通过 CSS 变量生效，无需手动更新
+            // 确保标题遮罩颜色同步更新
+            const titleMask = document.getElementById('titleMask');
+            if (titleMask) {
+                titleMask.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+            }
+            
             console.log('动态主题色已应用:', primaryColor, '亮度:', luminance.toFixed(0), '色相:', hue.toFixed(0));
         }
         
@@ -728,6 +693,11 @@
         async function loadBingWallpaper() {
             const captionDiv = document.getElementById('wallpaperCaption');
             const sourceLabel = document.getElementById('wallpaperSourceLabel');
+            const refreshBtn = document.getElementById('refreshWallpaperBtn');
+            
+            // Bing 壁纸模式下隐藏刷新按钮
+            if (refreshBtn) refreshBtn.classList.add('hidden');
+            
             try {
                 const response = await fetch('https://bing.biturl.top/?resolution=1920&format=json&index=0&mkt=zh-CN');
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -793,6 +763,11 @@
             const captionDiv = document.getElementById('wallpaperCaption');
             const sourceLabel = document.getElementById('wallpaperSourceLabel');
             const wallpaperDiv = document.getElementById('bgWallpaper');
+            const refreshBtn = document.getElementById('refreshWallpaperBtn');
+            
+            // 非 Bing 模式下显示刷新按钮
+            if (refreshBtn) refreshBtn.classList.remove('hidden');
+            
             const apiUrl = `https://www.loliapi.com/acg/?_=${Date.now()}`;
             
             if (captionDiv) {
@@ -820,12 +795,67 @@
                 img.onerror = function() {
                     console.error('Loli壁纸加载失败，回退Bing');
                     loadBingWallpaper();
-                    setActiveSourceButton('bing');
-                    currentSource = 'bing';
+                    switchToBing();
                     resolve();
                 };
                 img.src = apiUrl;
             });
+        }
+        
+        async function loadYuanjingWallpaper() {
+            const captionDiv = document.getElementById('wallpaperCaption');
+            const sourceLabel = document.getElementById('wallpaperSourceLabel');
+            const wallpaperDiv = document.getElementById('bgWallpaper');
+            const refreshBtn = document.getElementById('refreshWallpaperBtn');
+            
+            // 非 Bing 模式下显示刷新按钮
+            if (refreshBtn) refreshBtn.classList.remove('hidden');
+            
+            const apiUrl = `https://tu.ltyuanfang.cn/api/fengjing.php?_=${Date.now()}`;
+            
+            if (captionDiv) {
+                captionDiv.innerHTML = '<p class="font-medium mb-1"><i class="fa fa-image mr-2"></i>🏞️ 远景 API 随机风景</p><p>图片来源于 远景 API，无版权信息</p>';
+            }
+            if (sourceLabel) sourceLabel.innerText = '当前源: 远景';
+            
+            // 解决远景 API 刷新问题：直接使用 img 对象加载来确保获取最新图片
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = apiUrl;
+            img.onload = async function() {
+                // 使用 img.src 确保背景和取色源一致
+                wallpaperDiv.style.backgroundImage = `url('${img.src}')`;
+                updateWallpaperFilter();
+                
+                try {
+                    // 尝试直接取色
+                    const dominantColor = await getDominantColorFromImage(img.src);
+                    applyDynamicColorPalette(dominantColor);
+                } catch(e) {
+                    // 如果跨域取色失败，使用代理回退
+                    const realUrl = img.currentSrc || img.src;
+                    const proxyUrls = [
+                        `https://corsproxy.io/?${encodeURIComponent(realUrl)}`,
+                        `https://cors.eu.org/${realUrl}`,
+                    ];
+                    for (const proxyUrl of proxyUrls) {
+                        try {
+                            const response = await fetch(proxyUrl);
+                            if (response.ok) {
+                                const blob = await response.blob();
+                                const blobUrl = URL.createObjectURL(blob);
+                                const dominantColor = await getDominantColorFromImage(blobUrl);
+                                applyDynamicColorPalette(dominantColor);
+                                URL.revokeObjectURL(blobUrl);
+                                return;
+                            }
+                        } catch(err) {}
+                    }
+                }
+            };
+            img.onerror = function() {
+                console.warn('远景壁纸加载失败');
+            };
         }
         
         // --- 源切换控制 ---
@@ -846,79 +876,24 @@
             } else if (source === 'yuanjing') {
                 btnYuanjing.classList.add('active');
             }
+            
+            // 记住用户选择
+            localStorage.setItem('wallpaperSource', source);
         }
         
         async function switchToBing() {
-            if (currentSource === 'bing') return;
             currentSource = 'bing';
             setActiveSourceButton('bing');
             await loadBingWallpaper();
         }
         
         async function switchToLoli() {
-            if (currentSource === 'loli') return;
             currentSource = 'loli';
             setActiveSourceButton('loli');
             await loadLoliWallpaper();
         }
         
-        async function loadYuanjingWallpaper() {
-            const captionDiv = document.getElementById('wallpaperCaption');
-            const sourceLabel = document.getElementById('wallpaperSourceLabel');
-            const wallpaperDiv = document.getElementById('bgWallpaper');
-            const apiUrl = `https://tu.ltyuanfang.cn/api/fengjing.php?_=${Date.now()}`;
-            
-            if (captionDiv) {
-                captionDiv.innerHTML = '<p class="font-medium mb-1"><i class="fa fa-image mr-2"></i>🏞️ 远景 API 随机风景</p><p>图片来源于 远景 API，无版权信息</p>';
-            }
-            if (sourceLabel) sourceLabel.innerText = '当前源: 远景';
-            
-            // 直接设置背景图片（CSS background-image 不受 CORS 限制）
-            wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
-            updateWallpaperFilter();
-            
-            // 用隐藏的 img 加载图片，获取302重定向后的真实图片URL
-            // 远景 API 返回302到CDN，CORS代理需要直接图片URL才能正常工作
-            const img = new Image();
-            img.src = apiUrl;
-            img.onload = async function() {
-                const realUrl = img.currentSrc || img.src;
-                // 多级 CORS 代理取色
-                const proxyUrls = [
-                    `https://corsproxy.io/?${encodeURIComponent(realUrl)}`,
-                    `https://cors.eu.org/${realUrl}`,
-                ];
-                for (const proxyUrl of proxyUrls) {
-                    try {
-                        const controller = new AbortController();
-                        const timeoutId = setTimeout(() => controller.abort(), 10000);
-                        const response = await fetch(proxyUrl, { signal: controller.signal });
-                        clearTimeout(timeoutId);
-                        if (response.ok) {
-                            const blob = await response.blob();
-                            const blobUrl = URL.createObjectURL(blob);
-                            try {
-                                const dominantColor = await getDominantColorFromImage(blobUrl);
-                                applyDynamicColorPalette(dominantColor);
-                                URL.revokeObjectURL(blobUrl);
-                                return;
-                            } catch(e) {
-                                URL.revokeObjectURL(blobUrl);
-                            }
-                        }
-                    } catch(e) {
-                        // 继续下一个代理
-                    }
-                }
-                console.warn('远景壁纸取色失败，所有代理均不可用');
-            };
-            img.onerror = function() {
-                console.warn('远景壁纸预览加载失败');
-            };
-        }
-        
         async function switchToYuanjing() {
-            if (currentSource === 'yuanjing') return;
             currentSource = 'yuanjing';
             setActiveSourceButton('yuanjing');
             await loadYuanjingWallpaper();
@@ -927,6 +902,7 @@
         // --- 刷新按钮处理 ---
         async function refreshWallpaper() {
             if (currentSource === 'bing') {
+                // 虽然 Bing 模式下隐藏了按钮，但保留逻辑
                 showBingHint();
                 await loadBingWallpaper();
             } else if (currentSource === 'loli') {
@@ -1062,7 +1038,8 @@
         function handleClick(event) {
             if (event.target.closest('#darkModeToggle') || 
                 event.target.closest('#notificationToggle') || 
-                event.target.closest('#refreshWallpaperBtn')) return;
+                event.target.closest('#refreshWallpaperBtn') ||
+                event.target.closest('.source-btn')) return;
             const count = Math.floor(Math.random() * 5) + 3;
             for (let i = 0; i < count; i++) {
                 const offsetX = (Math.random() - 0.5) * 30;
@@ -1109,10 +1086,18 @@
         window.onload = async function() {
             initDarkMode();
             
-            // 预处理标题图片为纯白遮罩（必须在取色之前完成）
+            // 预处理标题图片为纯白遮罩
             await preprocessTitleImage();
             
-            await loadBingWallpaper();
+            // 根据记住的选择加载壁纸
+            setActiveSourceButton(currentSource);
+            if (currentSource === 'bing') {
+                await loadBingWallpaper();
+            } else if (currentSource === 'loli') {
+                await loadLoliWallpaper();
+            } else if (currentSource === 'yuanjing') {
+                await loadYuanjingWallpaper();
+            }
             
             renderContributors();
             updateTime();
@@ -1126,7 +1111,6 @@
             document.getElementById('btnLoliSource').addEventListener('click', switchToLoli);
             document.getElementById('btnYuanjingSource').addEventListener('click', switchToYuanjing);
             
-            setActiveSourceButton('bing');
             document.addEventListener('click', handleClick);
             updateBubbles();
         };
@@ -1245,7 +1229,7 @@
                 <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
                     <div class="flex items-center space-x-2">
                         <span class="text-sm opacity-80 mr-1">选择壁纸API：</span>
-                        <button id="btnBingSource" class="source-btn active">Bing API</button>
+                        <button id="btnBingSource" class="source-btn">Bing API</button>
                         <button id="btnLoliSource" class="source-btn">Loli API</button>
                         <button id="btnYuanjingSource" class="source-btn">远景 API</button>
                         <a href="https://www.loliapi.com/" target="_blank" class="ml-2 text-xs hover:underline opacity-70" title="API文档">📄 文档</a>
