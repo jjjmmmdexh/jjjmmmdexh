@@ -1039,13 +1039,19 @@
         function setActiveSourceButton(source) {
             const btnBing = document.getElementById('btnBingSource');
             const btnLoli = document.getElementById('btnLoliSource');
-            if (!btnBing || !btnLoli) return;
+            const btnYuanjing = document.getElementById('btnYuanjingSource');
+            if (!btnBing || !btnLoli || !btnYuanjing) return;
+            
+            btnBing.classList.remove('active');
+            btnLoli.classList.remove('active');
+            btnYuanjing.classList.remove('active');
+            
             if (source === 'bing') {
                 btnBing.classList.add('active');
-                btnLoli.classList.remove('active');
-            } else {
+            } else if (source === 'loli') {
                 btnLoli.classList.add('active');
-                btnBing.classList.remove('active');
+            } else if (source === 'yuanjing') {
+                btnYuanjing.classList.add('active');
             }
         }
         
@@ -1063,13 +1069,61 @@
             await loadLoliWallpaper();
         }
         
+        async function loadYuanjingWallpaper() {
+            const captionDiv = document.getElementById('wallpaperCaption');
+            const sourceLabel = document.getElementById('wallpaperSourceLabel');
+            const wallpaperDiv = document.getElementById('bgWallpaper');
+            const apiUrl = `https://tu.ltyuanfang.cn/api/fengjing.php?_=${Date.now()}`;
+            
+            if (captionDiv) {
+                captionDiv.innerHTML = '<p class="font-medium mb-1"><i class="fa fa-image mr-2"></i>🏞️ 远景 API 随机风景</p><p>图片来源于 远景 API，无版权信息</p>';
+            }
+            
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.onload = async function() {
+                    wallpaperDiv.style.backgroundImage = `url('${apiUrl}')`;
+                    try {
+                        const dominantColor = await getDominantColorFromImage(apiUrl);
+                        applyDynamicColorPalette(dominantColor);
+                    } catch(e) {
+                        console.warn('远景壁纸高级取色失败，使用简单平均:', e);
+                        const simpleColor = getSimpleAverageColor(img);
+                        applyDynamicColorPalette(simpleColor);
+                    }
+                    
+                    if (sourceLabel) sourceLabel.innerText = '当前源: 远景';
+                    updateWallpaperFilter();
+                    resolve();
+                };
+                img.onerror = function() {
+                    console.error('远景壁纸加载失败，回退Bing');
+                    loadBingWallpaper();
+                    setActiveSourceButton('bing');
+                    currentSource = 'bing';
+                    resolve();
+                };
+                img.src = apiUrl;
+            });
+        }
+        
+        async function switchToYuanjing() {
+            if (currentSource === 'yuanjing') return;
+            currentSource = 'yuanjing';
+            setActiveSourceButton('yuanjing');
+            await loadYuanjingWallpaper();
+        }
+        
         // --- 刷新按钮处理 ---
         async function refreshWallpaper() {
             if (currentSource === 'bing') {
                 showBingHint();
                 await loadBingWallpaper();
-            } else {
+            } else if (currentSource === 'loli') {
                 await loadLoliWallpaper();
+            } else if (currentSource === 'yuanjing') {
+                await loadYuanjingWallpaper();
             }
         }
         
@@ -1258,6 +1312,7 @@
             document.getElementById('refreshWallpaperBtn').addEventListener('click', refreshWallpaper);
             document.getElementById('btnBingSource').addEventListener('click', switchToBing);
             document.getElementById('btnLoliSource').addEventListener('click', switchToLoli);
+            document.getElementById('btnYuanjingSource').addEventListener('click', switchToYuanjing);
             
             setActiveSourceButton('bing');
             document.addEventListener('click', handleClick);
@@ -1387,7 +1442,9 @@
                         <span class="text-sm opacity-80 mr-1">选择壁纸API：</span>
                         <button id="btnBingSource" class="source-btn active">Bing API</button>
                         <button id="btnLoliSource" class="source-btn">Loli API</button>
+                        <button id="btnYuanjingSource" class="source-btn">远景 API</button>
                         <a href="https://www.loliapi.com/" target="_blank" class="ml-2 text-xs hover:underline opacity-70" title="API文档">📄 文档</a>
+                        <a href="https://api.ltyuanfang.cn/" target="_blank" class="ml-1 text-xs hover:underline opacity-70" title="远景API文档">📄 远景文档</a>
                     </div>
                     <div class="flex items-center">
                         <span id="wallpaperSourceLabel" class="text-xs opacity-70">当前源: Bing</span>
