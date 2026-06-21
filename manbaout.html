@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Minecraft PE · libminecraftpe.so 内存参数修改笔记</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#161922; --line:#232838; --line2:#2c3245;
+    --ink:#e7ecf3; --muted:#9aa3b2; --accent:#7cc4ff; --accent2:#a5e1c8;
+    --warn:#ffb86b; --danger:#ff7a8a; --ok:#7ee787;
+    --tag-ui:#5b8cff; --tag-render:#c586c0; --tag-fight:#ff8b6b;
+    --tag-move:#7ce0a8; --tag-world:#ffd166; --tag-mob:#e0a96d;
+    --tag-data:#9ad0ff; --tag-misc:#b0bec5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:48px 24px 80px}
+  header.top{padding:8px 0 32px;border-bottom:1px solid var(--line);margin-bottom:32px}
+  header.top .eyebrow{color:var(--accent);font-size:13px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px}
+  header.top h1{font-size:30px;line-height:1.25;margin:0 0 8px;font-weight:700}
+  header.top p.lede{color:var(--muted);max-width:780px;margin:0}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .meta-pill{font-size:12px;color:var(--muted);border:1px solid var(--line2);
+    padding:4px 10px;border-radius:999px;background:#11141c}
+  .meta-pill b{color:var(--ink);font-weight:600;margin-right:4px}
+
+  section{margin:48px 0}
+  h2{font-size:22px;margin:0 0 6px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  h2 .num{color:var(--accent);font-variant-numeric:tabular-nums;margin-right:10px}
+  h3{font-size:16px;margin:24px 0 10px;color:var(--accent2);font-weight:600}
+  p,li{color:#d3d8e0}
+  p small{color:var(--muted)}
+
+  /* TOC */
+  .toc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 22px}
+  .toc a{color:var(--ink);text-decoration:none;font-size:14px;display:flex;gap:8px;align-items:baseline}
+  .toc a:hover{color:var(--accent)}
+  .toc .id{color:var(--accent);font-variant-numeric:tabular-nums;min-width:24px}
+
+  /* Table */
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  table{width:100%;border-collapse:collapse;font-size:13px;min-width:880px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#11151f;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:11px}
+  tr:last-child td{border-bottom:none}
+  td.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:12px;color:#cfe1ff;white-space:nowrap}
+  td.mono small{color:#5d6b80;display:block;font-size:10px;margin-top:2px}
+  td.desc{color:#dde3ec}
+  td .v{color:#ffd28a}
+  td .w{color:#ff9aa2}
+  td .n{color:#9fd0ff}
+  td .note{display:inline-block;margin-top:4px;font-size:11px;color:var(--muted);
+    background:#0c0f16;border:1px solid var(--line2);padding:2px 6px;border-radius:4px}
+
+  .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;
+    letter-spacing:.04em;border:1px solid transparent;line-height:1.5}
+  .tag.ui{background:rgba(91,140,255,.12);color:var(--tag-ui);border-color:rgba(91,140,255,.3)}
+  .tag.render{background:rgba(197,134,192,.12);color:var(--tag-render);border-color:rgba(197,134,192,.3)}
+  .tag.fight{background:rgba(255,139,107,.12);color:var(--tag-fight);border-color:rgba(255,139,107,.3)}
+  .tag.move{background:rgba(124,224,168,.12);color:var(--tag-move);border-color:rgba(124,224,168,.3)}
+  .tag.world{background:rgba(255,209,102,.12);color:var(--tag-world);border-color:rgba(255,209,102,.3)}
+  .tag.mob{background:rgba(224,169,109,.12);color:var(--tag-mob);border-color:rgba(224,169,109,.3)}
+  .tag.data{background:rgba(154,208,255,.12);color:var(--tag-data);border-color:rgba(154,208,255,.3)}
+  .tag.misc{background:rgba(176,190,197,.12);color:var(--tag-misc);border-color:rgba(176,190,197,.3)}
+
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+  .legend .tag{cursor:default}
+
+  .callout{border-left:3px solid var(--warn);background:#1a1d27;padding:14px 16px;
+    border-radius:6px;margin:18px 0;color:#e6d6c0}
+  .callout.danger{border-left-color:var(--danger);color:#f4c7cf}
+  .callout.tip{border-left-color:var(--ok);color:#c6e7d4}
+  .callout b{color:inherit}
+
+  .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;margin:18px 0 6px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .card .k{color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+  .card .v{font-size:20px;font-weight:700;color:var(--ink)}
+  .card .sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+  footer{margin-top:80px;padding-top:18px;border-top:1px solid var(--line);
+    color:var(--muted);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+  @media (max-width:720px){
+    .toc{grid-template-columns:1fr}
+    header.top h1{font-size:24px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">Game Modding Notes · libminecraftpe.so</div>
+  <h1>Minecraft PE 客户端内存参数修改笔记</h1>
+  <p class="lede">本笔记整理自 <code>libminecraftpe.so</code>(Android 端 Minecraft Bedrock / 部分国服渠道客户端)的内存扫描与反汇编结果,系统性地罗列了 <b>玩家属性、视角与渲染、战斗与物品、爆炸与 TNT、生物与动画、世界生成、天气与天空、HUD 与 UI、内存数据/调试</b> 等类别下的可改写偏移地址、原值、推荐值与副作用说明,用于研究和个性化调试。</p>
+  <div class="meta-row">
+    <span class="meta-pill"><b>目标模块</b> libminecraftpe.so</span>
+    <span class="meta-pill"><b>位数</b> 32-bit ARM</span>
+    <span class="meta-pill"><b>类型</b> Float / Dword 混合</span>
+    <span class="meta-pill"><b>类别</b> 9 大类,共 60+ 条目</span>
+    <span class="meta-pill"><b>数据来源</b> 已整理 txt 偏移笔记</span>
+  </div>
+</header>
+
+<nav class="toc" aria-label="目录">
+  <a href="#overview"><span class="id">00</span>总体速览</a>
+  <a href="#howto"><span class="id">★</span>阅读与使用方式</a>
+  <a href="#cat-ui"><span class="id">01</span>HUD 与 UI 界面</a>
+  <a href="#cat-render"><span class="id">02</span>视角与画面渲染</a>
+  <a href="#cat-fight"><span class="id">03</span>战斗 / 武器 / 投掷物</a>
+  <a href="#cat-move"><span class="id">04</span>玩家移动与姿态</a>
+  <a href="#cat-world"><span class="id">05</span>世界生成 / 地形 / 方块</a>
+  <a href="#cat-sky"><span class="id">06</span>天空 / 天气 / 昼夜</a>
+  <a href="#cat-tnt"><span class="id">07</span>TNT 与爆炸特效</a>
+  <a href="#cat-mob"><span class="id">08</span>生物与动画 / 视角怪效</a>
+  <a href="#cat-data"><span class="id">09</span>本地玩家内存数据 / 调试</a>
+  <a href="#cat-misc"><span class="id">10</span>杂项与零散特殊偏移</a>
+  <a href="#warning"><span class="id">!</span>风险与注意事项</a>
+</nav>
+
+<section id="overview">
+  <h2><span class="num">00</span>总体速览</h2>
+  <p>原始笔记数据来自 20 份不同来源的 <code>.txt</code> 偏移记录,涵盖多个 <code>cn.galaxy.client-*</code> 与 <code>com.mojang.*</code> 渠道包的运行期内存镜像。同一逻辑功能在不同版本中的偏移会随 ASLR/重打包而漂移,但<b>文件相对偏移(末段 6 位十六进制)</b>在大多数改版里保持稳定——以下表格统一以<b>so 文件内偏移</b>为关键索引。</p>
+
+  <div class="summary-grid">
+    <div class="card">
+      <div class="k">条目总数</div>
+      <div class="v">60+</div>
+      <div class="sub">来自 20 份原始笔记去重合并</div>
+    </div>
+    <div class="card">
+      <div class="k">分类数</div>
+      <div class="v">10</div>
+      <div class="sub">UI / 渲染 / 战斗 / 移动 / 世界 / 天气 / TNT / 生物 / 数据 / 杂项</div>
+    </div>
+    <div class="card">
+      <div class="k">常用浮点常量</div>
+      <div class="v">0.1 / 0.2 / 0.3 / 0.85 / 3.14159</div>
+      <div class="sub">大量条目为 0.1F(0x3dcccccd)等固定常数</div>
+    </div>
+    <div class="card">
+      <div class="k">典型副作用</div>
+      <div class="v">NaN / 抽搐 / 穿墙 / 失效</div>
+      <div class="sub">改值越界易引发崩溃或行为异常</div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="tag ui">HUD · UI</span>
+    <span class="tag render">视角 · 渲染</span>
+    <span class="tag fight">战斗 · 投掷</span>
+    <span class="tag move">移动 · 姿态</span>
+    <span class="tag world">世界 · 地形</span>
+    <span class="tag sky">天空 · 天气</span>
+    <span class="tag tnt (tag-fight)" style="background:rgba(255,209,102,.12);color:#ffd166;border-color:rgba(255,209,102,.3)">TNT · 爆炸</span>
+    <span class="tag mob">生物 · 动画</span>
+    <span class="tag data">本地数据 · 调试</span>
+    <span class="tag misc">杂项</span>
+  </div>
+</section>
+
+<section id="howto">
+  <h2><span class="num">★</span>阅读与使用方式</h2>
+  <p>每条记录的格式统一为:</p>
+  <div class="callout tip">
+    <b>功能描述</b> · <span class="mono">so 偏移</span> · 数据宽度 · <span class="mono">原值(十六进制 → 浮点)</span> · 推荐改写值
+  </div>
+  <ul>
+    <li><b>so 偏移</b>(如 <code>0x3113e8</code>)指 <code>libminecraftpe.so</code> 文件内的相对偏移,实际运行期地址 = <code>so 基址 + 偏移</code>。改包时使用相对偏移,运行期使用绝对地址。</li>
+    <li><b>数据宽度</b>默认为 4 字节 Float(<code>10</code>),少数为 4 字节 Dword(<code>4</code>),如 <code>0x6163e4</code> 的"全图阴天"开关。</li>
+    <li><b>原值(浮点)</b>用括号标出人类可读的小数形式,如 <code>3dcccccd (0.1)</code>。十六进制按 little-endian 解释。</li>
+    <li><b>改写建议</b>有三种常见模式:放大系数(如 0.2 → 2.0)、置零(<code>00000000</code>)、置 <code>NaN</code>(<code>ffffffff</code> = <code>0x7FC00000</code> 形式浮点 NaN)。</li>
+    <li><b>联动说明</b>指该地址需要与另一个地址<b>同时改</b>才会生效或避免异常(如透视、夜视、生物原地扣血)。</li>
+  </ul>
+</section>
+
+<section id="cat-ui">
+  <h2><span class="num">01</span>HUD 与 UI 界面</h2>
+  <p>控制屏幕按钮、血条、调试信息的可见性、位置与样式。</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th style="width:32%">功能</th><th style="width:14%">so 偏移</th><th>原值 / 推荐值</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="desc">移动按钮图片位置偏移<br><small>调整屏幕方向键的贴图位置</small></td>
+        <td class="mono">0x2f4eb0</td>
+        <td class="mono">3b800000 <span class="v">(0.0039)</span><br>默认即可,放大可让按钮漂移</td>
+      </tr>
+      <tr>
+        <td class="desc">0.0 改 1.0 隐藏按钮<br><small>置 1 隐藏所有屏幕按钮</small></td>
+        <td class="mono">0x2f4eb4</td>
+        <td class="mono">00000000 <span class="v">(0.0)</span> → <b class="n">0000803F (1.0)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">血量倾斜度<br><small>血条倾斜角,默认 0.1</small></td>
+        <td class="mono">0x3113e8</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span> → 1.0 / <b class="n">45°</b> 倾斜</td>
+      </tr>
+      <tr>
+        <td class="desc">HUD 字体显示位置<br><small>屏幕文字/数字垂直偏移</small></td>
+        <td class="mono">0x3187c4</td>
+        <td class="mono">3c23d70a <span class="v">(0.01)</span> 改大后文字下沉</td>
+      </tr>
+      <tr>
+        <td class="desc">0 改 1 显示设备调试信息<br><small>FPS / 坐标 / Chunk 信息</small></td>
+        <td class="mono">0x6b73ec</td>
+        <td class="mono">00000000 <span class="v">(0.0)</span> → <b class="n">3F800000 (1.0)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">改 0 无物品栏边框 / 改 1 显示边框</td>
+        <td class="mono">0xf9c...fa8 (BSS)</td>
+        <td class="mono">3f800000 <span class="v">(1.0)</span> → <b class="n">0 / NaN</b> 取消</td>
+      </tr>
+      <tr>
+        <td class="desc">改 2 隐藏所有 UI<br><small>整数,常驻 1.0,改 2 全屏清空</small></td>
+        <td class="mono">0x1bdc (bss)</td>
+        <td class="mono">3f800000 <span class="v">(1.0)</span> → <b class="n">2</b></td>
+      </tr>
+      <tr>
+        <td class="desc">物品栏从左上离散程度</td>
+        <td class="mono">0x16c (bss)</td>
+        <td class="mono">40800000 <span class="v">(4.0)</span> 改大后物品栏倾斜散开</td>
+      </tr>
+      <tr>
+        <td class="desc">人物渲染红 / 绿 / 蓝(RGB 三段)<br><small>实现角色染色或隐身</small></td>
+        <td class="mono">0xf9c / fa0 / fa4 (bss)</td>
+        <td class="mono">3f800000 <span class="v">(1.0)</span> → <b class="n">0 隐藏 / 2 加强</b></td>
+      </tr>
+      <tr>
+        <td class="desc">部分物品渲染大小 / 宽 / 高</td>
+        <td class="mono">0x3308 / 3314 / 3318 (bss)</td>
+        <td class="mono">3f800000 <span class="v">(1.0)</span> 改大后物品方块放大</td>
+      </tr>
+      <tr>
+        <td class="desc">人物手与身体的距离</td>
+        <td class="mono">0x19f94 (bss)</td>
+        <td class="mono">3f800000 <span class="v">(1.0)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">主页面 HUD 隐藏(修改 so)<br><small>匹配字节 <code>0020704700220260</code> 三处之一</small></td>
+        <td class="mono">搜特征码</td>
+        <td class="mono">00 → <b class="n">01</b></td>
+      </tr>
+      <tr>
+        <td class="desc">点击某页面时原 HUD 不隐藏</td>
+        <td class="mono">0x2cb44c</td>
+        <td class="mono">00 (False) → <b class="n">01 (True)</b></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="cat-render">
+  <h2><span class="num">02</span>视角与画面渲染</h2>
+  <p>包括第三人称过肩、视角旋转、FOV、阴影、透视、亮度、视角高度等。</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th style="width:36%">功能</th><th style="width:14%">so 偏移</th><th>原值 / 推荐值</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="desc">第三人称过肩视角开关<br><small>原 0,改 1 启用</small></td>
+        <td class="mono">0x468910</td>
+        <td class="mono">00000000 <span class="v">(0.0)</span> → <b class="n">1.0 启用</b></td>
+      </tr>
+      <tr>
+        <td class="desc">第三人称穿墙视角<br><small>将值放大到极大,实现 X-Ray 般穿透</small></td>
+        <td class="mono">0x46890c</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span> → <b class="n">00401C46 (10,000)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">视角无旋转限制<br><small>水平/垂直旋转解除 -90/90 限制</small></td>
+        <td class="mono">0x49dc20 / 49dc24</td>
+        <td class="mono">-90 / 90 → <b class="n">-114514 / 114514</b></td>
+      </tr>
+      <tr>
+        <td class="desc">视野大小(FOV) 110</td>
+        <td class="mono">0x38f248</td>
+        <td class="mono">42dc0000 <span class="v">(110.0)</span> 改大后画面更广</td>
+      </tr>
+      <tr>
+        <td class="desc">视角高度 1.62<br><small>默认眼睛位置高度</small></td>
+        <td class="mono">0x6b8ea0</td>
+        <td class="mono">3fcf5c29 <span class="v">(1.62)</span> 改大后第一/三人称偏移</td>
+      </tr>
+      <tr>
+        <td class="desc">改渲染距离透视(联动)<br><small>0x46d5d0 与 0x46d5d4 一起改</small></td>
+        <td class="mono">0x46d5d0 / 46d5d4</td>
+        <td class="mono">0.1 / 0.05 → <b class="n">1000 / 114514</b></td>
+      </tr>
+      <tr>
+        <td class="desc">高亮白色阴影</td>
+        <td class="mono">0x46d878</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span> → <b class="n">0000803F (1.0)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">阴影颜色(只能改黑和隐藏)<br><small>0=黑 / NaN=不渲染</small></td>
+        <td class="mono">0x46d880</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span> → <b class="n">0 黑 / FFFFFFFF 隐</b></td>
+      </tr>
+      <tr>
+        <td class="desc">阴影大小 0.8</td>
+        <td class="mono">0x49dd9c</td>
+        <td class="mono">3f4ccccd <span class="v">(0.8)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">手的位置</td>
+        <td class="mono">0x4cfdec</td>
+        <td class="mono">00000000 <span class="v">(0.0)</span> 改大后手远离身体</td>
+      </tr>
+      <tr>
+        <td class="desc">亮度(可改 NaN 夜视,联动)<br><small>需同时改 0x6163e4 = -1 全图阴天</small></td>
+        <td class="mono">0x6163e8</td>
+        <td class="mono">3e4ccccd <span class="v">(0.2)</span> → <b class="n">FFFFFFFF (NaN) 夜视</b></td>
+      </tr>
+      <tr>
+        <td class="desc">255 改大能改光照效果</td>
+        <td class="mono">0x44fcf0</td>
+        <td class="mono">437f0000 <span class="v">(255.0)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">水下的亮度 0.35</td>
+        <td class="mono">0x446a90</td>
+        <td class="mono">3333B33E <span class="v">(0.35)</span> → <b class="n">0000803F (1.0) 亮</b></td>
+      </tr>
+      <tr>
+        <td class="desc">水面结冰(单人) 0.15</td>
+        <td class="mono">0x6b918c</td>
+        <td class="mono">3e19999a <span class="v">(0.15)</span> → <b class="n">00007a44 (1,000)</b></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="cat-fight">
+  <h2><span class="num">03</span>战斗 / 武器 / 投掷物</h2>
+  <p>包含爆击粒子、投掷物、空中挖掘、弓箭、拉弓、灵敏度等战斗相关参数。</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th style="width:36%">功能</th><th style="width:14%">so 偏移</th><th>原值 / 推荐值</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="desc">爆击粒子扩散程度 0.4</td>
+        <td class="mono">0x35fcdc</td>
+        <td class="mono">3ecccccd <span class="v">(0.4)</span> 改大粒子更炸</td>
+      </tr>
+      <tr>
+        <td class="desc">暴击粒子颜色 0.6</td>
+        <td class="mono">0x35fce0</td>
+        <td class="mono">3f19999a <span class="v">(0.6)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">0.4 改 2 暴击粒子变彩虹色<br><small>注:不同版本记录值不同(0.3/0.4/2.0)</small></td>
+        <td class="mono">0x35fce4</td>
+        <td class="mono">3e99999a/40a00000 → <b class="n">2.0 彩虹</b></td>
+      </tr>
+      <tr>
+        <td class="desc">爆击粒子投掷物上飘 0.1</td>
+        <td class="mono">0x392244</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">灵敏度 0.2(也用于加倍)</td>
+        <td class="mono">0x40820c</td>
+        <td class="mono">3e4cccccd <span class="v">(0.2)</span> 改 0.4 加倍</td>
+      </tr>
+      <tr>
+        <td class="desc">灵敏度加倍 0.4</td>
+        <td class="mono">0x360594</td>
+        <td class="mono">3ecccccd <span class="v">(0.4)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">空中挖掘速度 0.2<br><small>原版空中挖掘较慢,可改大</small></td>
+        <td class="mono">0x554c90</td>
+        <td class="mono">3e4ccccd <span class="v">(0.2)</span> → <b class="n">114514 改大</b></td>
+      </tr>
+      <tr>
+        <td class="desc">投掷物出手速度</td>
+        <td class="mono">0x57d10c</td>
+        <td class="mono">3f800000 <span class="v">(1.0)</span> 改大更远</td>
+      </tr>
+      <tr>
+        <td class="desc">投掷物范围伤害 0.3</td>
+        <td class="mono">0x57d114</td>
+        <td class="mono">3e99999a <span class="v">(0.3)</span> → <b class="n">1.75 加强</b></td>
+      </tr>
+      <tr>
+        <td class="desc">水下投掷物速度</td>
+        <td class="mono">0x57d118</td>
+        <td class="mono">3e99999a <span class="v">(0.3)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">投掷物粒子大小 0.1</td>
+        <td class="mono">0x364068</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">0.05 改大弓箭自动蓄力<br><small>拉弓自动满力</small></td>
+        <td class="mono">0x517a30</td>
+        <td class="mono">3d4ccccd <span class="v">(0.05)</span> → <b class="n">改大自动满</b></td>
+      </tr>
+      <tr>
+        <td class="desc">拉弓弓箭后移位置 0.1</td>
+        <td class="mono">0x48fdb0</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">拉弓弓的角度 -50</td>
+        <td class="mono">0x48fdc8</td>
+        <td class="mono">c2480000 <span class="v">(-50.0)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">拉满弓的上下抖动 0.01</td>
+        <td class="mono">0x48fddc</td>
+        <td class="mono">3c23d70a <span class="v">(0.01)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">挖掘方块爆炸特效 0.2<br><small>撸方块时的爆裂程度</small></td>
+        <td class="mono">0x39386c / 393870</td>
+        <td class="mono">3e4ccccd <span class="v">(0.2)</span> → <b class="n">10.0 大爆炸</b></td>
+      </tr>
+      <tr>
+        <td class="desc">挖草的方块颜色 0.004</td>
+        <td class="mono">0x393874</td>
+        <td class="mono">3b808081 <span class="v">(0.004)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">红石变色 0.7</td>
+        <td class="mono">0x585f9c</td>
+        <td class="mono">3f333333 <span class="v">(0.7)</span> 改大变色加快</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="cat-move">
+  <h2><span class="num">04</span>玩家移动与姿态</h2>
+  <p>涵盖走路、潜行、疾跑、跳跃、二段跳、飞行、头部/手部运动、惯性、全局速度等。</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th style="width:36%">功能</th><th style="width:14%">so 偏移</th><th>原值 / 推荐值</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="desc">潜行移速 0.3<br><small>不同版本记录为 0.3 / 3.0</small></td>
+        <td class="mono">0x386d98</td>
+        <td class="mono">3e99999a/40400000 <span class="v">(0.3/3.0)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">0.0 改 1.0 自动左前方行走<br><small>无需操作持续前进</small></td>
+        <td class="mono">0x386d9c</td>
+        <td class="mono">00000000 → <b class="n">0000803F (1.0)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">走路脚的摆动幅度 1.3</td>
+        <td class="mono">0x38b3c0</td>
+        <td class="mono">3fb33333 <span class="v">(1.3)</span> 改大后步伐夸张</td>
+      </tr>
+      <tr>
+        <td class="desc">头的运动角度大小 0.005</td>
+        <td class="mono">0x38b3bc</td>
+        <td class="mono">3bb60b61 <span class="v">(0.005)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">右手使用物品的摆动幅度 0.2</td>
+        <td class="mono">0x38b3c4</td>
+        <td class="mono">3e4ccccd <span class="v">(0.2)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">手的挥动物品运动偏移 0.2</td>
+        <td class="mono">0x48f898</td>
+        <td class="mono">3e4ccccd <span class="v">(0.2)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">生物移速 0.98</td>
+        <td class="mono">0x4ca480</td>
+        <td class="mono">3f7ae148 <span class="v">(0.98)</span> 改大后所有生物更快</td>
+      </tr>
+      <tr>
+        <td class="desc">1.15 高跳<br><small>默认起跳高度系数</small></td>
+        <td class="mono">0x4ca854</td>
+        <td class="mono">3f7ae148 <span class="v">(1.15)</span> 改大跳更高</td>
+      </tr>
+      <tr>
+        <td class="desc">疾跑跳跃距离 0.2<br><small>冲刺跳的水平距离</small></td>
+        <td class="mono">0x4cfd34</td>
+        <td class="mono">3e4ccccd <span class="v">(0.2)</span> → <b class="n">2.0 超远跳</b></td>
+      </tr>
+      <tr>
+        <td class="desc">0.15 飞行时二段跳高</td>
+        <td class="mono">0x42c1f0</td>
+        <td class="mono">3e19999a <span class="v">(0.15)</span> 改大后飞行可二段跳</td>
+      </tr>
+      <tr>
+        <td class="desc">0.6 改高飞行无法动弹</td>
+        <td class="mono">0x51356c</td>
+        <td class="mono">3f19999a <span class="v">(0.6)</span> 改高 → 飞行失效</td>
+      </tr>
+      <tr>
+        <td class="desc">游戏全局速度 0.001</td>
+        <td class="mono">0x4be9f0</td>
+        <td class="mono">3a83126f <span class="v">(0.001)</span> 改大后全局加速</td>
+      </tr>
+      <tr>
+        <td class="desc">0.4 改大陆地着水<br><small>踩水时不下沉</small></td>
+        <td class="mono">0x4a0abc</td>
+        <td class="mono">3ecccccd <span class="v">(0.4)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">0.4 岩浆垂直判定<br><small>踩岩浆时不下沉</small></td>
+        <td class="mono">0x4a04d4</td>
+        <td class="mono">3ecccccd <span class="v">(0.4)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">100 地址四个全改 0 无饥饿<br><small>0x57d800 起 4 个连续 float 改 0</small></td>
+        <td class="mono">0x57d800 + 3*4</td>
+        <td class="mono">42c80000 <span class="v">(100.0)</span> × 4 → <b class="n">0 × 4 永饱</b></td>
+      </tr>
+      <tr>
+        <td class="desc">人物视角(BSS 区,运行时)</td>
+        <td class="mono">0x1bc8 (bss)</td>
+        <td class="mono">3f800000 <span class="v">(1.0)</span> 可用于运行时调视野</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="cat-world">
+  <h2><span class="num">05</span>世界生成 / 地形 / 方块</h2>
+  <p>控制地形噪声、噪声参数、火焰、火把、挖掘、草地等方块相关视觉与生成参数。</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th style="width:36%">功能</th><th style="width:14%">so 偏移</th><th>原值 / 推荐值</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="desc">地形生成噪声 0.1<br><small>影响地表起伏与悬崖感</small></td>
+        <td class="mono">0x606e48</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span> 改大后群山更陡</td>
+      </tr>
+      <tr>
+        <td class="desc">地形生成辅助参数(连续 7 个 float)<br><small>原值 0.3/0.9/0.36/1e-4/0.2/1e-3/0.333</small></td>
+        <td class="mono">0x606e3c..5c</td>
+        <td class="mono">按需调,可制造"奇形怪状"地形</td>
+      </tr>
+      <tr>
+        <td class="desc">改 1 草地变五颜六色 0.0004956</td>
+        <td class="mono">0x61c758</td>
+        <td class="mono">3a01ed90 <span class="v">(0.0004956)</span> → <b class="n">0000803F (1.0)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">火把类在墙上向上偏移 0.1</td>
+        <td class="mono">0x399d48</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span> 改大后火把上移</td>
+      </tr>
+      <tr>
+        <td class="desc">火焰高度 1.4</td>
+        <td class="mono">0x39a1e4</td>
+        <td class="mono">3fb33333 <span class="v">(1.4)</span> 改大后火焰更高</td>
+      </tr>
+      <tr>
+        <td class="desc">火焰内扩散 0.8</td>
+        <td class="mono">0x39a1e8</td>
+        <td class="mono">3e4ccccc <span class="v">(0.8)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">火焰内 1/2 向中心偏移 0.3 / 0.7</td>
+        <td class="mono">0x39a1ec / 39a1f0</td>
+        <td class="mono">3f333333 / 3e99999a</td>
+      </tr>
+      <tr>
+        <td class="desc">火焰内部/外部西北扩散特效 0.8 / 0.9</td>
+        <td class="mono">0x39a1f4 / 39a1f8</td>
+        <td class="mono">3f4ccccd / 3f666666</td>
+      </tr>
+      <tr>
+        <td class="desc">0.0011 粒子偏移大小<br><small>改 0.11 会抽搐</small></td>
+        <td class="mono">0x361360 / 39a1d0</td>
+        <td class="mono">3a90ee17 <span class="v">(0.0011)</span> 建议保持</td>
+      </tr>
+      <tr>
+        <td class="desc">0.0011 火焰贴图偏移</td>
+        <td class="mono">0x39a1d0</td>
+        <td class="mono">3a90ee17 <span class="v">(0.0011)</span> 改 0.11 显示错误</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="cat-sky">
+  <h2><span class="num">06</span>天空 / 天气 / 昼夜</h2>
+  <p>包括天空亮度、阴天、太阳光圈、雨、云朵、星星、闪屏等。</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th style="width:36%">功能</th><th style="width:14%">so 偏移</th><th>原值 / 推荐值</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="desc">天空亮度 0.1 / 0.005</td>
+        <td class="mono">0x4465c0 / 449508</td>
+        <td class="mono">3dcccccd / 3baaaaab 改大更亮</td>
+      </tr>
+      <tr>
+        <td class="desc">看向太阳的光照效果 0.2<br><small>模拟阳光光晕</small></td>
+        <td class="mono">0x446714</td>
+        <td class="mono">3e4ccccd <span class="v">(0.2)</span> 改大后太阳更刺眼</td>
+      </tr>
+      <tr>
+        <td class="desc">看向太阳变圆 0.2(改高不变)</td>
+        <td class="mono">0x46aac8</td>
+        <td class="mono">3e4ccccd <span class="v">(0.2)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">改 NaN 屏蔽雨<br><small>写 NaN 后不再下雨</small></td>
+        <td class="mono">0x448afc</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span> → <b class="n">FFFFFFFF (NaN)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">0 改 -1 全图阴天(联动)<br><small>Dword,需配合下一条</small></td>
+        <td class="mono">0x6163e4</td>
+        <td class="mono">00000000 → <b class="n">FFFFFFFF (-1)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">改 0 屏蔽自然光照(联动上一条)<br><small>与上一条同时改才会全图阴天</small></td>
+        <td class="mono">0x6163e8</td>
+        <td class="mono">FFFFFFFF → <b class="n">00000000</b></td>
+      </tr>
+      <tr>
+        <td class="desc">改大闪屏 / DJ 闪屏 0.1</td>
+        <td class="mono">0x44950c</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span> 改大后强光闪烁</td>
+      </tr>
+      <tr>
+        <td class="desc">0 下雨 0</td>
+        <td class="mono">0x59721c</td>
+        <td class="mono">00000000 置 1 强制下雨</td>
+      </tr>
+      <tr>
+        <td class="desc">云的高度 128</td>
+        <td class="mono">0x49569c</td>
+        <td class="mono">4300547b <span class="v">(128.0)</span> 改大后云更高</td>
+      </tr>
+      <tr>
+        <td class="desc">水中看天空的雾 129</td>
+        <td class="mono">0x4956a0</td>
+        <td class="mono">43010000 <span class="v">(129.0)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">云运动的速度 0.2 / 1.0</td>
+        <td class="mono">0x4956a4</td>
+        <td class="mono">3ca3d70a/3f000000 改大云跑得更快</td>
+      </tr>
+      <tr>
+        <td class="desc">云上下扭曲程度 0.1</td>
+        <td class="mono">0x4465c0</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">0 屏蔽水</td>
+        <td class="mono">0x4956b0</td>
+        <td class="mono">00000000 置 1 不渲染水</td>
+      </tr>
+      <tr>
+        <td class="desc">天空星星大小 0.1</td>
+        <td class="mono">0x46108c</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span> 改大后星星更大</td>
+      </tr>
+      <tr>
+        <td class="desc">改大云变黄色 0.1 / 0.15</td>
+        <td class="mono">0x616970</td>
+        <td class="mono">3dcccccd/3e19999a</td>
+      </tr>
+      <tr>
+        <td class="desc">0.15 云变蓝色 0.3</td>
+        <td class="mono">0x616974</td>
+        <td class="mono">3e19999a <span class="v">(0.15)</span> → <b class="n">3e99999a (0.3)</b> 蓝</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="cat-tnt">
+  <h2><span class="num">07</span>TNT 与爆炸特效</h2>
+  <p>一组专门用于调节 TNT 引爆、运动、扩散、威力与爆炸外观的参数。</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th style="width:36%">功能</th><th style="width:14%">so 偏移</th><th>原值 / 推荐值</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="desc">改 1 tnt 无膨胀特效 0.0</td>
+        <td class="mono">0x44c75c</td>
+        <td class="mono">00000000 <span class="v">(0.0)</span> 置 1 取消膨胀</td>
+      </tr>
+      <tr>
+        <td class="desc">tnt 爆炸膨胀特效 0.3 / -1.0</td>
+        <td class="mono">0x44c760</td>
+        <td class="mono">3e99999a / bf800000 改大爆炸更强</td>
+      </tr>
+      <tr>
+        <td class="desc">改 1 tnt 爆炸无扩散粒子 0.0</td>
+        <td class="mono">0x538140</td>
+        <td class="mono">00000000 置 1 取消扩散</td>
+      </tr>
+      <tr>
+        <td class="desc">tnt 粒子扩散大小 0.3</td>
+        <td class="mono">0x538154</td>
+        <td class="mono">3e99999a <span class="v">(0.3)</span> 改大粒子更密</td>
+      </tr>
+      <tr>
+        <td class="desc">tnt 移动惯性 0.98</td>
+        <td class="mono">0x57c644</td>
+        <td class="mono">3f7ae148 <span class="v">(0.98)</span> 改大更"滑"</td>
+      </tr>
+      <tr>
+        <td class="desc">tnt 点燃运动速度 0.7</td>
+        <td class="mono">0x57c648</td>
+        <td class="mono">3f333333 <span class="v">(0.7)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">tnt 威力大小 0.6</td>
+        <td class="mono">0x57f7c4</td>
+        <td class="mono">3f19999a/3f000000 改大爆炸破坏力</td>
+      </tr>
+      <tr>
+        <td class="desc">0.9 实体死亡后爆炸特效</td>
+        <td class="mono">0x3914f0</td>
+        <td class="mono">3f666666 <span class="v">(0.9)</span> 改大死亡爆炸更明显</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="cat-mob">
+  <h2><span class="num">08</span>生物与动画 / 视角怪效</h2>
+  <p>涉及生物模型抖动、神魂颠倒、手臂挥动、僵尸、视角怪效等。</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th style="width:36%">功能</th><th style="width:14%">so 偏移</th><th>原值 / 推荐值</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="desc">57.295 生物模型乱动(角度→弧度)<br><small>57.295 = 180/π,改大生物抖动</small></td>
+        <td class="mono">0x6b8bd8</td>
+        <td class="mono">42652ee0 <span class="v">(57.295)</span> 改大后抽搐</td>
+      </tr>
+      <tr>
+        <td class="desc">3.14159274101 改大神魂颠倒<br><small>π 常量,改大后视角全乱</small></td>
+        <td class="mono">0x6b8be4</td>
+        <td class="mono">40490fdb <span class="v">(3.14159)</span> → <b class="n">0000F041 (30)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">0.85 改 NaN 值除了玩家外所有怪物原地扣血<br><small>写 NaN 后,周围生物持续掉血</small></td>
+        <td class="mono">0x49dfc0</td>
+        <td class="mono">3f59999a <span class="v">(0.85)</span> → <b class="n">FFFFFFFF (NaN)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">僵尸手的位置 0.1</td>
+        <td class="mono">0x431bc8</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">生物手臂前后挥动 0.05</td>
+        <td class="mono">0x431bcc</td>
+        <td class="mono">3d4ccccd <span class="v">(0.05)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">粒子大小 0.1</td>
+        <td class="mono">0x361370</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">摔落粒子上飘 0.1</td>
+        <td class="mono">0x390a2c</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">粒子上飘速度 0.004</td>
+        <td class="mono">0x3914ec</td>
+        <td class="mono">3b83126f <span class="v">(0.004)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">经验球颜色 0.1</td>
+        <td class="mono">0x46bb2c</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">经验的重力大小 0.03</td>
+        <td class="mono">0x57bc78</td>
+        <td class="mono">3d23d70a <span class="v">(0.03)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">经验上飘 1</td>
+        <td class="mono">0x57bc80</td>
+        <td class="mono">3f7ae148 <span class="v">(1.0)</span> 改大后经验飞向天空</td>
+      </tr>
+      <tr>
+        <td class="desc">吸收经验的速度 0.1</td>
+        <td class="mono">0x57bc88</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">掉落物上下浮动 0.1</td>
+        <td class="mono">0x486f7c</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">掉落物旋转速度 0.05</td>
+        <td class="mono">0x486f88</td>
+        <td class="mono">3d4ccccd <span class="v">(0.05)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">多物品掉落离散程度</td>
+        <td class="mono">0x486f90</td>
+        <td class="mono">3f4ccccd <span class="v">(0.8)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">物品掉落的左右偏移 0.1</td>
+        <td class="mono">0x5443cc</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">物品掉落的前后偏移 0.1</td>
+        <td class="mono">0x5443d0</td>
+        <td class="mono">3e4ccccd <span class="v">(0.2)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">50 手持物品离手心的距离</td>
+        <td class="mono">0x4861a4</td>
+        <td class="mono">42480000 <span class="v">(50.0)</span> 改小后手持物更近</td>
+      </tr>
+      <tr>
+        <td class="desc">手持物品旋转角度 -90</td>
+        <td class="mono">0x4861a8</td>
+        <td class="mono">c2b40000 <span class="v">(-90.0)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">水上气泡粒子大小 0.5</td>
+        <td class="mono">0x3700b4</td>
+        <td class="mono">3f19999a <span class="v">(0.5)</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="cat-data">
+  <h2><span class="num">09</span>本地玩家内存数据 / 调试</h2>
+  <p>这是 <code>localplayer</code> / <code>玩家状态</code> 类别下,通过 Cheat Engine 扫描出来的玩家实体运行时内存布局,常用于<b>本地调试与修改</b>(不修改 so)。</p>
+
+  <h3>玩家本地内存字段(以 <code>BF26A000</code> 为基准的偏移)</h3>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>地址偏移</th><th>字段</th><th>类型</th><th>示例值</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">BF26A004</td><td>未知</td><td>Float</td><td>7.17e-43</td></tr>
+      <tr><td class="mono">BF26A008</td><td>坐标 X</td><td>Float</td><td>107.63</td></tr>
+      <tr><td class="mono">BF26A00C</td><td>坐标 Y</td><td>Float</td><td>5.62</td></tr>
+      <tr><td class="mono">BF26A010</td><td>坐标 Z</td><td>Float</td><td>32.42</td></tr>
+      <tr><td class="mono">BF26A02C</td><td>x motion</td><td>Float</td><td>-1.4e-45</td></tr>
+      <tr><td class="mono">BF26A030</td><td>y motion</td><td>Float</td><td>-0.0784</td></tr>
+      <tr><td class="mono">BF26A034</td><td>z motion</td><td>Float</td><td>1.4e-45</td></tr>
+      <tr><td class="mono">BF26A038</td><td>头 yaw</td><td>Float</td><td>22.5</td></tr>
+      <tr><td class="mono">BF26A03C</td><td>头 pitch</td><td>Float</td><td>2,265.99</td></tr>
+      <tr><td class="mono">BF26A040</td><td>身体 yaw</td><td>Float</td><td>22.5</td></tr>
+      <tr><td class="mono">BF26A044</td><td>身体 pitch</td><td>Float</td><td>2,265.99</td></tr>
+      <tr><td class="mono">BF26A090</td><td>低 X(碰撞箱)</td><td>Float</td><td>107.33</td></tr>
+      <tr><td class="mono">BF26A094</td><td>低 Y</td><td>Float</td><td>4.0</td></tr>
+      <tr><td class="mono">BF26A098</td><td>低 Z</td><td>Float</td><td>32.12</td></tr>
+      <tr><td class="mono">BF26A09C</td><td>顶 X</td><td>Float</td><td>107.93</td></tr>
+      <tr><td class="mono">BF26A0A0</td><td>顶 Y</td><td>Float</td><td>5.80</td></tr>
+      <tr><td class="mono">BF26A0A4</td><td>顶 Z</td><td>Float</td><td>32.73</td></tr>
+      <tr><td class="mono">BF26A0AC</td><td>碰撞箱宽</td><td>Float</td><td>0.6</td></tr>
+      <tr><td class="mono">BF26A0B0</td><td>碰撞箱高</td><td>Float</td><td>1.8</td></tr>
+      <tr><td class="mono">BF26A0B4</td><td>运动距离</td><td>Float</td><td>50.76</td></tr>
+      <tr><td class="mono">BF26A0C0</td><td>视角高度</td><td>Float</td><td>1.62</td></tr>
+      <tr><td class="mono">BF26A0CC</td><td>爬墙高度</td><td>Float</td><td>0.5</td></tr>
+      <tr><td class="mono">BF26A0DC</td><td>氧气值</td><td>Dword</td><td>200</td></tr>
+      <tr><td class="mono">BF26A0E0</td><td>着火时长</td><td>Float</td><td>-NaN</td></tr>
+      <tr><td class="mono">BF26A104</td><td>玩家实体</td><td>Dword</td><td>27 / 3</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>其他调试类条目</h3>
+  <div class="scroll">
+  <table>
+    <thead><tr><th style="width:32%">功能</th><th style="width:14%">so 偏移</th><th>原值 / 推荐值</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="desc">解锁所有皮肤<br><small>匹配特征码修改</small></td>
+        <td class="mono">0x3956b8</td>
+        <td class="mono">10b50446 → <b class="n">00207047</b></td>
+      </tr>
+      <tr>
+        <td class="desc">98 视角广度(外置 FOV)</td>
+        <td class="mono">E188DA10 (CA)</td>
+        <td class="mono">120.0 <span class="v">(运行时)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">110 视野大小(CA)</td>
+        <td class="mono">B7303544 (CA)</td>
+        <td class="mono">110.0 <span class="v">(运行时)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">我喜欢的视角 20 / -75</td>
+        <td class="mono">0x4861a4 / 4861a8</td>
+        <td class="mono">50 / -90 → <b class="n">20 / -75</b></td>
+      </tr>
+      <tr>
+        <td class="desc">下蹲状态(内存)<br><small>蹲下时 65536,非蹲 0</small></td>
+        <td class="mono">+52 / +56 / +64 / +68</td>
+        <td class="mono">0/0/0/0 → <b class="n">10 / 256 / 11 / 512 蹲下</b></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="cat-misc">
+  <h2><span class="num">10</span>杂项与零散特殊偏移</h2>
+  <p>来源 <code>0.3.txt / 3.txt / 区块数据适配.txt / MC模组笔记.txt</code> 等零散文件,合并于此。</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th style="width:36%">功能</th><th style="width:14%">so 偏移</th><th>原值 / 推荐值</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="desc">tnt 爆炸膨胀大小 -1.0(单点测试)</td>
+        <td class="mono">0x44c760 (B7DB…)</td>
+        <td class="mono">bf800000 <span class="v">(-1.0)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">tnt 爆炸膨胀大小 0.3(另一版本)</td>
+        <td class="mono">0x44c760 (oUNUzS…)</td>
+        <td class="mono">bf800000 <span class="v">(-1.0)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">云上下扭曲程度 0.1(简易记录)</td>
+        <td class="mono">0x4465c0 (B7DB…)</td>
+        <td class="mono">3dcccccd <span class="v">(0.1)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">地形生成噪声 0.1(简易记录)</td>
+        <td class="mono">0x606e48 (B7DB…)</td>
+        <td class="mono">bf800000 <span class="v">(-1.0 / 未确认)</span></td>
+      </tr>
+      <tr>
+        <td class="desc">云朵夜晚 0.15 → 0.3(蓝色云)</td>
+        <td class="mono">0x616974</td>
+        <td class="mono">3e19999a → <b class="n">3e99993e (0.3)</b></td>
+      </tr>
+      <tr>
+        <td class="desc">区块数据适配(Ca 列表)<br><small>4 个连续 Dword,可能是区块长度/指针</small></td>
+        <td class="mono">C20721C0..CC</td>
+        <td class="mono">Dword ×4,常用于区块格式校验</td>
+      </tr>
+      <tr>
+        <td class="desc">MC 模组笔记 · 单点 NaN 测试</td>
+        <td class="mono">0x6b8be4 (bb)</td>
+        <td class="mono">3.14159 → <b class="n">30.0 神魂颠倒</b></td>
+      </tr>
+      <tr>
+        <td class="desc">0.3 版专用(发散偏移样本)</td>
+        <td class="mono">3700b4 / 57d10c / 57d114 / 57d118</td>
+        <td class="mono">水上气泡、投掷物三连</td>
+      </tr>
+      <tr>
+        <td class="desc">视角文件中的"20 手持物品"变体</td>
+        <td class="mono">0x4861a4 (5B_w7r…)</td>
+        <td class="mono">42480000 <span class="v">(20.0 注释)</span> 数据为 50.0</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="warning">
+  <h2><span class="num">!</span>风险与注意事项</h2>
+
+  <div class="callout danger">
+    <b>仅供学习与研究使用。</b>修改 <code>libminecraftpe.so</code> 可能违反 Minecraft / 渠道方最终用户许可协议(EULA),并在多人联机中被反作弊系统识别。请仅在<b>本地单机</b>或<b>自己可控的测试环境</b>下使用。
+  </div>
+  <div class="callout">
+    <b>偏移会随版本变化。</b>每次游戏更新,so 文件内偏移都会变化,本笔记整理自 2022–2025 间的多份偏移样本,实际应用时必须先用 Cheat Engine / GameGuardian / Frida 等工具按"特征码 + 浮点值"重新定位,而不是直接照搬地址。
+  </div>
+  <div class="callout tip">
+    <b>常用的稳定特征:</b>浮点 <code>0.1 = 0x3dcccccd</code>、<code>0.2 = 0x3e4ccccd</code>、<code>0.5 = 0x3f000000</code>、<code>1.0 = 0x3f800000</code>、<code>NaN = 0xffc00000</code>、<code>-1.0 = 0xbf800000</code>、<code>255.0 = 0x437f0000</code>。遇到相近地址先按这些常量扫。
+  </div>
+  <div class="callout">
+    <b>联动规则:</b>"全图阴天/夜视/原地扣血/透视"等条目至少需要改 <b>两个</b> 偏移才能生效——通常一个写值(NaN / 大数)、一个写 0(屏蔽正常路径)。改一半会出现只掉帧、不生效或崩溃。
+  </div>
+  <div class="callout">
+    <b>常见副作用速查:</b>改值过大 → 抽搐 / 崩溃;改 NaN → 功能屏蔽但可能引发其他模块除零;改 BSS 区段 → 运行期生效但下次启动会重置;改 .text 段 → 永久生效但游戏更新会失效。
+  </div>
+</section>
+
+<footer>
+  <span>整理自:0.3.txt · 12345.txt · 3.txt · MC模组笔记.txt · com.mojang.minecraftpe.txt · localplayer.txt · 下蹲.txt · 修改2.txt · 区块数据适配.txt · 单个.txt · 地形.txt · 完整版.txt · 完整版过滤0.3.txt · 已增加.txt · 已增加1.txt · 已增加2.txt · 新的.txt · 玩家状态.txt · 视角.txt · 🐴.txt</span>
+  <span>2026 · Game Modding Notes</span>
+</footer>
+
+</div>
+</body>
+</html>
