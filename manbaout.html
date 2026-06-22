@@ -102,10 +102,13 @@
 
   /* Copyable cells visual hint */
   td.copyable{cursor:pointer;transition:background .15s,box-shadow .15s;position:relative}
+  tr.row-dbl{transition:background .12s}
+  tr.row-dbl:hover{background:#161c28}
+  tr.row-dbl:hover td{background:transparent}
   td.copyable:hover{background:#1a2030;box-shadow:inset 0 0 0 1px rgba(124,196,255,.25)}
-  td.copyable::after{content:"点击复制";position:absolute;top:6px;right:6px;
+  td.copyable::after{content:"点击复制 / 双击复制整行";position:absolute;top:6px;right:6px;
     font-size:10px;color:var(--muted);background:#0c0f16;border:1px solid var(--line2);
-    padding:1px 5px;border-radius:3px;opacity:0;transition:opacity .15s;pointer-events:none}
+    padding:1px 5px;border-radius:3px;opacity:0;transition:opacity .15s;pointer-events:none;white-space:nowrap}
   td.copyable:hover::after{opacity:1}
 
   /* Toast */
@@ -210,6 +213,7 @@
     <li><b>原值(浮点)</b>用括号标出人类可读的小数形式,如 <code>3dcccccd (0.1)</code>。十六进制按 little-endian 解释。</li>
     <li><b>改写建议</b>有三种常见模式:放大系数(如 0.2 → 2.0)、置零(<code>00000000</code>)、置 <code>NaN</code>(<code>ffffffff</code> = <code>0x7FC00000</code> 形式浮点 NaN)。</li>
     <li><b>联动说明</b>指该地址需要与另一个地址<b>同时改</b>才会生效或避免异常(如透视、夜视、生物原地扣血)。</li>
+    <li><b>复制使用方式:</b>表格每个单元格<b>单击</b>复制单个数据、每行<b>双击</b>(或点击行末"整行"按钮)复制整行、表格顶部"复制整张表"按钮复制整张为 TSV。每张概览卡片也可单击复制。</li>
   </ul>
 </section>
 
@@ -1239,20 +1243,58 @@
     var th = document.createElement('th');
     th.className = 'row-cp';
     th.textContent = '行';
-    th.style.width = '56px';
+    th.title = '双击该行任意位置也可复制整行';
+    th.style.width = '64px';
     thead.appendChild(th);
 
     tbl.querySelectorAll('tbody tr').forEach(function(tr){
+      // 整行支持双击复制
+      tr.classList.add('row-dbl');
+      tr.title = '双击复制整行(单击单元格 = 仅复制该单元格)';
       var td = document.createElement('td');
       td.className = 'row-cp';
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'cp-btn';
       btn.setAttribute('data-copy-row','');
-      btn.innerHTML = '<span class="ico">⎘</span>复制行';
+      btn.title = '复制整行(双击该行任意位置也行)';
+      btn.innerHTML = '<span class="ico">⎘</span>整行';
       td.appendChild(btn);
       tr.appendChild(td);
     });
+  });
+
+  // 提取:复制整行的纯文本(供点击按钮和双击共用)
+  function copyRow(tr, srcLabel){
+    var cells = rowCells(tr).map(getCellPlainText);
+    var line = cells.join(' | ');
+    copyText(line).then(function(){
+      showToast(srcLabel || '已复制 1 行', cells.length + ' 列 · "' + preview(line) + '"');
+      flashRow(tr);
+    });
+  }
+
+  function flashRow(tr){
+    tr.style.transition = 'background .12s, box-shadow .12s';
+    var old = tr.style.background;
+    tr.style.background = 'rgba(124,196,255,.18)';
+    tr.style.boxShadow = 'inset 0 0 0 2px var(--accent)';
+    setTimeout(function(){
+      tr.style.background = old;
+      tr.style.boxShadow = '';
+    }, 350);
+  }
+
+  // 整行双击复制(忽略按钮区域,按钮已有自己的 click 行为)
+  document.addEventListener('dblclick', function(e){
+    var tr = e.target.closest && e.target.closest('table tbody tr');
+    if(!tr) return;
+    // 双击发生在按钮上时,让按钮自己处理
+    if(e.target.closest && e.target.closest('button, .cp-btn')) return;
+    // 双击发生在表头时跳过
+    if(tr.parentElement.tagName !== 'TBODY') return;
+    e.preventDefault();
+    copyRow(tr, '已复制 1 行(双击)');
   });
 
   // 防止在 copyable 单元格上选中文本时,被识别为"点击 td"误触发
